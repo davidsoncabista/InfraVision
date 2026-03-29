@@ -1,0 +1,213 @@
+'use server';
+
+import { apiFetch } from './db';
+import { logAuditEvent } from './audit-actions';
+import { _getUserById } from './user-service';
+import { revalidatePath } from 'next/cache';
+
+export interface ConnectableItem {
+    id: string;
+    label: string;
+    type: string;
+    parentName: string | null;
+}
+
+export interface EquipmentPort {
+    id: string;
+    label: string;
+    portTypeName: string;
+    status: 'up' | 'down' | 'disabled';
+    connectionId: string | null;
+    connectedToPortId: string | null;
+    connectedToPortLabel: string | null;
+    connectedToEquipmentLabel: string | null;
+}
+
+export interface EquipmentSummary {
+    id: string;
+    label: string;
+    type: string;
+    parentName: string | null;
+    totalPorts: number;
+    usedPorts: number;
+}
+
+export interface ConnectionDetail {
+    id: string;
+    portA_id: string;
+    portB_id: string | null;
+    itemA_label: string;
+    itemA_parentName: string | null;
+    portA_label: string;
+    itemB_label: string | null;
+    itemB_parentName: string | null;
+    portB_label: string | null;
+    connectionType: string;
+    connectionTypeId: string;
+    status: string;
+    imageUrl: string | null;
+    labelText: string | null;
+}
+
+export async function getConnectableChildItems(buildingId?: string): Promise<ConnectableItem[]> {
+    try {
+        // Resource embedding para filtrar por prédio usando endpoints minúsculos
+        let url = '/childitems?select=id,label,type,parentitems(label,rooms(buildingid))';
+        if (buildingId) {
+            url += `&parentitems.rooms.buildingid=eq.${buildingId}`;
+        }
+        const data = await apiFetch(url);
+        return data.map((ci: any) => ({
+            id: ci.id,
+            label: ci.label,
+            type: ci.type,
+            parentName: ci.parentitems?.label || null
+        }));
+    } catch (error) {
+        return [];
+    }
+}
+
+export async function getPortsByChildItemId(childItemId: string | null): Promise<EquipmentPort[]> {
+    if (!childItemId) return [];
+    try {
+        // PostgREST select com nomes de tabelas em minúsculo
+        const data = await apiFetch(`/equipmentports?childitemid=eq.${childItemId}&select=*,porttypes(name),connections!portA_id(*),connectedport:connectedtoportid(label,childitems(label))&order=label.asc`);
+        
+        return data.map((ep: any) => ({
+            id: ep.id,
+            label: ep.label,
+            portTypeName: ep.porttypes?.name || 'N/A',
+            status: ep.status,
+            connectionId: ep.connections?.[0]?.id || null,
+            connectedToPortId: ep.connectedtoportid,
+            connectedToPortLabel: ep.connectedport?.label || null,
+            connectedToEquipmentLabel: ep.connectedport?.childitems?.label || null
+        }));
+    } catch (error) {
+        return [];
+    }
+}
+
+export async function getAllConnections(buildingId?: string): Promise<ConnectionDetail[]> {
+    try {
+        let url = '/connections?select=*,portA:portA_id(label,childitems(label,parentitems(label,rooms(buildingid)))),portB:portB_id(label,childitems(label,parentitems(label))),connectiontypes(name)';
+        if (buildingId) {
+            url += `&portA.childitems.parentitems.rooms.buildingid=eq.${buildingId}`;
+        }
+        const data = await apiFetch(url);
+        return data.map((c: any) => ({
+            id: c.id,
+            portA_id: c.portA_id,
+            portB_id: c.portB_id,
+            itemA_label: c.portA?.childitems?.label || 'N/A',
+            itemA_parentName: c.portA?.childitems?.parentitems?.label || null,
+            portA_label: c.portA?.label || 'N/A',
+            itemB_label: c.portB?.childitems?.label || null,
+            itemB_parentName: c.portB?.childitems?.parentitems?.label || null,
+            portB_label: c.portB?.label || null,
+            connectionType: c.connectiontypes?.name || 'N/A',
+            connectionTypeId: c.connectiontypeid,
+            status: c.status,
+            imageUrl: c.imageurl,
+            labelText: c.labeltext
+        }));
+    } catch (error) {
+        return [];
+    }
+}
+
+export async function createConnection(data: { 
+    portA_id: string; 
+    portB_id?: string | null; 
+    connectionTypeId: string; 
+    labelText?: string | null;
+    imageUrl?: string | null;
+    userId: string;
+}) {
+    const user = await _getUserById(data.userId);
+    if (!user) throw new Error("Usuário inválido.");
+
+    const connectionId = `conn_${Date.now()}`;
+    const status = data.portB_id ? 'active' : 'unresolved';
+
+    await apiFetch('/connections', {
+        method: 'POST',
+        body: JSON.stringify({
+            id: connectionId,
+            portA_id: data.portA_id,
+            portB_id: data.portB_id || null,
+            connectiontypeid: data.connectionTypeId,
+            labeltext: data.labelText || null,
+            imageurl: data.imageUrl || null,
+            status
+        })
+    });
+
+    // Atualiza portas
+    await apiFetch(`/equipmentports?id=eq.${data.portA_id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status: 'up', connectedtoportid: data.portB_id || null })
+    });
+
+    if (data.portB_id) {
+        await apiFetch(`/equipmentports?id=eq.${data.portB_id}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ status: 'up', connectedtoportid: data.portA_id })
+        });
+    }
+
+    await logAuditEvent({ user, action: 'CONNECTION_CREATED', entityType: 'connections', entityId: connectionId });
+    revalidatePath('/depara');
+}
+
+export async function disconnectConnection(connectionId: string, userId: string) {
+    const user = await _getUserById(userId);
+    if (!user) throw new Error("Usuário inválido.");
+
+    const connData = await apiFetch(`/connections?id=eq.${connectionId}`);
+    if (connData.length === 0) throw new Error("Conexão não encontrada.");
+    
+    const { portA_id, portB_id } = connData[0];
+
+    await apiFetch(`/connections?id=eq.${connectionId}`, { method: 'DELETE' });
+    
+    if (portA_id) await apiFetch(`/equipmentports?id=eq.${portA_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'down', connectedtoportid: null }) });
+    if (portB_id) await apiFetch(`/equipmentports?id=eq.${portB_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'down', connectedtoportid: null }) });
+
+    await logAuditEvent({ user, action: 'CONNECTION_DELETED', entityType: 'connections', entityId: connectionId });
+    revalidatePath('/depara');
+}
+
+export async function getConnectableEquipmentSummary(buildingId?: string): Promise<EquipmentSummary[]> {
+    try {
+        const items = await getConnectableChildItems(buildingId);
+        const summaries = await Promise.all(items.map(async (item) => {
+            const ports = await apiFetch(`/equipmentports?childitemid=eq.${item.id}`);
+            return {
+                ...item,
+                totalPorts: ports.length,
+                usedPorts: ports.filter((p: any) => p.status === 'up').length
+            };
+        }));
+        return summaries;
+    } catch (error) {
+        return [];
+    }
+}
+
+export async function addPortToEquipment(data: { childItemId: string; portTypeId: string; label: string; }) {
+    await apiFetch('/equipmentports', {
+        method: 'POST',
+        body: JSON.stringify({ id: `eport_${Date.now()}`, childitemid: data.childItemId, porttypeid: data.portTypeId, label: data.label, status: 'down' })
+    });
+    revalidatePath('/connections');
+}
+
+export async function deletePortFromEquipment(portId: string, userId: string) {
+    const user = await _getUserById(userId);
+    if (!user) throw new Error("Usuário inválido.");
+    await apiFetch(`/equipmentports?id=eq.${portId}&status=neq.up`, { method: 'DELETE' });
+    await logAuditEvent({ user, action: 'PORT_DELETED', entityType: 'equipmentports', entityId: portId });
+    revalidatePath('/connections');
+}

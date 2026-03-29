@@ -1,0 +1,78 @@
+'use server';
+
+import { apiFetch } from "@/lib/db";
+import type { Building, Room, GridItem } from "@/types/datacenter";
+
+/**
+ * Busca todos os dados necessários para renderizar a planta baixa (Footprint).
+ * Agora utiliza chamadas HTTPS via PostgREST com endpoints em minúsculo.
+ */
+export async function getDatacenterData(): Promise<Building[]> {
+    try {
+        // Buscamos os dados fundamentais em paralelo para máxima performance
+        const [buildings, rooms, items, itemTypes] = await Promise.all([
+            apiFetch('/buildings?select=id,name&order=name.asc'),
+            apiFetch('/rooms?order=name.asc'),
+            apiFetch('/parentitems?status=not.in.(decommissioned,deleted)'),
+            apiFetch('/itemtypes?select=name,shape,iconname,defaultcolor')
+        ]);
+
+        // Criamos um mapa de tipos para enriquecer os itens com ícones e formas
+        const itemTypesMap = new Map((itemTypes || []).map((it: any) => [it.name, it]));
+
+        // Processamos as salas mapeando os nomes de coluna minúsculos do PostgreSQL
+        const allRooms = (rooms || []).map((r: any) => ({
+            id: r.id,
+            name: r.name,
+            buildingId: r.buildingid,
+            widthM: r.widthm || 20, 
+            depthM: r.depthm || 20, 
+            tileWidthCm: r.tilewidthcm || 60,
+            tileHeightCm: r.tileheightcm || 60,
+            xAxisNaming: r.xaxisnaming || 'alpha',
+            yAxisNaming: r.yaxisnaming || 'numeric',
+            items: []
+        }));
+
+        // Processamos os itens da planta aplicando o mapeamento de tipos
+        const allItems = (items || []).map((item: any) => {
+            const typeInfo = itemTypesMap.get(item.type) || {};
+            return {
+                ...item,
+                roomId: item.roomid,
+                widthM: item.widthm,
+                heightM: item.heightm,
+                radiusM: item.radiusm,
+                serialNumber: item.serialnumber,
+                isTagEligible: item.istageligible,
+                ownerEmail: item.owneremail,
+                dataSheetUrl: item.datasheeturl,
+                trellisId: item.trellisid,
+                tamanhoU: item.tamanhou,
+                potenciaW: item.potenciaw,
+                isTestData: !!item.istestdata,
+                // Dados vindos da tabela de tipos
+                shape: typeInfo.shape,
+                iconName: typeInfo.iconname,
+                itemTypeColor: typeInfo.defaultcolor
+            };
+        });
+
+        // Montamos a hierarquia: Prédios -> Salas -> Itens
+        const roomsById = new Map(allRooms.map((r: any) => [r.id, r]));
+        allItems.forEach((item: any) => {
+            if (item.roomId && roomsById.has(item.roomId)) {
+                roomsById.get(item.roomId)!.items.push(item);
+            }
+        });
+
+        return (buildings || []).map((b: any) => ({
+            ...b,
+            rooms: allRooms.filter((r: any) => r.buildingId === b.id)
+        }));
+
+    } catch (err: any) {
+        console.error('Falha ao buscar dados do datacenter via API:', err);
+        return [];
+    }
+}

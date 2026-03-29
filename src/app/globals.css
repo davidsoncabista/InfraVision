@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* 
+  Aqui é o coração da identidade visual. 
+  Cada linha de HSL é uma pincelada na alma da aplicação.
+  Alterado com carinho por davidson.dev.br.
+*/
+@layer base {
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 222.2 84% 4.9%; /* Escurecido para melhor contraste */
+    --card: 210 40% 98%;
+    --card-foreground: 222.2 84% 4.9%; /* Escurecido */
+    --popover: 210 40% 98%;
+    --popover-foreground: 222.2 84% 4.9%; /* Escurecido */
+    --primary: 195 100% 50%; /* Electric Blue */
+    --primary-foreground: 210 40% 9.8%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%; /* Escurecido */
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%; /* CORREÇÃO PRINCIPAL: Texto secundário muito mais escuro */
+    --accent: 96 100% 59.2%; /* Vibrant Blue-Green */
+    --accent-foreground: 222.2 47.4% 11.2%; /* Escurecido */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 85.0%; /* Borda mais visível */
+    --input: 214.3 31.8% 85.0%;  /* Input com borda mais visível */
+    --ring: 195 100% 50%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 240 5% 14%; /* Dark Gray */
+    --foreground: 210 40% 98%;
+    --card: 240 5% 16%;
+    --card-foreground: 210 40% 98%;
+    --popover: 240 6% 10%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 195 100% 50%; /* Electric Blue */
+    --primary-foreground: 240 5% 16%;
+    --secondary: 240 4% 20%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 240 4% 20%;
+    --muted-foreground: 240 4% 65%;
+    --accent: 96 100% 59.2%; /* Vibrant Blue-Green */
+    --accent-foreground: 240 6% 10%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 240 4% 25%;
+    --input: 240 4% 25%;
+    --ring: 195 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* NProgress custom styles */
+#nprogress {
+  pointer-events: none;
+}
+#nprogress .bar {
+  background: hsl(var(--primary));
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+}
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px hsl(var(--primary)), 0 0 5px hsl(var(--primary));
+  opacity: 1.0;
+  -webkit-transform: rotate(3deg) translate(0px, -4px);
+      -ms-transform: rotate(3deg) translate(0px, -4px);
+          transform: rotate(3deg) translate(0px, -4px);
+}
+#nprogress .spinner {
+  display: none;
+}

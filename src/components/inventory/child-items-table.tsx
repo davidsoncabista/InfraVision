@@ -1,0 +1,167 @@
+
+"use client";
+
+import { useState, useMemo, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { Search, Plus } from 'lucide-react';
+import type { GridItem } from '@/types/datacenter';
+import type { ItemStatus } from '@/lib/status-actions';
+import { AddChildItemDialog } from '@/components/inventory/add-child-item-dialog';
+import { ChildItemDetailDialog } from '@/components/inventory/child-item-detail-dialog'; // NOVO: Importa o novo modal
+import { getItemTypes, ItemType } from '@/lib/item-types-actions';
+import { getManufacturers, Manufacturer } from '@/lib/manufacturer-actions';
+
+
+interface ChildItemsTableProps {
+  items: GridItem[];
+  allItems: GridItem[];
+  statuses: ItemStatus[];
+}
+
+const statusColorClasses: Record<string, string> = {
+    active: "bg-green-500/20 text-green-400 border-green-500/30",
+    maintenance: "bg-orange-500/20 text-orange-400 border-orange-500/30",
+    draft: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+    pending_approval: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+};
+
+export function ChildItemsTable({ items, allItems, statuses }: ChildItemsTableProps) {
+    const router = useRouter();
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState('all');
+    const [selectedItem, setSelectedItem] = useState<GridItem | null>(null);
+    const [isAddChildOpen, setIsAddChildOpen] = useState(false);
+
+    const [itemTypes, setItemTypes] = useState<ItemType[]>([]);
+    const [manufacturers, setManufacturers] = useState<Manufacturer[]>([]);
+
+    const statusesById = useMemo(() => new Map(statuses.map(s => [s.id, s])), [statuses]);
+
+    useEffect(() => {
+        getItemTypes(false).then(setItemTypes);
+        getManufacturers().then(setManufacturers);
+    }, []);
+
+    const filteredItems = useMemo(() => {
+        return items.filter(item =>
+          (item.label.toLowerCase().includes(searchTerm.toLowerCase()) || 
+           (item.parentName || '').toLowerCase().includes(searchTerm.toLowerCase())) &&
+          (statusFilter === 'all' || item.status === statusFilter)
+        );
+    }, [items, searchTerm, statusFilter]);
+
+    const refreshData = () => {
+        router.refresh();
+    };
+
+  return (
+    <>
+        <div className="space-y-4">
+            <div className="flex items-center gap-4">
+                <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                        placeholder="Buscar por nome ou item pai..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 w-full"
+                    />
+                </div>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Filtrar por status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">Todos os Status</SelectItem>
+                        {statuses.map(status => (
+                          <SelectItem key={status.id} value={status.id}>{status.name}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+                <Button onClick={() => setIsAddChildOpen(true)}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Adicionar Aninhado
+                </Button>
+            </div>
+            <div className="border rounded-md">
+                <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Nome</TableHead>
+                        <TableHead>Item Pai</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Tipo</TableHead>
+                        <TableHead>Nº de Série</TableHead>
+                        <TableHead>Fabricante</TableHead>
+                        <TableHead>Modelo</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {filteredItems.length > 0 ? (
+                    filteredItems.map(item => (
+                        <TableRow key={item.id} className="cursor-pointer" onClick={() => setSelectedItem(item)}>
+                            <TableCell className="font-medium">{item.label}</TableCell>
+                            <TableCell>{item.parentName}</TableCell>
+                            <TableCell>
+                                <Badge variant="outline" className={cn("capitalize", statusColorClasses[statusesById.get(item.status)?.name.toLowerCase() || ''] || 'text-foreground')}>
+                                {statusesById.get(item.status)?.name || item.status}
+                                </Badge>
+                            </TableCell>
+                            <TableCell>{item.type}</TableCell>
+                            <TableCell>{item.serialNumber || '-'}</TableCell>
+                            <TableCell>{item.brand || '-'}</TableCell>
+                            <TableCell>{item.modelo || '-'}</TableCell>
+                        </TableRow>
+                    ))
+                    ) : (
+                    <TableRow>
+                        <TableCell colSpan={7} className="h-24 text-center">
+                        Nenhum equipamento encontrado.
+                        </TableCell>
+                    </TableRow>
+                    )}
+                </TableBody>
+                </Table>
+            </div>
+        </div>
+
+        {selectedItem && (
+             <ChildItemDetailDialog
+                item={selectedItem}
+                open={!!selectedItem}
+                onOpenChange={(open) => !open && setSelectedItem(null)}
+                onItemUpdate={refreshData}
+                onItemDelete={refreshData}
+                allItems={allItems}
+                statuses={statuses}
+            />
+        )}
+        <AddChildItemDialog
+            allItems={allItems}
+            itemTypes={itemTypes}
+            manufacturers={manufacturers}
+            open={isAddChildOpen}
+            onOpenChange={setIsAddChildOpen}
+        />
+    </>
+  );
+}
