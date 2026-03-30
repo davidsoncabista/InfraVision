@@ -16,7 +16,7 @@ export interface ExclusionZone {
 interface AddRoomParams {
   building_id: string;
   name: string;
-  width_m?: number;
+  depth_m?: number;
   width_m?: number;
   tile_width_cm?: number;
   tile_height_cm?: number;
@@ -43,7 +43,7 @@ export async function addRoom(params: AddRoomParams): Promise<void> {
           id: newId,
           name: params.name,
           building_id: params.building_id,
-          width_m: params.width_m || null,
+          depth_m: params.depth_m || null,
           width_m: params.width_m || null,
           tile_width_cm: params.tile_width_cm || 60,
           tile_height_cm: params.tile_height_cm || 60,

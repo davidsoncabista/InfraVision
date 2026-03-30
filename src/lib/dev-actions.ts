@@ -66,7 +66,7 @@ export async function populateRooms() {
             id: 'R_DEV_01A', 
             name: 'Sala de Teste 01', 
             building_id: 'B_DEV_01', 
-            width_m: 20, 
+            depth_m: 20, 
             width_m: 20, 
             is_test_data: true 
         })

@@ -204,7 +204,7 @@ export function RenameRoomDialog({ room, open, onOpenChange }: RenameRoomDialogP
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue />
-                            </Trigger>
+                            </SelectTrigger>
                           </FormControl>
                           <SelectContent>
                             <SelectItem value="alpha">Alfabético (A, B...)</SelectItem>
@@ -225,7 +225,7 @@ export function RenameRoomDialog({ room, open, onOpenChange }: RenameRoomDialogP
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue />
-                            </Trigger>
+                            </SelectTrigger>
                           </FormControl>
                           <SelectContent>
                             <SelectItem value="numeric">Numérico (1, 2...)</SelectItem>

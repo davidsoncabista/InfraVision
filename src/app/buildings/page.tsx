@@ -14,7 +14,7 @@ export interface Room {
   id: string;
   name: string;
   building_id: string;
-  width_m?: number;
+  depth_m?: number;
   width_m?: number;
   tile_width_cm?: number;
   tile_height_cm?: number;
@@ -30,7 +30,7 @@ export interface BuildingWithRooms {
 async function getBuildings(): Promise<BuildingWithRooms[]> {
     try {
         // No PostgREST usamos Resource Embedding para trazer salas dentro de prédios em uma só chamada
-        const url = '/buildings?select=id,name,address,rooms(id,name,building_id,width_m,width_m,tile_width_cm,tile_height_cm)&order=name.asc';
+        const url = '/buildings?select=id,name,address,rooms(id,name,building_id,depth_m,width_m,tile_width_cm,tile_height_cm)&order=name.asc';
         const data = await apiFetch(url);
         
         return (data || []).map((b: any) => ({
@@ -41,7 +41,7 @@ async function getBuildings(): Promise<BuildingWithRooms[]> {
                 id: r.id,
                 name: r.name,
                 building_id: r.building_id,
-                width_m: r.width_m,
+                depth_m: r.depth_m,
                 width_m: r.width_m,
                 tile_width_cm: r.tile_width_cm || 60,
                 tile_height_cm: r.tile_height_cm || 60,
