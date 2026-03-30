@@ -2,18 +2,9 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { getAuth, signOut } from 'firebase/auth';
-import { app } from '@/lib/firebase';
+import { signOut, useSession } from 'next-auth/react';
 import {
-  Server,
-  LogOut,
-  Building,
-  Settings,
-  Lock,
-  User as UserIcon,
-  Sun,
-  Moon,
-  Laptop,
+  Server, LogOut, Building, User as UserIcon, Sun, Moon, Laptop, Lock
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -28,11 +19,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useTheme } from 'next-themes';
 
 const NoAccessPage = () => {
-    const router = useRouter();
     const handleLogout = async () => {
-        const auth = getAuth(app);
-        await signOut(auth);
-        router.push('/login1');
+        await signOut({ callbackUrl: '/login' });
     };
 
     return (
@@ -43,19 +31,12 @@ const NoAccessPage = () => {
                        <Lock className="h-8 w-8" />
                     </div>
                     <CardTitle>Acesso Limitado</CardTitle>
-                    <CardDescription>
-                        Sua conta está ativa, mas você ainda não tem permissão para acessar nenhum prédio ou sala.
-                    </CardDescription>
+                    <CardDescription>Sua conta está ativa, mas você ainda não tem permissão para acessar nenhum prédio ou sala.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                        Por favor, entre em contato com um administrador do sistema para solicitar a liberação do seu acesso.
-                    </p>
-                </CardContent>
-                <CardContent>
-                     <Button onClick={handleLogout}>
-                        <LogOut className="mr-2 h-4 w-4" />
-                        Sair
+                    <p className="text-sm text-muted-foreground">Entre em contato com um administrador do sistema para solicitar acesso.</p>
+                     <Button className="mt-6" onClick={handleLogout}>
+                        <LogOut className="mr-2 h-4 w-4" />Sair
                     </Button>
                 </CardContent>
             </Card>
@@ -63,42 +44,33 @@ const NoAccessPage = () => {
     );
 };
 
-// Se você está lendo isso, provavelmente algo quebrou. Ou você é curioso. De qualquer forma, bem-vindo ao meu código. Ass: davidson.dev.br
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const { setTheme } = useTheme();
-  const auth = getAuth(app);
-  const user = auth.currentUser;
+  const { data: session } = useSession();
+  
   const { user: dbUser, realRole, viewAs, setViewAsRole, isDeveloper, hasPermission } = usePermissions();
   const { buildings, activeBuildingId, setActiveBuildingId, pendingApprovalsCount } = useBuilding();
   
   const showDeveloperMenu = useKonamiCode();
 
   const handleLogout = async () => {
-    await signOut(auth);
-    router.push('/login1');
+    await signOut({ callbackUrl: '/login' });
   };
 
   const hiddenMenuItems = dbUser?.preferences?.hiddenMenuItems || [];
   
   const getVisibleNavSections = () => {
     return NAV_SECTIONS.map(section => {
-      if (section.isDeveloper && !isDeveloper) {
-        return null;
-      }
-      if (section.permission && !hasPermission(section.permission)) {
-        return null;
-      }
+      if (section.isDeveloper && !isDeveloper) return null;
+      if (section.permission && !hasPermission(section.permission)) return null;
       
       const visibleItems = section.items.filter(item => 
         hasPermission(item.permission) && !hiddenMenuItems.includes(item.href)
       );
       
-      if (visibleItems.length === 0) {
-        return null;
-      }
-      
+      if (visibleItems.length === 0) return null;
       return { ...section, items: visibleItems };
     }).filter(Boolean);
   }
@@ -111,26 +83,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   const roleLabels: Record<UserRole, string> = {
-    developer: 'Desenvolvedor',
-    manager: 'Gerente',
-    project_manager: 'Gerente de Projeto',
-    supervisor_1: 'Supervisor 1',
-    supervisor_2: 'Supervisor 2',
-    technician_1: 'Técnico 1',
-    technician_2: 'Técnico 2',
-    guest: 'Convidado',
+    developer: 'Desenvolvedor', manager: 'Gerente', project_manager: 'Gerente de Projeto',
+    supervisor_1: 'Supervisor 1', supervisor_2: 'Supervisor 2', technician_1: 'Técnico 1',
+    technician_2: 'Técnico 2', guest: 'Convidado',
   };
   
   const accessibleBuildings = React.useMemo(() => {
     if (!dbUser || !buildings) return [];
-    
-    // Filtra o prédio 'Prédio Dev' se o usuário não for developer
-    const visibleBuildings = buildings.filter(b => {
-        if (b.name === 'Prédio Dev') {
-            return isDeveloper;
-        }
-        return true;
-    });
+    const visibleBuildings = buildings.filter(b => b.name === 'Prédio Dev' ? isDeveloper : true);
 
     if (isDeveloper || realRole === 'manager' || realRole === 'project_manager') {
         return visibleBuildings;
@@ -139,7 +99,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     if (dbUser.accessibleBuildingIds && dbUser.accessibleBuildingIds.length > 0) {
         return visibleBuildings.filter(b => dbUser.accessibleBuildingIds?.includes(b.id));
     }
-
     return [];
   }, [dbUser, isDeveloper, realRole, buildings]);
 
@@ -157,7 +116,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen w-full bg-muted/40">
-      {/* Sidebar Estática */}
       <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r bg-background sm:flex">
         <div className="flex h-16 items-center border-b px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold">
@@ -172,13 +130,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 <div key={section.title} className={index > 0 ? 'mt-4 pt-4 border-t' : 'mt-4'}>
                   <h3 className="px-4 mb-2 text-xs text-muted-foreground uppercase tracking-wider">{section.title}</h3>
                   {section.items.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary relative ${pathname.startsWith(item.href) ? 'bg-muted text-primary' : 'text-muted-foreground'}`}
-                    >
-                      <item.icon className="h-4 w-4" />
-                      {item.label}
+                    <Link key={item.href} href={item.href} className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary relative ${pathname.startsWith(item.href) ? 'bg-muted text-primary' : 'text-muted-foreground'}`}>
+                      <item.icon className="h-4 w-4" />{item.label}
                        {item.href === '/approvals' && pendingApprovalsCount > 0 && (
                           <span className="absolute right-3 top-1/2 -translate-y-1/2 flex h-2 w-2">
                               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
@@ -194,7 +147,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      {/* Conteúdo Principal */}
       <div className="flex flex-1 flex-col sm:ml-64">
         <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-6">
           <div className="flex-1" />
@@ -207,18 +159,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setTheme('light')}>
-                <Sun className="mr-2 h-4 w-4" />
-                <span>Claro</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme('dark')}>
-                <Moon className="mr-2 h-4 w-4" />
-                <span>Escuro</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme('system')}>
-                <Laptop className="mr-2 h-4 w-4" />
-                <span>Sistema</span>
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme('light')}><Sun className="mr-2 h-4 w-4" /><span>Claro</span></DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme('dark')}><Moon className="mr-2 h-4 w-4" /><span>Escuro</span></DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme('system')}><Laptop className="mr-2 h-4 w-4" /><span>Sistema</span></DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
            <DropdownMenu>
@@ -232,9 +175,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 <DropdownMenuLabel>Mudar de Prédio</DropdownMenuLabel>
                  <DropdownMenuRadioGroup value={activeBuildingId} onValueChange={setActiveBuildingId}>
                     {accessibleBuildings.map(building => (
-                        <DropdownMenuRadioItem key={building.id} value={building.id}>
-                            {building.name}
-                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem key={building.id} value={building.id}>{building.name}</DropdownMenuRadioItem>
                     ))}
                  </DropdownMenuRadioGroup>
               </DropdownMenuContent>
@@ -243,14 +184,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <DropdownMenuTrigger asChild>
                  <Button variant="secondary" className="relative h-10 w-10 rounded-full">
                    <Avatar className="h-9 w-9">
-                      <AvatarImage src={user?.photoURL ?? undefined} alt={user?.displayName ?? 'User'} />
-                      <AvatarFallback>{getInitials(user?.displayName)}</AvatarFallback>
+                      <AvatarImage src={dbUser?.photoURL ?? undefined} alt={dbUser?.displayName ?? 'User'} />
+                      <AvatarFallback>{getInitials(dbUser?.displayName)}</AvatarFallback>
                     </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end">
                 <DropdownMenuLabel>
-                    <p className="text-sm font-medium leading-none">{user?.displayName}</p>
+                    <p className="text-sm font-medium leading-none">{dbUser?.displayName}</p>
                     <p className="text-xs text-muted-foreground leading-none mt-1">
                       {roleLabels[viewAs]} {isDeveloper && realRole !== viewAs ? '(Visualizando)' : ''}
                     </p>
@@ -259,15 +200,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   <>
                   <DropdownMenuSeparator />
                     <DropdownMenuSub>
-                      <DropdownMenuSubTrigger>
-                        <span>Ver como</span>
-                      </DropdownMenuSubTrigger>
+                      <DropdownMenuSubTrigger><span>Ver como</span></DropdownMenuSubTrigger>
                       <DropdownMenuSubContent>
                          <DropdownMenuRadioGroup value={viewAs} onValueChange={(value) => setViewAsRole(value as UserRole)}>
                           {USER_ROLES.map(role => (
-                            <DropdownMenuRadioItem key={role} value={role}>
-                              {roleLabels[role]}
-                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem key={role} value={role}>{roleLabels[role]}</DropdownMenuRadioItem>
                           ))}
                          </DropdownMenuRadioGroup>
                       </DropdownMenuSubContent>
@@ -278,15 +215,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                  {USER_MENU_ITEMS.map(item => (
                    hasPermission(item.permission) && (
                     <DropdownMenuItem key={item.href} onSelect={() => router.push(item.href)}>
-                        <item.icon className="mr-2 h-4 w-4" />
-                        <span>{item.label}</span>
+                        <item.icon className="mr-2 h-4 w-4" /><span>{item.label}</span>
                     </DropdownMenuItem>
                    )
                  ))}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Sair</span>
+                  <LogOut className="mr-2 h-4 w-4" /><span>Sair</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

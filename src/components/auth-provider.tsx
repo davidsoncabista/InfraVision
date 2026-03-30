@@ -1,21 +1,20 @@
-
 "use client";
 
-import { ReactNode, useEffect, useState, useCallback, Suspense } from 'react';
-import { getAuth, onAuthStateChanged, User as AuthUser, signOut } from 'firebase/auth';
-import { app } from '@/lib/firebase';
+import { ReactNode, useEffect, useState } from 'react';
+import { useSession, SessionProvider } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PermissionsProvider } from '@/components/permissions-provider';
-import { updateUser, getUserByEmail, ensureDatabaseSchema } from '@/lib/user-actions';
+import { getUserByEmail } from '@/lib/user-actions';
 import type { User as DbUser } from '@/lib/user-service';
 import { BuildingProvider } from '@/components/building-provider';
 import { getBuildingsList } from '@/lib/building-actions';
 import { AppLayout } from '@/components/app-layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertTriangle, WifiOff } from 'lucide-react';
+import { WifiOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+// --- COMPONENTES DE INTERFACE MANTIDOS ---
 const FullPageLoader = () => (
     <div className="flex h-screen w-screen items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
@@ -40,7 +39,7 @@ const ConnectionErrorScreen = ({ error, onRetry }: { error: string, onRetry: () 
             </CardHeader>
             <CardContent className="space-y-4">
                 <p className="text-sm text-muted-foreground">
-                    Isso geralmente ocorre por uma regra de firewall bloqueando o acesso. Verifique as configurações de rede do seu servidor SQL.
+                    Verifique se o banco PostgreSQL está rodando corretamente no Docker.
                 </p>
                 <div className="rounded-md border bg-muted p-3 text-left text-sm">
                     <p className="font-semibold">Detalhes do Erro:</p>
@@ -48,120 +47,79 @@ const ConnectionErrorScreen = ({ error, onRetry }: { error: string, onRetry: () 
                         {error}
                     </pre>
                 </div>
-              <Button onClick={onRetry}>
-                Tentar Novamente
-              </Button>
+              <Button onClick={onRetry}>Tentar Novamente</Button>
             </CardContent>
         </Card>
     </div>
-)
+);
 
-
-type Building = {
-    id: string;
-    name: string;
-};
-
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
+// --- LÓGICA DE ESTADO (AGORA COM NEXTAUTH) ---
+function AuthStateWrapper({ children }: { children: ReactNode }) {
+  const { data: session, status } = useSession();
   const [dbUser, setDbUser] = useState<DbUser | null>(null);
-  const [buildings, setBuildings] = useState<Building[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [buildings, setBuildings] = useState<any[]>([]);
+  const [dbLoading, setDbLoading] = useState(false);
   const [connectionError, setConnectionError] = useState<string | null>(null);
-  const auth = getAuth(app);
   const router = useRouter();
   const pathname = usePathname();
 
-  const handleUserAuth = useCallback(async (user: AuthUser | null) => {
-    setLoading(true);
-    setConnectionError(null);
-    if (user && user.email) {
-      try {
-        await ensureDatabaseSchema();
-        
-        let userRecordInDb = await getUserByEmail(user.email);
-        
-        // Se o usuário não existe no DB, criamos um registro básico.
-        if (!userRecordInDb) {
-            console.log(`Usuário autenticado ${user.email} não encontrado no DB. Criando novo registro...`);
-            userRecordInDb = await updateUser({
-                id: user.uid,
-                email: user.email.toLowerCase(),
-                displayName: user.displayName || user.email,
-                photoURL: user.photoURL,
-                role: 'guest',
-                lastLoginAt: new Date().toISOString(),
-            });
-        } else {
-            // Se o usuário já existe, apenas atualizamos o lastLoginAt.
-            // Não sincronizamos mais displayName ou photoURL para não sobrescrever as edições do perfil.
-            userRecordInDb = await updateUser({
-                id: user.uid,
-                lastLoginAt: new Date().toISOString()
-            });
+  useEffect(() => {
+    async function fetchDbData() {
+      if (session?.user?.email) {
+        setDbLoading(true);
+        try {
+          // Busca os dados locais (sem Firebase)
+          const userRecord = await getUserByEmail(session.user.email);
+          const buildingsData = await getBuildingsList();
+          
+          if (userRecord) setDbUser(userRecord);
+          setBuildings(buildingsData || []);
+        } catch (error: any) {
+          console.error("Erro ao buscar dados do DB:", error);
+          setConnectionError(error.message);
+        } finally {
+          setDbLoading(false);
         }
-        
-        const buildingsData = await getBuildingsList();
-        
-        setAuthUser(user);
-        setDbUser(userRecordInDb);
-        setBuildings(buildingsData);
-
-      } catch (error: any) {
-         console.error("Erro de conexão durante a autenticação:", error);
-         setConnectionError(error.message || "Erro desconhecido ao conectar ao banco de dados.");
       }
-    } else {
-      setAuthUser(null);
+    }
+
+    if (status === 'authenticated') {
+      fetchDbData();
+    } else if (status === 'unauthenticated') {
       setDbUser(null);
       setBuildings([]);
     }
-    setLoading(false);
-  }, [auth, router]);
+  }, [session, status]);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, handleUserAuth);
-    return () => unsubscribe();
-  }, [auth, handleUserAuth]);
+  const isPublicPage = pathname === '/login' || pathname === '/login1' || pathname === '/logout';
 
-
-  useEffect(() => {
-    if (loading || connectionError) {
-      return; 
-    }
-
-    const isAuthPage = pathname === '/login1' || pathname === '/login';
-
-    if (!authUser && !isAuthPage) {
-      router.push('/login1');
-    } else if (authUser && dbUser && isAuthPage) {
-      router.push('/datacenter');
-    }
-  }, [authUser, dbUser, loading, connectionError, pathname, router]);
-  
   if (connectionError) {
-      return <ConnectionErrorScreen error={connectionError} onRetry={() => handleUserAuth(auth.currentUser)} />
+     return <ConnectionErrorScreen error={connectionError} onRetry={() => window.location.reload()} />
   }
 
-  if (loading) {
+  if (status === 'loading' || dbLoading) {
     return <FullPageLoader />;
   }
-  
-  const isPublicPage = pathname === '/login1' || pathname === '/login' || pathname === '/logout';
-  
-  if (!authUser && !isPublicPage) {
-     return <FullPageLoader />;
+
+  // Redireciona usuários não logados
+  if (status === 'unauthenticated' && !isPublicPage) {
+    router.push('/login');
+    return <FullPageLoader />;
   }
 
-  if(isPublicPage) {
+  // Redireciona usuários já logados que tentam acessar a tela de login
+  if (status === 'authenticated' && dbUser && isPublicPage && pathname !== '/logout') {
+    router.push('/datacenter');
+    return <FullPageLoader />;
+  }
+
+  // Libera páginas públicas (como Login e Logout)
+  if (isPublicPage) {
     return <>{children}</>;
   }
 
-  if (authUser && !dbUser) {
-    return <FullPageLoader />;
-  }
-
-  if (authUser && dbUser) {
+  // Envelopa a aplicação para usuários logados
+  if (status === 'authenticated' && dbUser) {
     return (
       <PermissionsProvider user={dbUser}>
         <BuildingProvider initialBuildings={buildings}>
@@ -172,4 +130,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return <FullPageLoader />;
+}
+
+// --- PROVIDER PRINCIPAL EXPORTADO ---
+export function AuthProvider({ children }: { children: ReactNode }) {
+  return (
+    <SessionProvider>
+      <AuthStateWrapper>{children}</AuthStateWrapper>
+    </SessionProvider>
+  );
 }
