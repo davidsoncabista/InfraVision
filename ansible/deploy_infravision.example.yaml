@@ -45,8 +45,13 @@
       prompt: "🗄️ 8. Digite a senha para o banco PostgreSQL (infravision)"
       private: yes
 
+    - name: admin_email
+      prompt: "📧 9. Digite o E-mail do administrador web"
+      default: "admin@dominio.com"
+      private: no
+
     - name: admin_password
-      prompt: "👤 9. Digite a senha inicial para o administrador web"
+      prompt: "👤 10. Digite a senha inicial para o administrador web"
       private: yes
 
   tasks:
@@ -123,7 +128,7 @@
           cd {{ app_dir }}
           git clone {{ repo_url }} . || (git fetch --all && git reset --hard origin/main)
 
-          # Auto-Seed do banco
+          # Auto-Seed do banco: E-mail variável e role developer garantida
           cat <<EOF > init.sql
           CREATE TABLE IF NOT EXISTS users (
             id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -133,7 +138,7 @@
             role VARCHAR(50) DEFAULT 'admin'
           );
           INSERT INTO users (email, password, displayname, role) 
-          VALUES ('davidson.php@gmail.com', '{{ admin_password }}', 'Davidson', 'developer')
+          VALUES ('{{ admin_email }}', '{{ admin_password }}', 'Admin', 'developer')
           ON CONFLICT (email) DO NOTHING;
           EOF
 
