@@ -19,14 +19,14 @@ interface InventoryData {
 }
 
 export default function InventoryPage() {
-  const { activebuilding_id } = useBuilding();
+  const { activebuildingid } = useBuilding();
   const [inventoryData, setInventoryData] = React.useState<InventoryData | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    if (activebuilding_id) {
+    if (activebuildingid) {
       setIsLoading(true);
-      getInventoryData(activebuilding_id)
+      getInventoryData(activebuildingid)
         .then(setInventoryData)
         .finally(() => setIsLoading(false));
     } else {
@@ -34,7 +34,7 @@ export default function InventoryPage() {
       setIsLoading(false);
       setInventoryData(null);
     }
-  }, [activebuilding_id]);
+  }, [activebuildingid]);
 
   return (
     <div className="flex flex-col gap-6">

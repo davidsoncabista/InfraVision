@@ -10,29 +10,29 @@ import { Loader2, ShieldQuestion } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function ApprovalsPage() {
-  const { activebuilding_id } = useBuilding();
+  const { activebuildingid } = useBuilding();
   const router = useRouter();
   const [pendingApprovals, setPendingApprovals] = React.useState<ApprovalRequest[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    if (!activebuilding_id) {
+    if (!activebuildingid) {
       setIsLoading(false);
       setPendingApprovals([]);
       return;
     }
 
     setIsLoading(true);
-    getPendingApprovals(activebuilding_id)
+    getPendingApprovals(activebuildingid)
       .then(setPendingApprovals)
       .finally(() => setIsLoading(false));
-  }, [activebuilding_id]);
+  }, [activebuildingid]);
 
   const handleSuccess = () => {
     // Re-fetch data after an approval is resolved
-    if (activebuilding_id) {
+    if (activebuildingid) {
       setIsLoading(true);
-      getPendingApprovals(activebuilding_id)
+      getPendingApprovals(activebuildingid)
         .then(setPendingApprovals)
         .finally(() => setIsLoading(false));
     }

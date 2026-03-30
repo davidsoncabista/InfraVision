@@ -81,7 +81,7 @@ export function DeParaClient() {
     const router = useRouter();
     const { toast } = useToast();
     const { user } = usePermissions();
-    const { activebuilding_id } = useBuilding();
+    const { activebuildingid } = useBuilding();
 
     const [isLoading, setIsLoading] = useState(true);
     const [connectableItems, setConnectableItems] = useState<ConnectableItem[]>([]);
@@ -104,7 +104,7 @@ export function DeParaClient() {
 
 
     const fetchData = useCallback(async () => {
-        if (!activebuilding_id) {
+        if (!activebuildingid) {
             setIsLoading(false);
             setConnectableItems([]);
             setConnections([]);
@@ -113,8 +113,8 @@ export function DeParaClient() {
         setIsLoading(true);
         try {
             const [itemsData, connectionsData, typesData] = await Promise.all([
-                getConnectablechild_items(activebuilding_id),
-                getAllConnections(activebuilding_id),
+                getConnectablechild_items(activebuildingid),
+                getAllConnections(activebuildingid),
                 getConnectionTypes(),
             ]);
             setConnectableItems(itemsData);
@@ -125,7 +125,7 @@ export function DeParaClient() {
         } finally {
             setIsLoading(false);
         }
-    }, [activebuilding_id, toast]);
+    }, [activebuildingid, toast]);
 
     useEffect(() => {
         fetchData();
@@ -267,7 +267,7 @@ export function DeParaClient() {
         return <div className="flex justify-center items-center h-64"><Loader2 className="h-12 w-12 animate-spin text-muted-foreground" /></div>;
     }
 
-    if (!activebuilding_id) {
+    if (!activebuildingid) {
         return (
             <div className="flex flex-col items-center justify-center h-64 border-2 border-dashed rounded-lg text-center">
                 <p className="font-semibold text-muted-foreground">Selecione um prédio</p>

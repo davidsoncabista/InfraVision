@@ -136,16 +136,16 @@ const AllocationLobby = ({ items, onDragStart }: { items: GridItem[], onDragStar
 export function DatacenterClient({ initialData }: { initialData: Building[] }) {
   const { toast } = useToast();
   const { user, hasPermission } = usePermissions();
-  const { activebuilding_id } = useBuilding();
+  const { activebuildingid } = useBuilding();
   
   const [data, setData] = React.useState(initialData);
   const [activeroom_id, setActiveroom_id] = React.useState<string | null>(null);
   
   const gridItems = React.useMemo(() => {
-    const building = data.find(b => b.id === activebuilding_id);
+    const building = data.find(b => b.id === activebuildingid);
     const room = building?.rooms.find(r => r.id === activeroom_id);
     return room?.items || [];
-  }, [data, activebuilding_id, activeroom_id]);
+  }, [data, activebuildingid, activeroom_id]);
   
   const [itemsWithIncidents, setItemsWithIncidents] = React.useState<string[]>([]);
   const [exclusionZones, setExclusionZones] = React.useState<ExclusionZone[]>([]);
@@ -174,8 +174,8 @@ export function DatacenterClient({ initialData }: { initialData: Building[] }) {
   }, []);
 
   const currentBuilding = React.useMemo(() => 
-    data.find(b => b.id === activebuilding_id),
-  [data, activebuilding_id]);
+    data.find(b => b.id === activebuildingid),
+  [data, activebuildingid]);
 
   const availableRooms = React.useMemo(() => currentBuilding?.rooms || [], [currentBuilding]);
 
@@ -214,8 +214,8 @@ export function DatacenterClient({ initialData }: { initialData: Building[] }) {
   }, [availableRooms, activeroom_id]);
 
   React.useEffect(() => {
-    if (activebuilding_id) {
-      getParentItemIdsWithActiveIncidents(activebuilding_id)
+    if (activebuildingid) {
+      getParentItemIdsWithActiveIncidents(activebuildingid)
         .then(setItemsWithIncidents)
         .catch(err => console.error("Failed to fetch incident data:", err));
     } else {
@@ -230,7 +230,7 @@ export function DatacenterClient({ initialData }: { initialData: Building[] }) {
         setExclusionZones([]);
     }
 
-  }, [activebuilding_id, activeroom_id, gridItems]);
+  }, [activebuildingid, activeroom_id, gridItems]);
 
 
   const GRID_COLS = Math.floor((roomDimensions.width_m * 100) / tileDimensions.widthCm);
@@ -446,11 +446,11 @@ export function DatacenterClient({ initialData }: { initialData: Building[] }) {
       return item;
     });
 
-    const activeBuilding = data.find(b => b.id === activebuilding_id);
+    const activeBuilding = data.find(b => b.id === activebuildingid);
     if (activeBuilding) {
         const updatedRooms = activeBuilding.rooms.map(r => r.id === activeroom_id ? { ...r, items: updatedItems } : r);
         const updatedBuilding = { ...activeBuilding, rooms: updatedRooms };
-        setData(d => d.map(b => b.id === activebuilding_id ? updatedBuilding : b));
+        setData(d => d.map(b => b.id === activebuildingid ? updatedBuilding : b));
     }
   };
 

@@ -51,7 +51,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
   
   const { user: dbUser, realRole, viewAs, setViewAsRole, isDeveloper, hasPermission } = usePermissions();
-  const { buildings, activebuilding_id, setActivebuilding_id, pendingApprovalsCount } = useBuilding();
+  const { buildings, activebuildingid, setactivebuildingid, pendingApprovalsCount } = useBuilding();
   
   const showDeveloperMenu = useKonamiCode();
 
@@ -103,12 +103,12 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   }, [dbUser, isDeveloper, realRole, buildings]);
 
   React.useEffect(() => {
-      if (accessiblebuildings.length > 0 && !accessiblebuildings.some(b => b.id === activebuilding_id)) {
-          setActivebuilding_id(accessiblebuildings[0].id);
-      } else if (accessiblebuildings.length === 0 && activebuilding_id) {
-          setActivebuilding_id('');
+      if (accessiblebuildings.length > 0 && !accessiblebuildings.some(b => b.id === activebuildingid)) {
+          setactivebuildingid(accessiblebuildings[0].id);
+      } else if (accessiblebuildings.length === 0 && activebuildingid) {
+          setactivebuildingid('');
       }
-  }, [accessiblebuildings, activebuilding_id, setActivebuilding_id]);
+  }, [accessiblebuildings, activebuildingid, setactivebuildingid]);
 
   if (dbUser && accessiblebuildings.length === 0 && !isDeveloper) {
     return <NoAccessPage />;
@@ -168,12 +168,12 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <DropdownMenuTrigger asChild>
                 <Button variant="secondary" disabled={accessiblebuildings.length === 0}>
                     <Building className="mr-2 h-4 w-4" />
-                    <span>{accessiblebuildings.find(b => b.id === activebuilding_id)?.name || 'Nenhum Prédio Acessível'}</span>
+                    <span>{accessiblebuildings.find(b => b.id === activebuildingid)?.name || 'Nenhum Prédio Acessível'}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Mudar de Prédio</DropdownMenuLabel>
-                 <DropdownMenuRadioGroup value={activebuilding_id} onValueChange={setActivebuilding_id}>
+                 <DropdownMenuRadioGroup value={activebuildingid} onValueChange={setactivebuildingid}>
                     {accessiblebuildings.map(building => (
                         <DropdownMenuRadioItem key={building.id} value={building.id}>{building.name}</DropdownMenuRadioItem>
                     ))}
