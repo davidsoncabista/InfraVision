@@ -1,68 +1,65 @@
-# InfraVision - Sistema de Gerenciamento de Infraestrutura de Data Center
+# 🌐 InfraVision - Data Center Infrastructure Management
 
-## 1. Descrição do Projeto
-
-**InfraVision** é uma aplicação web moderna e robusta (DCIM - Data Center Infrastructure Management) projetada para oferecer visualização, gerenciamento e automação detalhados da infraestrutura de TI em ambientes de missão crítica.
-
-O sistema permite que operadores, técnicos e gerentes visualizem a disposição física dos equipamentos através de uma planta baixa interativa, gerenciem o inventário de ativos (incluindo uma visualização gráfica de racks), controlem permissões de acesso baseadas em cargos e utilizem uma **Central de Incidentes** proativa para garantir a integridade dos dados. Futuramente, o sistema incorporará ferramentas de IA para otimizar e automatizar a coleta de dados em campo.
-
-Nossa filosofia de desenvolvimento prioriza a **estabilidade e a confiabilidade**. Acreditamos que um aplicativo funcional e estável é a característica mais importante, e a correção de bugs sempre terá prioridade sobre a introdução de novas funcionalidades.
-
-## 2. Documentação do Projeto
-
-Para um entendimento completo da arquitetura, decisões de design e progresso do desenvolvimento, consulte os seguintes documentos:
-
-- **[ARCHITECTURE.md](ARCHITECTURE.md):** Detalha a visão do projeto, o tech stack e o plano de desenvolvimento faseado.
-- **[DAILY.md](DAILY.md):** Registra as discussões, metas e impedimentos das nossas reuniões diárias.
-- **[CHANGELOG.md](CHANGELOG.md):** Mantém um histórico de todas as mudanças notáveis implementadas no projeto.
-- **[DEPLOYMENT.md](./src/DEPLOYMENT.md):** Fornece um guia passo a passo para implantar a aplicação em um ambiente de produção.
-
-## 3. Stack de Tecnologia
-
-A aplicação é construída utilizando um conjunto de tecnologias modernas, seguras e escaláveis:
-
-- **Framework Principal:** [Next.js](https://nextjs.org/) (com App Router)
-- **Linguagem:** [TypeScript](https://www.typescriptlang.org/)
-- **Biblioteca de UI:** [React](https://react.dev/)
-- **Estilização:** [Tailwind CSS](https://tailwindcss.com/)
-- **Componentes:** [ShadCN/UI](https://ui.shadcn.com/)
-- **Banco de Dados:** [Azure SQL](https://azure.microsoft.com/en-us/products/azure-sql/database/)
-- **Autenticação:** [Firebase Authentication](https://firebase.google.com/docs/auth) (com E-mail/Senha)
-- **Armazenamento de Arquivos:** [Azure Blob Storage](https://azure.microsoft.com/en-us/products/storage/blobs)
-- **Inteligência Artificial (Futuro):** [Azure AI Services](https://azure.microsoft.com/en-us/products/ai-services)
-
-## 4. Instalação e Configuração
-
-Para executar este projeto localmente, siga estes passos:
-
-1.  **Clone o repositório.**
-2.  **Instale as dependências:**
-    ```bash
-    npm install
-    ```
-3.  **Configure as Variáveis de Ambiente:**
-    -   Copie o arquivo `.env.example` para um novo arquivo chamado `.env`.
-    -   Abra o arquivo `.env` e preencha as variáveis com suas credenciais do Firebase e do Azure SQL.
-4.  **Execute o servidor de desenvolvimento:**
-    ```bash
-    npm run dev
-    ```
-
-## 5. Desenvolvedor Principal
-
-- **Nome:** Davidson Santos Conceição
-- **Cargo (TIM):** Critical Mission Environment Operations Resident
-- **Empresa Contratante:** Fundamentos Sistemas
-- **Contatos:**
-  - **E-mail Fundamentos:** `davidson.conceicao@fundamentos.com.br`
-  - **E-mail TIM:** `dconceicao_fundamentos@timbrasil.com`
-  - **E-mail Pessoal:** `davidson.php@gmail.com`
-  - **Telefones:**
-    - `+55 12 99732-4548`
-    - `+55 91 98426-0688`
-    - `+55 73 99119-9676`
+**InfraVision** é uma aplicação web moderna (DCIM) projetada para visualização, gerenciamento e automação detalhados de infraestrutura de TI em ambientes de missão crítica.
 
 ---
-*Este projeto está sendo desenvolvido no Firebase Studio.*
----
-*Atualização 31/08/2025 20:03 por Davidson Santos Conceição davidson.dev.br*
+
+## 🚀 Sobre o Projeto
+O sistema permite que operadores e gerentes visualizem a disposição física através de uma **planta baixa interativa**, gerenciem inventário com **visão gráfica de racks** e controlem acessos proativamente. 
+
+> **Filosofia:** Priorizamos a estabilidade e a independência. Um sistema funcional, robusto e **100% self-hosted** é mais importante que novas funcionalidades dependentes de nuvens de terceiros.
+
+## 📚 Documentação Detalhada
+Consulte os documentos técnicos para entender a arquitetura:
+- 🏗️ [**ARCHITECTURE.md**](ARCHITECTURE.md) - Visão geral e Tech Stack.
+- 📅 [**DAILY.md**](DAILY.md) - Diário de bordo e metas.
+- 📋 [**CHANGELOG.md**](CHANGELOG.md) - Histórico de atualizações.
+
+## 🛠️ Stack Tecnológica (Self-Hosted)
+- **Frontend:** [Next.js 15](https://nextjs.org/) (App Router) + [TypeScript](https://www.typescriptlang.org/)
+- **UI & Style:** [Tailwind CSS](https://tailwindcss.com/) + [ShadCN/UI](https://ui.shadcn.com/)
+- **Banco de Dados:** [PostgreSQL](https://www.postgresql.org/) (Container Isolado)
+- **API REST:** [PostgREST](https://postgrest.org/) (Backend Serverless)
+- **Autenticação:** [NextAuth.js](https://next-auth.js.org/) (Credenciais Locais)
+- **Infraestrutura (IaC):** Ansible, Docker Compose e Proxmox LXC.
+
+## ⚙️ Instalação e Setup (Desenvolvimento Local)
+```bash
+# 1. Instale as dependências
+npm install
+
+# 2. Configure o ambiente
+cp .env.example .env # Preencha com as credenciais locais do BD e NextAuth
+
+# 3. Rodar em desenvolvimento
+npm run dev
+🐳 Deploy Automatizado (Produção)
+O ambiente de produção é provisionado inteiramente via Ansible. Com um único comando, o servidor LXC é criado no Proxmox, a rede é configurada e a stack Docker (DB + API + Web) é levantada de forma segura.
+
+```
+Para atualizar o código da aplicação já em produção, basta acessar o servidor via console/SSH e rodar o script raiz:
+
+```bash
+./deploy.sh
+```
+
+👨‍💻 Desenvolvedor Principal
+Davidson Santos Conceição
+Critical Mission Environment Operations Resident
+🏢 Empresa: Fundamentos Sistemas (Alocado na TIM)
+
+📧 E-mails:
+
+davidson.conceicao@fundamentos.com.br
+
+dconceicao_fundamentos@timbrasil.com
+
+davidson.php@gmail.com
+
+📞 Contatos: +55 (12) 99732-4548 / (91) 98426-0688 / (73) 99119-9676
+
+Atualizado em Março/2026 por davidson.dev.br
+
+
+### O que fazer em seguida:
+Salve o arquivo `README.md` no VS Code. Quando a instalação do `next-auth` terminar e você limpar os imports do Firebase como conversamos antes, você pode enviar tudo de uma vez para o GitHub com os seguintes comandos no seu terminal:
