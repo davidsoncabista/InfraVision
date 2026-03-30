@@ -1,0 +1,133 @@
+---
+- name: Deploy InfraVision Stack (Qualquer Servidor Ubuntu/Debian)
+  # Ao contrário do Proxmox que corre em 'localhost', aqui corremos nos hosts passados no comando
+  hosts: all
+  become: yes
+  vars:
+    app_dir: "/opt/infravision"
+    repo_url: "https://github.com/davidsoncabista/InfraVision.git"
+
+  vars_prompt:
+    - name: server_ip
+      prompt: "🌐 1. Qual o IP ou Domínio que este servidor vai usar na rede? (Ex: 192.168.1.100)"
+      private: no
+
+    - name: db_password
+      prompt: "🗄️ 2. Digite a senha para o banco PostgreSQL (infravision)"
+      private: yes
+
+    - name: admin_email
+      prompt: "📧 3. Digite o E-mail do administrador web"
+      default: "admin@dominio.com"
+      private: no
+
+    - name: admin_password
+      prompt: "👤 4. Digite a senha inicial para o administrador web"
+      private: yes
+
+  tasks:
+    - name: Gerar NEXTAUTH_SECRET automaticamente
+      shell: openssl rand -hex 32
+      register: secret_output
+
+    - name: Salvar Secret na memória
+      set_fact:
+        nextauth_secret: "{{ secret_output.stdout }}"
+
+    - name: Instalar dependências básicas do sistema
+      apt:
+        name:
+          - curl
+          - git
+          - gnupg
+          - lsb-release
+        state: present
+        update_cache: yes
+
+    - name: Adicionar chave GPG oficial do Docker
+      shell: |
+        mkdir -p /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg --yes
+      args:
+        creates: /etc/apt/keyrings/docker.gpg
+
+    - name: Adicionar repositório do Docker
+      shell: |
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
+
+    - name: Instalar Docker e Docker Compose
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+        state: present
+        update_cache: yes
+
+    - name: Preparar diretório da aplicação
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Clonar repositório do InfraVision
+      git:
+        repo: "{{ repo_url }}"
+        dest: "{{ app_dir }}"
+        force: yes
+        version: main
+
+    - name: Gerar script de Auto-Seed (init.sql)
+      copy:
+        dest: "{{ app_dir }}/init.sql"
+        content: |
+          CREATE TABLE IF NOT EXISTS users (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            email VARCHAR(255) UNIQUE NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            displayname VARCHAR(255),
+            role VARCHAR(50) DEFAULT 'admin'
+          );
+          INSERT INTO users (email, password, displayname, role) 
+          VALUES ('{{ admin_email }}', '{{ admin_password }}', 'Admin', 'developer')
+          ON CONFLICT (email) DO NOTHING;
+
+    - name: Gerar ficheiro .env Dinâmico
+      copy:
+        dest: "{{ app_dir }}/.env"
+        content: |
+          POSTGRES_USER=infravision
+          POSTGRES_PASSWORD={{ db_password }}
+          POSTGRES_DB=infravisiondb
+          PGRST_DB_URI=postgres://infravision:{{ db_password }}@db:5432/infravisiondb
+          PGRST_DB_SCHEMA=public
+          PGRST_DB_ANON_ROLE=infravision
+          NEXT_PUBLIC_API_URL=http://{{ server_ip }}:3001
+          NEXTAUTH_URL=http://{{ server_ip }}:3000
+          NEXTAUTH_SECRET={{ nextauth_secret }}
+
+    - name: Compilar e iniciar os contentores Docker
+      shell: "docker compose up -d --build"
+      args:
+        chdir: "{{ app_dir }}"
+
+    - name: Criar atalho de atualização (deploy.sh)
+      copy:
+        dest: "/root/deploy.sh"
+        mode: '0755'
+        content: |
+          #!/bin/bash
+          cd {{ app_dir }} || exit 1
+          echo "Baixando atualizações..."
+          git fetch --all && git reset --hard origin/main && git pull origin main
+          echo "Subindo containers..."
+          docker compose up -d --build web
+          docker image prune -f
+          echo "Concluído!"
+
+    - name: Resultado Final
+      debug:
+        msg: |
+          ✅ Instalação do InfraVision concluída com SUCESSO! 🚀
+          🌐 Aceda ao sistema em: http://{{ server_ip }}:3000
