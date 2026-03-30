@@ -134,11 +134,11 @@
           cat <<EOF >> init.sql
           
           -- Injetando Usuários Dinâmicos
-          INSERT INTO users (email, password, displayname, role) 
+          INSERT INTO users (email, password, display_name, role) 
           VALUES ('{{ admin_email }}', '{{ admin_password }}', 'Admin', 'developer')
           ON CONFLICT (email) DO NOTHING;
 
-          INSERT INTO users (email, password, displayname, role) 
+          INSERT INTO users (email, password, display_name, role) 
           VALUES ('demo@davidson.dev.br', 'demo0326', 'Gerente de TI (Demo)', 'manager')
           ON CONFLICT (email) DO NOTHING;
 

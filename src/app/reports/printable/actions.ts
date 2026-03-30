@@ -41,9 +41,9 @@ interface ReportConnection {
 
 interface ReportUser {
     id: string;
-    displayName: string;
+    display_name: string;
     role: string;
-    signatureUrl: string | null;
+    signature_url: string | null;
 }
 
 export interface PrintableReportData {
@@ -63,11 +63,11 @@ export async function getPrintableReportData(): Promise<PrintableReportData> {
             connectionsResult, usersResult, statusesResult
         ] = await Promise.all([
             apiFetch('/buildings?select=id,name&order=name.asc'),
-            apiFetch('/rooms?select=id,name,building_id,xaxisnaming,yaxisnaming&order=name.asc'),
+            apiFetch('/rooms?select=id,name,building_id,x_axis_naming,y_axis_naming&order=name.asc'),
             apiFetch('/parent_items?status=not.in.(decommissioned,deleted)'),
             apiFetch('/child_items?status=not.in.(decommissioned,deleted)'),
             apiFetch('/connections?select=*,portA:portA_id(label,child_items(label,parent_items(label))),portB:portB_id(label,child_items(label,parent_items(label))),connectiontypes(name)'),
-            apiFetch('/users?signatureurl=not.is.null&select=id,displayname,role,signatureurl&order=displayname.asc'),
+            apiFetch('/users?signature_url=not.is.null&select=id,display_name,role,signature_url&order=display_name.asc'),
             apiFetch('/itemstatuses?select=id,name')
         ]);
 
@@ -104,7 +104,7 @@ export async function getPrintableReportData(): Promise<PrintableReportData> {
             if (!acc[building_id]) acc[building_id] = [];
             const itemsInRoom = (parent_itemsByRoom[room.id] || []).map((pItem: any) => ({
                  ...pItem,
-                 gridPosition: getGridLabel(pItem.x, pItem.y, room.xaxisnaming, room.yaxisnaming),
+                 gridPosition: getGridLabel(pItem.x, pItem.y, room.x_axis_naming, room.y_axis_naming),
             }));
 
             acc[building_id].push({ id: room.id, name: room.name, items: itemsInRoom });
@@ -126,9 +126,9 @@ export async function getPrintableReportData(): Promise<PrintableReportData> {
         // Mapeamos usuários
         const mappedUsers = (usersResult || []).map((u: any) => ({
             id: u.id,
-            displayName: u.displayname,
+            display_name: u.display_name,
             role: u.role,
-            signatureUrl: u.signatureurl
+            signature_url: u.signature_url
         }));
 
         const buildings = (buildingsResult || []).map((building: any) => ({

@@ -22,7 +22,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 const profileSchema = z.object({
-    displayName: z.string().min(2, "O nome deve ter pelo menos 2 caracteres."),
+    display_name: z.string().min(2, "O nome deve ter pelo menos 2 caracteres."),
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
@@ -100,22 +100,22 @@ export default function ProfilePage() {
 
     const profileForm = useForm<ProfileFormData>({
         resolver: zodResolver(profileSchema),
-        defaultValues: { displayName: user?.displayName || "" },
+        defaultValues: { display_name: user?.display_name || "" },
     });
     
     React.useEffect(() => {
         if(initialUser) {
             setUser(initialUser);
-            profileForm.reset({ displayName: initialUser.displayName || "" });
+            profileForm.reset({ display_name: initialUser.display_name || "" });
         }
     }, [initialUser, profileForm]);
 
     const handleProfileSubmit = async (data: ProfileFormData) => {
         if (!user) return;
         try {
-            await updateUser({ id: user.id, displayName: data.displayName });
+            await updateUser({ id: user.id, display_name: data.display_name });
             toast({ title: "Sucesso!", description: "Seu nome foi atualizado." });
-            setUser(prev => prev ? { ...prev, displayName: data.displayName } : null);
+            setUser(prev => prev ? { ...prev, display_name: data.display_name } : null);
             await updateSession(); // Força a sessão local a recarregar
             router.refresh();
         } catch (error: any) {
@@ -133,7 +133,7 @@ export default function ProfilePage() {
             const blobName = `${type}-${user.id}.jpg`;
             const url = await uploadImage(compressedDataURI, blobName);
 
-            const updateData = type === 'photo' ? { photoURL: url } : { signatureUrl: url };
+            const updateData = type === 'photo' ? { photo_url: url } : { signature_url: url };
             
             await updateUser({ id: user.id, ...updateData });
 
@@ -166,8 +166,8 @@ export default function ProfilePage() {
                         <CardHeader className="items-center">
                             <div className="relative group">
                                 <Avatar className="h-32 w-32 border-4 border-background ring-2 ring-primary">
-                                    <AvatarImage src={user.photoURL ?? undefined} alt={user.displayName ?? 'User'} />
-                                    <AvatarFallback className="text-4xl">{getInitials(user.displayName)}</AvatarFallback>
+                                    <AvatarImage src={user.photo_url ?? undefined} alt={user.display_name ?? 'User'} />
+                                    <AvatarFallback className="text-4xl">{getInitials(user.display_name)}</AvatarFallback>
                                 </Avatar>
                                 <Button size="icon" variant="outline" className="absolute bottom-2 right-2 rounded-full h-9 w-9 group-hover:bg-primary transition-all" onClick={() => photoInputRef.current?.click()} disabled={!!isUploading}>
                                     {isUploading === 'photo' ? <Loader2 className="h-5 w-5 animate-spin"/> : <ImageIcon className="h-5 w-5"/>}
@@ -177,7 +177,7 @@ export default function ProfilePage() {
                         </CardHeader>
                         <CardContent className="text-center">
                              <div className="flex items-center justify-center gap-2">
-                                <h2 className="text-2xl font-semibold font-headline">{user.displayName}</h2>
+                                <h2 className="text-2xl font-semibold font-headline">{user.display_name}</h2>
                                 <Badge variant="outline" className={cn("capitalize", roleStyles[user.role])}>
                                     {roleLabels[user.role]}
                                 </Badge>
@@ -193,15 +193,15 @@ export default function ProfilePage() {
                         </CardHeader>
                         <CardContent className="flex flex-col items-center gap-4">
                             <div className="w-full h-32 border-2 border-dashed rounded-md flex items-center justify-center bg-muted/50 p-2">
-                               {user.signatureUrl ? (
-                                    <img src={user.signatureUrl} alt="Assinatura" className="max-h-full max-w-full object-contain" />
+                               {user.signature_url ? (
+                                    <img src={user.signature_url} alt="Assinatura" className="max-h-full max-w-full object-contain" />
                                ) : (
                                     <span className="text-sm text-muted-foreground">Nenhuma assinatura</span>
                                )}
                             </div>
                              <Button variant="outline" onClick={() => signatureInputRef.current?.click()} disabled={!!isUploading}>
                                 {isUploading === 'signature' ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Edit3 className="mr-2 h-4 w-4"/>}
-                                {user.signatureUrl ? 'Alterar Assinatura' : 'Carregar Assinatura'}
+                                {user.signature_url ? 'Alterar Assinatura' : 'Carregar Assinatura'}
                             </Button>
                             <input type="file" ref={signatureInputRef} className="hidden" accept="image/*" onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], 'signature')} />
                         </CardContent>
@@ -219,7 +219,7 @@ export default function ProfilePage() {
                                 <CardContent>
                                      <FormField
                                         control={profileForm.control}
-                                        name="displayName"
+                                        name="display_name"
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Nome Completo</FormLabel>

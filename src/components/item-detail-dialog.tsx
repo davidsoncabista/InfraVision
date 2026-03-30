@@ -211,7 +211,7 @@ const GenericItemView = ({ item, hasPermission, onItemChange }: { item: Partial<
       setIsUploading(true);
       try {
           const url = await uploadImage(dataURI, blobName);
-          onItemChange('imageUrl', url);
+          onItemChange('image_url', url);
           toast({ title: 'Sucesso!', description: 'A imagem foi carregada.' });
       } catch (error) {
           const msg = error instanceof Error ? error.message : "Erro desconhecido.";
@@ -223,7 +223,7 @@ const GenericItemView = ({ item, hasPermission, onItemChange }: { item: Partial<
   };
 
   const handleRemoveImage = () => {
-    onItemChange('imageUrl', null);
+    onItemChange('image_url', null);
   }
   
   const openCamera = async () => {
@@ -294,9 +294,9 @@ const GenericItemView = ({ item, hasPermission, onItemChange }: { item: Partial<
         <div className="relative p-2 border rounded-md bg-muted/30 min-h-[128px] w-full flex justify-center items-center mb-4 group/image">
           {isUploading ? (
               <Loader2 className="h-8 w-8 animate-spin" />
-          ) : item.imageUrl ? (
+          ) : item.image_url ? (
             <>
-              <img src={item.imageUrl} alt="Preview" className="max-h-48 object-contain rounded-md" data-ai-hint="server rack"/>
+              <img src={item.image_url} alt="Preview" className="max-h-48 object-contain rounded-md" data-ai-hint="server rack"/>
               <Button
                   variant="destructive"
                   size="icon"
@@ -316,7 +316,7 @@ const GenericItemView = ({ item, hasPermission, onItemChange }: { item: Partial<
           <div className="flex gap-2 justify-center">
             <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()} disabled={isUploading}>
               <FileImage className="mr-2 h-4 w-4" />
-              {item.imageUrl ? "Alterar Imagem" : "Escolher Arquivo"}
+              {item.image_url ? "Alterar Imagem" : "Escolher Arquivo"}
             </Button>
             <Input type="file" ref={fileInputRef} className="hidden" accept="image/jpeg, image/png, image/webp" onChange={handleFileChange} />
             <Button type="button" variant="outline" onClick={openCamera} disabled={isUploading}>
@@ -440,7 +440,7 @@ export const ItemDetailDialog = ({
                         building_id: building.id,
                         items: [],
                         width_m: 20, width_m: 20, tile_width_cm: 60, tile_height_cm: 60,
-                        xAxisNaming: 'alpha', yAxisNaming: 'numeric'
+                        x_axis_naming: 'alpha', y_axis_naming: 'numeric'
                     });
                 }
             }

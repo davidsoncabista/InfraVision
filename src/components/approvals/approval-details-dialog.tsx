@@ -44,7 +44,7 @@ export function ApprovalDetailsDialog({ isOpen, onOpenChange, approval }: Approv
             <div className="space-y-2 border-t pt-4">
                 <div className="flex items-center gap-2">
                     <User className="h-4 w-4 text-muted-foreground" />
-                    <span><span className="font-semibold">Solicitado por:</span> {approval.requestedByUserDisplayName}</span>
+                    <span><span className="font-semibold">Solicitado por:</span> {approval.requestedByUserdisplay_name}</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4 text-muted-foreground" />
@@ -58,7 +58,7 @@ export function ApprovalDetailsDialog({ isOpen, onOpenChange, approval }: Approv
                 </div>
                  <div className="flex items-center gap-2">
                     <User className="h-4 w-4 text-muted-foreground" />
-                    <span><span className="font-semibold">Resolvido por:</span> {approval.resolvedByUserDisplayName || 'N/A'}</span>
+                    <span><span className="font-semibold">Resolvido por:</span> {approval.resolvedByUserdisplay_name || 'N/A'}</span>
                 </div>
                  <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4 text-muted-foreground" />

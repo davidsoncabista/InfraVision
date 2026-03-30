@@ -26,6 +26,6 @@ const PopoverContent = React.forwardRef<
     />
   </PopoverPrimitive.Portal>
 ))
-PopoverContent.displayName = PopoverPrimitive.Content.displayName
+PopoverContent.display_name = PopoverPrimitive.Content.display_name
 
 export { Popover, PopoverTrigger, PopoverContent }

@@ -184,14 +184,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <DropdownMenuTrigger asChild>
                  <Button variant="secondary" className="relative h-10 w-10 rounded-full">
                    <Avatar className="h-9 w-9">
-                      <AvatarImage src={dbUser?.photoURL ?? undefined} alt={dbUser?.displayName ?? 'User'} />
-                      <AvatarFallback>{getInitials(dbUser?.displayName)}</AvatarFallback>
+                      <AvatarImage src={dbUser?.photo_url ?? undefined} alt={dbUser?.display_name ?? 'User'} />
+                      <AvatarFallback>{getInitials(dbUser?.display_name)}</AvatarFallback>
                     </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end">
                 <DropdownMenuLabel>
-                    <p className="text-sm font-medium leading-none">{dbUser?.displayName}</p>
+                    <p className="text-sm font-medium leading-none">{dbUser?.display_name}</p>
                     <p className="text-xs text-muted-foreground leading-none mt-1">
                       {roleLabels[viewAs]} {isDeveloper && realRole !== viewAs ? '(Visualizando)' : ''}
                     </p>

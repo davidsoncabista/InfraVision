@@ -84,11 +84,11 @@
         cat <<EOF >> {{ app_dir }}/init.sql
 
         -- Injetando Usuários Dinâmicos
-        INSERT INTO users (email, password, displayname, role) 
+        INSERT INTO users (email, password, display_name, role) 
         VALUES ('{{ admin_email }}', '{{ admin_password }}', 'Admin', 'developer')
         ON CONFLICT (email) DO NOTHING;
 
-        INSERT INTO users (email, password, displayname, role) 
+        INSERT INTO users (email, password, display_name, role) 
         VALUES ('demo@davidson.dev.br', 'demo0326', 'Gerente de TI (Demo)', 'manager')
         ON CONFLICT (email) DO NOTHING;
 
@@ -101,7 +101,7 @@
         VALUES ('room_demo_01', 'Sala Cofre 01', 'bldg_demo_01', 10, 10, 60, 60)
         ON CONFLICT (id) DO NOTHING;
         EOF
-        
+
     - name: Gerar ficheiro .env Dinâmico
       copy:
         dest: "{{ app_dir }}/.env"

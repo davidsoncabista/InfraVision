@@ -44,8 +44,8 @@ const formSchema = z.object({
   comprimento: z.coerce.number().optional(),
   tile_width_cm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
   tile_height_cm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
-  xAxisNaming: z.enum(['alpha', 'numeric']),
-  yAxisNaming: z.enum(['alpha', 'numeric']),
+  x_axis_naming: z.enum(['alpha', 'numeric']),
+  y_axis_naming: z.enum(['alpha', 'numeric']),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -68,8 +68,8 @@ export function RenameRoomDialog({ room, open, onOpenChange }: RenameRoomDialogP
       comprimento: room.comprimento || undefined,
       tile_width_cm: room.tile_width_cm || 60,
       tile_height_cm: room.tile_height_cm || 60,
-      xAxisNaming: room.xAxisNaming || 'alpha',
-      yAxisNaming: room.yAxisNaming || 'numeric',
+      x_axis_naming: room.x_axis_naming || 'alpha',
+      y_axis_naming: room.y_axis_naming || 'numeric',
     },
   });
 
@@ -81,8 +81,8 @@ export function RenameRoomDialog({ room, open, onOpenChange }: RenameRoomDialogP
         comprimento: room.comprimento || undefined,
         tile_width_cm: room.tile_width_cm || 60,
         tile_height_cm: room.tile_height_cm || 60,
-        xAxisNaming: room.xAxisNaming || 'alpha',
-        yAxisNaming: room.yAxisNaming || 'numeric',
+        x_axis_naming: room.x_axis_naming || 'alpha',
+        y_axis_naming: room.y_axis_naming || 'numeric',
       });
     }
   }, [open, room, form]);
@@ -196,7 +196,7 @@ export function RenameRoomDialog({ room, open, onOpenChange }: RenameRoomDialogP
               />
                <FormField
                   control={form.control}
-                  name="xAxisNaming"
+                  name="x_axis_naming"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Eixo X (Colunas)</FormLabel>
@@ -217,7 +217,7 @@ export function RenameRoomDialog({ room, open, onOpenChange }: RenameRoomDialogP
                 />
                  <FormField
                   control={form.control}
-                  name="yAxisNaming"
+                  name="y_axis_naming"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Eixo Y (Linhas)</FormLabel>

@@ -68,8 +68,8 @@ const formSchema = z.object({
   width_m: z.coerce.number().optional(),
   tile_width_cm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
   tile_height_cm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
-  xAxisNaming: z.enum(['alpha', 'numeric']),
-  yAxisNaming: z.enum(['alpha', 'numeric']),
+  x_axis_naming: z.enum(['alpha', 'numeric']),
+  y_axis_naming: z.enum(['alpha', 'numeric']),
   newExclusionZone: z.object({
     id: z.string().optional(), // ID da zona em edição
     xStr: z.string().min(1, "Obrigatório"),
@@ -102,8 +102,8 @@ export function ManageRoomDialog({ room, open, onOpenChange }: ManageRoomDialogP
       width_m: room.width_m, 
       tile_width_cm: room.tile_width_cm || 60,
       tile_height_cm: room.tile_height_cm || 60,
-      xAxisNaming: room.xAxisNaming || 'alpha',
-      yAxisNaming: room.yAxisNaming || 'numeric',
+      x_axis_naming: room.x_axis_naming || 'alpha',
+      y_axis_naming: room.y_axis_naming || 'numeric',
       newExclusionZone: { xStr: '', yStr: '', width: 1, height: 1 }
     },
   });
@@ -136,8 +136,8 @@ export function ManageRoomDialog({ room, open, onOpenChange }: ManageRoomDialogP
         width_m: room.width_m, 
         tile_width_cm: room.tile_width_cm || 60,
         tile_height_cm: room.tile_height_cm || 60,
-        xAxisNaming: room.xAxisNaming || 'alpha',
-        yAxisNaming: room.yAxisNaming || 'numeric',
+        x_axis_naming: room.x_axis_naming || 'alpha',
+        y_axis_naming: room.y_axis_naming || 'numeric',
       });
       resetZoneForm();
       fetchZones();
@@ -165,8 +165,8 @@ export function ManageRoomDialog({ room, open, onOpenChange }: ManageRoomDialogP
 
       const { id, xStr, yStr, width, height } = zoneData;
       
-      const x = room.xAxisNaming === 'alpha' ? alphaToIndex(xStr) : numericToIndex(xStr);
-      const y = room.yAxisNaming === 'alpha' ? alphaToIndex(yStr) : numericToIndex(yStr);
+      const x = room.x_axis_naming === 'alpha' ? alphaToIndex(xStr) : numericToIndex(xStr);
+      const y = room.y_axis_naming === 'alpha' ? alphaToIndex(yStr) : numericToIndex(yStr);
       
       if (x === -1 || y === -1) {
           toast({ title: "Coordenadas Inválidas", description: "Por favor, insira valores válidos para coluna e linha.", variant: "destructive" });
@@ -192,8 +192,8 @@ export function ManageRoomDialog({ room, open, onOpenChange }: ManageRoomDialogP
       setEditingZone(zone);
       form.setValue('newExclusionZone', {
           id: zone.id,
-          xStr: room.xAxisNaming === 'alpha' ? indexToAlpha(zone.x) : indexToNumeric(zone.x),
-          yStr: room.yAxisNaming === 'alpha' ? indexToAlpha(zone.y) : indexToNumeric(zone.y),
+          xStr: room.x_axis_naming === 'alpha' ? indexToAlpha(zone.x) : indexToNumeric(zone.x),
+          yStr: room.y_axis_naming === 'alpha' ? indexToAlpha(zone.y) : indexToNumeric(zone.y),
           width: zone.width,
           height: zone.height
       });
@@ -242,7 +242,7 @@ export function ManageRoomDialog({ room, open, onOpenChange }: ManageRoomDialogP
                                 {zones.map(zone => (
                                 <div key={zone.id} className="flex items-center justify-between p-2 bg-muted/50 rounded-md">
                                     <div className="flex items-center gap-4 font-mono text-sm">
-                                        <span>De: <strong>{getGridLabel(zone.x, zone.y, room.xAxisNaming, room.yAxisNaming)}</strong></span>
+                                        <span>De: <strong>{getGridLabel(zone.x, zone.y, room.x_axis_naming, room.y_axis_naming)}</strong></span>
                                         <span>Tamanho: <strong>{zone.width}x{zone.height}</strong></span>
                                     </div>
                                     <div>
@@ -263,10 +263,10 @@ export function ManageRoomDialog({ room, open, onOpenChange }: ManageRoomDialogP
                 </div>
 
                 <div className="mt-6 border-t pt-6">
-                    <h5 className="font-medium mb-3">{editingZone ? `Editando Zona: ${getGridLabel(editingZone.x, editingZone.y, room.xAxisNaming, room.yAxisNaming)}` : 'Adicionar Nova Zona'}</h5>
+                    <h5 className="font-medium mb-3">{editingZone ? `Editando Zona: ${getGridLabel(editingZone.x, editingZone.y, room.x_axis_naming, room.y_axis_naming)}` : 'Adicionar Nova Zona'}</h5>
                     <div className="flex items-end gap-2">
-                      <FormField control={form.control} name="newExclusionZone.xStr" render={({ field }) => (<FormItem><FormLabel>Coluna ({room.xAxisNaming === 'alpha' ? 'Letra' : 'Nº'})</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage/></FormItem>)}/>
-                      <FormField control={form.control} name="newExclusionZone.yStr" render={({ field }) => (<FormItem><FormLabel>Linha ({room.yAxisNaming === 'alpha' ? 'Letra' : 'Nº'})</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage/></FormItem>)}/>
+                      <FormField control={form.control} name="newExclusionZone.xStr" render={({ field }) => (<FormItem><FormLabel>Coluna ({room.x_axis_naming === 'alpha' ? 'Letra' : 'Nº'})</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage/></FormItem>)}/>
+                      <FormField control={form.control} name="newExclusionZone.yStr" render={({ field }) => (<FormItem><FormLabel>Linha ({room.y_axis_naming === 'alpha' ? 'Letra' : 'Nº'})</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage/></FormItem>)}/>
                       <FormField control={form.control} name="newExclusionZone.width" render={({ field }) => (<FormItem><FormLabel>Largura (células)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
                       <FormField control={form.control} name="newExclusionZone.height" render={({ field }) => (<FormItem><FormLabel>Altura (células)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage/></FormItem>)}/>
                       

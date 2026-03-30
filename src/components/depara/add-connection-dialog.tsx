@@ -36,7 +36,7 @@ import { usePermissions } from '@/components/permissions-provider';
 
 const formSchema = z.object({
   labelText: z.string().optional().nullable(),
-  imageUrl: z.string().optional().nullable(),
+  image_url: z.string().optional().nullable(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -77,10 +77,10 @@ export function AddConnectionDialog({
 
     const form = useForm<FormData>({
       resolver: zodResolver(formSchema),
-      defaultValues: { labelText: '', imageUrl: null },
+      defaultValues: { labelText: '', image_url: null },
     });
 
-    const imageUrl = form.watch('imageUrl');
+    const image_url = form.watch('image_url');
 
     const resizeAndCompressImage = (file: File): Promise<string | null> => {
         return new Promise((resolve, reject) => {
@@ -131,10 +131,10 @@ export function AddConnectionDialog({
   
     const handleUpload = async (dataURI: string, blobName: string) => {
         setIsUploading(true);
-        form.setValue('imageUrl', '');
+        form.setValue('image_url', '');
         try {
             const url = await uploadImage(dataURI, blobName);
-            form.setValue('imageUrl', url);
+            form.setValue('image_url', url);
             toast({ title: 'Sucesso!', description: 'A imagem foi carregada.' });
         } catch (error) {
             const msg = error instanceof Error ? error.message : "Erro desconhecido.";
@@ -201,7 +201,7 @@ export function AddConnectionDialog({
                 portB_id: sideB.port.id,
                 connectionTypeId,
                 labelText: data.labelText,
-                imageUrl: data.imageUrl,
+                image_url: data.image_url,
                 user_id: user.id
             });
             toast({
@@ -264,10 +264,10 @@ export function AddConnectionDialog({
             <FormItem>
               <FormLabel>Evidência Fotográfica (Opcional)</FormLabel>
               <div className="relative p-2 border rounded-md bg-muted/30 min-h-[128px] w-full flex justify-center items-center group/image">
-                {isUploading ? <Loader2 className="h-8 w-8 animate-spin" /> : imageUrl ? (
+                {isUploading ? <Loader2 className="h-8 w-8 animate-spin" /> : image_url ? (
                     <>
-                    <img src={imageUrl} alt="Preview" className="max-h-48 object-contain rounded-md" data-ai-hint="cable connection"/>
-                    <Button variant="destructive" size="icon" className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover/image:opacity-100 transition-opacity" onClick={() => form.setValue('imageUrl', null)} type="button">
+                    <img src={image_url} alt="Preview" className="max-h-48 object-contain rounded-md" data-ai-hint="cable connection"/>
+                    <Button variant="destructive" size="icon" className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover/image:opacity-100 transition-opacity" onClick={() => form.setValue('image_url', null)} type="button">
                         <Trash2 className="h-4 w-4" />
                     </Button>
                     </>

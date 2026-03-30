@@ -6,7 +6,7 @@ import { _getUsers, _getUserByEmail, _updateUserInDb, User, _deleteUser, _ensure
 import { logAuditEvent } from './audit-actions';
 
 async function getAdminUser() {
-    return { id: 'system_admin', displayName: 'System Admin', email: 'admin@system.local' } as User;
+    return { id: 'system_admin', display_name: 'System Admin', email: 'admin@system.local' } as User;
 }
 
 export async function ensureDatabaseSchema(): Promise<string> {
@@ -39,7 +39,7 @@ export async function updateUser(userData: Partial<User>): Promise<User> {
         const savedUser = await _updateUserInDb(userData);
         
         const keysBeingUpdated = Object.keys(userData);
-        const isOnlyLoginUpdate = keysBeingUpdated.length === 2 && keysBeingUpdated.includes('id') && keysBeingUpdated.includes('lastLoginAt');
+        const isOnlyLoginUpdate = keysBeingUpdated.length === 2 && keysBeingUpdated.includes('id') && keysBeingUpdated.includes('last_login_at');
 
         if (!isOnlyLoginUpdate) {
             await logAuditEvent({
@@ -77,7 +77,7 @@ export async function deleteUser(user_id: string): Promise<void> {
             action: 'USER_DELETED',
             entity_type: 'User',
             entity_id: user_id,
-            details: { email: userToDelete.email, displayName: userToDelete.displayName }
+            details: { email: userToDelete.email, display_name: userToDelete.display_name }
         });
         
         revalidatePath('/users');

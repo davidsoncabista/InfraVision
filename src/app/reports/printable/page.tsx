@@ -112,9 +112,9 @@ export default async function PrintableReportPage({ searchParams }: { searchPara
                     {data.usersWithSignatures.map(user => (
                         <div key={user.id} className="text-center break-inside-avoid">
                             <div className="h-24 w-full border-b-2 border-gray-400 mb-2 flex items-center justify-center">
-                                {user.signatureUrl && <img src={user.signatureUrl} alt={`Assinatura de ${user.displayName}`} className="max-h-full max-w-full object-contain" />}
+                                {user.signature_url && <img src={user.signature_url} alt={`Assinatura de ${user.display_name}`} className="max-h-full max-w-full object-contain" />}
                             </div>
-                            <p className="font-semibold">{user.displayName}</p>
+                            <p className="font-semibold">{user.display_name}</p>
                             <p className="text-sm text-gray-600">{user.role}</p>
                         </div>
                     ))}

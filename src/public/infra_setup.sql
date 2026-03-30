@@ -27,12 +27,12 @@ GO
 CREATE TABLE Users (
     id NVARCHAR(100) PRIMARY KEY,
     email NVARCHAR(255) NOT NULL UNIQUE,
-    displayName NVARCHAR(255),
-    photoURL NVARCHAR(MAX),
+    display_name NVARCHAR(255),
+    photo_url NVARCHAR(MAX),
     role NVARCHAR(50) NOT NULL,
     permissions NVARCHAR(MAX),
     accessiblebuilding_ids NVARCHAR(MAX),
-    lastLoginAt DATETIME2 NOT NULL,
+    last_login_at DATETIME2 NOT NULL,
     preferences NVARCHAR(MAX),
     is_test_data BIT NOT NULL DEFAULT 0
 );
@@ -54,9 +54,9 @@ CREATE TABLE Rooms (
     width_m FLOAT,
     tile_width_cm FLOAT,
     tile_height_cm FLOAT,
-    xAxisNaming NVARCHAR(20) DEFAULT 'alpha',
-    yAxisNaming NVARCHAR(20) DEFAULT 'numeric',
-    backgroundImageUrl NVARCHAR(MAX),
+    x_axis_naming NVARCHAR(20) DEFAULT 'alpha',
+    y_axis_naming NVARCHAR(20) DEFAULT 'numeric',
+    background_image_url NVARCHAR(MAX),
     backgroundScale FLOAT,
     backgroundPosX FLOAT,
     backgroundPosY FLOAT,
@@ -139,7 +139,7 @@ CREATE TABLE parent_items (
     ownerEmail NVARCHAR(255),
     dataSheetUrl NVARCHAR(MAX),
     description NVARCHAR(MAX),
-    imageUrl NVARCHAR(MAX),
+    image_url NVARCHAR(MAX),
     modelo NVARCHAR(100),
     preco FLOAT,
     trellisId NVARCHAR(100),
@@ -165,7 +165,7 @@ CREATE TABLE child_items (
     ownerEmail NVARCHAR(255),
     dataSheetUrl NVARCHAR(MAX),
     description NVARCHAR(MAX),
-    imageUrl NVARCHAR(MAX),
+    image_url NVARCHAR(MAX),
     modelo NVARCHAR(100),
     preco FLOAT,
     trellisId NVARCHAR(100),
@@ -228,7 +228,7 @@ CREATE TABLE AuditLog (
     id INT IDENTITY(1,1) PRIMARY KEY,
     timestamp DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     user_id NVARCHAR(100) NOT NULL,
-    userDisplayName NVARCHAR(255),
+    userdisplay_name NVARCHAR(255),
     action NVARCHAR(255) NOT NULL,
     entity_type NVARCHAR(50),
     entity_id NVARCHAR(100),
@@ -270,7 +270,7 @@ CREATE TABLE Sensors (
 GO
 
 -- Insert Initial Data
-INSERT INTO Users (id, email, displayName, photoURL, role, permissions, accessiblebuilding_ids, lastLoginAt, is_test_data) 
+INSERT INTO Users (id, email, display_name, photo_url, role, permissions, accessiblebuilding_ids, last_login_at, is_test_data) 
 VALUES ('dev_user', 'dev@dev.com', 'Desenvolvedor Padrão', NULL, 'developer', '["*"]', '[]', GETUTCDATE(), 1);
 GO
 

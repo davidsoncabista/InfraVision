@@ -20,7 +20,7 @@ export interface GridItem {
   ownerEmail?: string;
   dataSheetUrl?: string;
   description?: string;
-  imageUrl?: string;
+  image_url?: string;
   modelo?: string;
   preco?: number;
   trellisId?: string;
@@ -48,8 +48,8 @@ export interface Room {
   width_m: number;
   tile_width_cm: number;
   tile_height_cm: number;
-  xAxisNaming: AxisNaming;
-  yAxisNaming: AxisNaming;
+  x_axis_naming: AxisNaming;
+  y_axis_naming: AxisNaming;
   items: GridItem[];
 }
 

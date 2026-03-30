@@ -10,7 +10,7 @@ export interface Evidence {
     entity_id: string;
     entity_type: string;
     user_id: string;
-    userDisplayName: string;
+    userdisplay_name: string;
     timestamp: string;
     type: string;
     data: any;
@@ -20,14 +20,14 @@ export async function getEvidenceForEntity(entity_id: string, entity_type: strin
     if (!entity_id || !entity_type) return [];
     try {
         // PostgREST: Resource Embedding com nomes em minúsculo
-        const data = await apiFetch(`/evidence?entity_id=eq.${entity_id}&entity_type=eq.${entity_type}&select=*,users:user_id(displayname)&order=timestamp.asc`);
+        const data = await apiFetch(`/evidence?entity_id=eq.${entity_id}&entity_type=eq.${entity_type}&select=*,users:user_id(display_name)&order=timestamp.asc`);
         
         return data.map((record: any) => ({
             id: record.id,
             entity_id: record.entity_id,
             entity_type: record.entity_type,
             user_id: record.user_id,
-            userDisplayName: record.users?.displayname || record.user_id,
+            userdisplay_name: record.users?.display_name || record.user_id,
             timestamp: new Date(record.timestamp).toISOString(),
             type: record.type,
             data: typeof record.data === 'string' ? JSON.parse(record.data) : record.data,

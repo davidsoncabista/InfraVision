@@ -29,8 +29,8 @@ export async function getDatacenterData(): Promise<Building[]> {
             width_m: r.width_m || 20, 
             tile_width_cm: r.tile_width_cm || 60,
             tile_height_cm: r.tile_height_cm || 60,
-            xAxisNaming: r.xaxisnaming || 'alpha',
-            yAxisNaming: r.yaxisnaming || 'numeric',
+            x_axis_naming: r.x_axis_naming || 'alpha',
+            y_axis_naming: r.y_axis_naming || 'numeric',
             items: []
         }));
 

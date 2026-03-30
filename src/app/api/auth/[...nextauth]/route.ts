@@ -25,7 +25,7 @@ const handler = NextAuth({
             return { 
               id: user.id, 
               email: user.email, 
-              name: user.displayname || user.email 
+              name: user.display_name || user.email 
             };
           }
           return null;

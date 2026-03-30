@@ -29,7 +29,7 @@ const roleLabels: Record<UserRole, string> = {
 };
 
 const formSchema = z.object({
-  displayName: z.string().min(2, "O nome deve ter pelo menos 2 caracteres."),
+  display_name: z.string().min(2, "O nome deve ter pelo menos 2 caracteres."),
   email: z.string().email("Por favor, insira um e-mail válido."),
   password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres."),
   role: z.enum(USER_ROLES, { required_error: "Selecione um cargo." }),
@@ -46,7 +46,7 @@ export function AddUserDialog() {
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: { email: "", displayName: "", password: "", role: "technician_2" },
+    defaultValues: { email: "", display_name: "", password: "", role: "technician_2" },
   });
   
   const onSubmit = async (data: FormData) => {
@@ -58,12 +58,12 @@ export function AddUserDialog() {
       await updateUser({
         id: tempId,
         email: data.email,
-        displayName: data.displayName, 
+        display_name: data.display_name, 
         role: data.role,
-        lastLoginAt: new Date().toISOString(),
+        last_login_at: new Date().toISOString(),
       });
 
-      toast({ title: "Usuário Criado!", description: `O usuário ${data.displayName} foi registrado no banco local.` });
+      toast({ title: "Usuário Criado!", description: `O usuário ${data.display_name} foi registrado no banco local.` });
       form.reset();
       setIsOpen(false);
       router.refresh();
@@ -87,7 +87,7 @@ export function AddUserDialog() {
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
-              <FormField control={form.control} name="displayName" render={({ field }) => (
+              <FormField control={form.control} name="display_name" render={({ field }) => (
                   <FormItem><FormLabel>Nome Completo</FormLabel><FormControl><Input placeholder="Ex: João da Silva" {...field} /></FormControl><FormMessage /></FormItem>
               )}/>
               <FormField control={form.control} name="email" render={({ field }) => (

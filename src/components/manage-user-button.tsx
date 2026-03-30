@@ -81,7 +81,7 @@ const roleHierarchy: Record<UserRole, number> = {
 
 const formSchema = z.object({
   id: z.string().min(1, "O UID do Firebase é obrigatório."),
-  displayName: z.string().min(2, "O nome deve ter pelo menos 2 caracteres."),
+  display_name: z.string().min(2, "O nome deve ter pelo menos 2 caracteres."),
   email: z.string().email("Por favor, insira um e-mail válido."),
   role: z.enum(USER_ROLES),
   permissions: z.array(z.string()),
@@ -124,7 +124,7 @@ export function ManageUserButton({ user }: ManageUserButtonProps) {
     defaultValues: {
       id: user.id,
       email: user.email,
-      displayName: user.displayName || '',
+      display_name: user.display_name || '',
       role: user.role,
       permissions: user.permissions || [],
       accessiblebuilding_ids: user.accessiblebuilding_ids || [],
@@ -138,7 +138,7 @@ export function ManageUserButton({ user }: ManageUserButtonProps) {
         form.reset({
             id: user.id,
             email: user.email,
-            displayName: user.displayName || '',
+            display_name: user.display_name || '',
             role: user.role,
             permissions: user.permissions || defaultPermissions[user.role] || [],
             accessiblebuilding_ids: user.accessiblebuilding_ids || [],
@@ -170,14 +170,14 @@ export function ManageUserButton({ user }: ManageUserButtonProps) {
       await updateUser({ 
           id: data.id,
           email: data.email,
-          displayName: data.displayName,
+          display_name: data.display_name,
           role: data.role,
           permissions: data.permissions ? Array.from(data.permissions) : [],
           accessiblebuilding_ids: data.accessiblebuilding_ids ? Array.from(data.accessiblebuilding_ids) : [],
        });
       toast({
         title: "Sucesso!",
-        description: `As permissões de ${data.displayName || data.email} foram atualizadas.`,
+        description: `As permissões de ${data.display_name || data.email} foram atualizadas.`,
       });
       setIsOpen(false);
       router.refresh(); 
@@ -199,7 +199,7 @@ export function ManageUserButton({ user }: ManageUserButtonProps) {
         await deleteUser(user.id);
         toast({
             title: "Usuário Removido",
-            description: `${user.displayName || user.email} foi removido do banco de dados. A conta no autenticador deve ser removida manualmente.`,
+            description: `${user.display_name || user.email} foi removido do banco de dados. A conta no autenticador deve ser removida manualmente.`,
         });
         setConfirmDeleteOpen(false);
         setIsOpen(false);
@@ -242,7 +242,7 @@ export function ManageUserButton({ user }: ManageUserButtonProps) {
         <DialogHeader>
           <DialogTitle>Gerenciar Usuário</DialogTitle>
           <DialogDescription>
-            Edite os detalhes, cargo e permissões para {user.displayName || user.email}.
+            Edite os detalhes, cargo e permissões para {user.display_name || user.email}.
           </DialogDescription>
         </DialogHeader>
         
@@ -255,11 +255,11 @@ export function ManageUserButton({ user }: ManageUserButtonProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                  <Controller
                     control={form.control}
-                    name="displayName"
+                    name="display_name"
                     render={({ field }) => (
                         <div>
-                            <Label htmlFor="displayName">Nome Completo</Label>
-                            <Input id="displayName" {...field} />
+                            <Label htmlFor="display_name">Nome Completo</Label>
+                            <Input id="display_name" {...field} />
                         </div>
                     )}
                 />
@@ -411,7 +411,7 @@ export function ManageUserButton({ user }: ManageUserButtonProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar Exclusão de Usuário?</AlertDialogTitle>
             <AlertDialogDescription>
-                Esta ação removerá o usuário <span className="font-bold">{user.displayName || user.email}</span> do banco de dados do InfraVision. 
+                Esta ação removerá o usuário <span className="font-bold">{user.display_name || user.email}</span> do banco de dados do InfraVision. 
                 A conta no sistema de autenticação Firebase precisará ser removida manualmente.
             </AlertDialogDescription>
           </AlertDialogHeader>

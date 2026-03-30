@@ -53,14 +53,14 @@ const getInitials = (name: string | null | undefined) => {
     return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
 }
 
-type SortableKeys = keyof User | 'displayName';
+type SortableKeys = keyof User | 'display_name';
 
 export default function UsersPage() {
   const [users, setUsers] = React.useState<User[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [searchTerm, setSearchTerm] = React.useState('');
   const [roleFilter, setRoleFilter] = React.useState('all');
-  const [sortConfig, setSortConfig] = React.useState<{ key: SortableKeys, direction: 'ascending' | 'descending' } | null>({ key: 'displayName', direction: 'ascending' });
+  const [sortConfig, setSortConfig] = React.useState<{ key: SortableKeys, direction: 'ascending' | 'descending' } | null>({ key: 'display_name', direction: 'ascending' });
 
   React.useEffect(() => {
     setIsLoading(true);
@@ -103,7 +103,7 @@ export default function UsersPage() {
     }
 
     return sortableUsers.filter(user =>
-      (user.displayName?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      (user.display_name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
        user.email.toLowerCase().includes(searchTerm.toLowerCase())) &&
       (roleFilter === 'all' || user.role === roleFilter)
     );
@@ -147,8 +147,8 @@ export default function UsersPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>
-                    <Button variant="ghost" onClick={() => requestSort('displayName')} className="group px-0">
-                      Usuário{getSortIndicator('displayName')}
+                    <Button variant="ghost" onClick={() => requestSort('display_name')} className="group px-0">
+                      Usuário{getSortIndicator('display_name')}
                     </Button>
                   </TableHead>
                   <TableHead>
@@ -177,10 +177,10 @@ export default function UsersPage() {
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <Avatar className="h-9 w-9">
-                            <AvatarImage src={user.photoURL ?? undefined} alt={user.displayName ?? 'User'} />
-                            <AvatarFallback>{getInitials(user.displayName)}</AvatarFallback>
+                            <AvatarImage src={user.photo_url ?? undefined} alt={user.display_name ?? 'User'} />
+                            <AvatarFallback>{getInitials(user.display_name)}</AvatarFallback>
                           </Avatar>
-                          <span className="font-medium">{user.displayName || 'N/A'}</span>
+                          <span className="font-medium">{user.display_name || 'N/A'}</span>
                         </div>
                       </TableCell>
                       <TableCell>{user.email}</TableCell>
@@ -189,7 +189,7 @@ export default function UsersPage() {
                           {roleLabels[user.role]}
                         </Badge>
                       </TableCell>
-                      <TableCell>{new Date(user.lastLoginAt).toLocaleString()}</TableCell>
+                      <TableCell>{new Date(user.last_login_at).toLocaleString()}</TableCell>
                       <TableCell className="text-right">
                         <ManageUserButton user={user} />
                       </TableCell>

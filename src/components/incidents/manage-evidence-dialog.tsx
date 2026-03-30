@@ -189,13 +189,13 @@ export function ManageEvidenceDialog({ incident, isOpen, onOpenChange, onSuccess
                      evidenceList.map(ev => (
                         <div key={ev.id} className="flex items-start gap-4 group">
                             <Avatar>
-                                <AvatarImage src={user?.photoURL ?? undefined} />
-                                <AvatarFallback>{getInitials(ev.userDisplayName)}</AvatarFallback>
+                                <AvatarImage src={user?.photo_url ?? undefined} />
+                                <AvatarFallback>{getInitials(ev.userdisplay_name)}</AvatarFallback>
                             </Avatar>
                             <div className="flex-1 space-y-1">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="font-semibold text-sm">{ev.userDisplayName}</p>
+                                        <p className="font-semibold text-sm">{ev.userdisplay_name}</p>
                                         <p className="text-xs text-muted-foreground">{new Date(ev.timestamp).toLocaleString()}</p>
                                     </div>
                                     <AlertDialog>

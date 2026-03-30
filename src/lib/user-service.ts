@@ -12,13 +12,13 @@ export interface UserPreferences {
 export interface User {
   id: string;
   email: string;
-  displayName: string | null;
-  photoURL: string | null;
-  signatureUrl: string | null;
+  display_name: string | null;
+  photo_url: string | null;
+  signature_url: string | null;
   role: UserRole;
   permissions: string[];
   accessiblebuilding_ids: string[];
-  lastLoginAt: string;
+  last_login_at: string;
   preferences?: UserPreferences;
   is_test_data?: boolean;
 }
@@ -37,10 +37,10 @@ const parseUser = (dbRecord: any): User => {
     return {
       ...dbRecord,
       // Fazemos o fallback para minúsculo caso o Postgres tenha ignorado as aspas na criação
-      displayName: dbRecord.displayName || dbRecord.displayname || null,
-      photoURL: dbRecord.photoURL || dbRecord.photourl || null,
-      signatureUrl: dbRecord.signatureUrl || dbRecord.signatureurl || null,
-      lastLoginAt: dbRecord.lastLoginAt || dbRecord.lastloginat ? new Date(dbRecord.lastLoginAt || dbRecord.lastloginat).toISOString() : new Date().toISOString(),
+      display_name: dbRecord.display_name || dbRecord.display_name || null,
+      photo_url: dbRecord.photo_url || dbRecord.photo_url || null,
+      signature_url: dbRecord.signature_url || dbRecord.signature_url || null,
+      last_login_at: dbRecord.last_login_at || dbRecord.last_login_at ? new Date(dbRecord.last_login_at || dbRecord.last_login_at).toISOString() : new Date().toISOString(),
       permissions: typeof dbRecord.permissions === 'string' ? JSON.parse(dbRecord.permissions) : (dbRecord.permissions || []),
       accessiblebuilding_ids: typeof (dbRecord.accessiblebuilding_ids || dbRecord.accessiblebuilding_ids) === 'string' 
         ? JSON.parse(dbRecord.accessiblebuilding_ids || dbRecord.accessiblebuilding_ids) 
@@ -63,7 +63,7 @@ export async function _getUserById(id: string): Promise<User | null> {
 export async function _getUsers(): Promise<User[]> {
     const data = await apiFetch('/users');
     const parsed = data.map(parseUser);
-    return parsed.sort((a, b) => (a.displayName || '').localeCompare(b.displayName || ''));
+    return parsed.sort((a, b) => (a.display_name || '').localeCompare(b.display_name || ''));
 }
 
 export async function _updateUserInDb(userData: Partial<User>): Promise<User> {
@@ -84,12 +84,12 @@ export async function _updateUserInDb(userData: Partial<User>): Promise<User> {
             role: merged.role,
             permissions: merged.permissions,
             preferences: merged.preferences || {},
-            displayName: merged.displayName,
-            photoURL: merged.photoURL,
-            lastLoginAt: merged.lastLoginAt || new Date().toISOString(),
+            display_name: merged.display_name,
+            photo_url: merged.photo_url,
+            last_login_at: merged.last_login_at || new Date().toISOString(),
             accessiblebuilding_ids: merged.accessiblebuilding_ids,
             is_test_data: merged.is_test_data,
-            signatureUrl: merged.signatureUrl
+            signature_url: merged.signature_url
         };
 
         const result = await apiFetch(`/users?id=eq.${lookupId}`, {
@@ -104,10 +104,10 @@ export async function _updateUserInDb(userData: Partial<User>): Promise<User> {
         const dataToInsert = {
             id: userData.id,
             email: userData.email?.toLowerCase(),
-            displayName: userData.displayName || userData.email,
-            photoURL: userData.photoURL || null,
+            display_name: userData.display_name || userData.email,
+            photo_url: userData.photo_url || null,
             role: role,
-            lastLoginAt: new Date().toISOString(),
+            last_login_at: new Date().toISOString(),
             permissions: rolePermissions[role] || [],
             accessiblebuilding_ids: [],
             preferences: {},

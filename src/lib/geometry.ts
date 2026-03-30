@@ -27,18 +27,18 @@ function getAlphaLabel(index: number): string {
  * Converte coordenadas numéricas (x, y) em uma etiqueta de grid legível (ex: C3, 15-A).
  * @param x A coordenada X (base 0).
  * @param y A coordenada Y (base 0).
- * @param xAxisNaming O tipo de nomenclatura do eixo X ('alpha' ou 'numeric').
- * @param yAxisNaming O tipo de nomenclatura do eixo Y ('alpha' ou 'numeric').
+ * @param x_axis_naming O tipo de nomenclatura do eixo X ('alpha' ou 'numeric').
+ * @param y_axis_naming O tipo de nomenclatura do eixo Y ('alpha' ou 'numeric').
  * @returns A etiqueta formatada da célula do grid.
  */
-export function getGridLabel(x: number, y: number, xAxisNaming: AxisNaming, yAxisNaming: AxisNaming): string {
+export function getGridLabel(x: number, y: number, x_axis_naming: AxisNaming, y_axis_naming: AxisNaming): string {
   // Retorna apenas a parte do grid se o eixo não for relevante (índice -1)
-  if (x === -1 && y >= 0) return yAxisNaming === 'alpha' ? getAlphaLabel(y) : String(y + 1);
-  if (y === -1 && x >= 0) return xAxisNaming === 'alpha' ? getAlphaLabel(x) : String(x + 1);
+  if (x === -1 && y >= 0) return y_axis_naming === 'alpha' ? getAlphaLabel(y) : String(y + 1);
+  if (y === -1 && x >= 0) return x_axis_naming === 'alpha' ? getAlphaLabel(x) : String(x + 1);
   if (x < 0 || y < 0) return '';
   
-  const xLabel = xAxisNaming === 'alpha' ? getAlphaLabel(x) : String(x + 1);
-  const yLabel = yAxisNaming === 'alpha' ? getAlphaLabel(y) : String(y + 1);
+  const xLabel = x_axis_naming === 'alpha' ? getAlphaLabel(x) : String(x + 1);
+  const yLabel = y_axis_naming === 'alpha' ? getAlphaLabel(y) : String(y + 1);
   return `${xLabel}${yLabel}`;
 };
 

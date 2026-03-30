@@ -15,7 +15,7 @@ export async function logAuditEvent(event: { user: User; action: string; entity_
             method: 'POST',
             body: JSON.stringify({
                 user_id: event.user.id,
-                userdisplayname: event.user.displayName || event.user.email,
+                userdisplay_name: event.user.display_name || event.user.email,
                 action: event.action,
                 entity_type: event.entity_type || null,
                 entity_id: event.entity_id || null,
@@ -37,7 +37,7 @@ export async function getAuditLogs(): Promise<any[]> {
         return (data || []).map((log: any) => ({
             id: log.id,
             timestamp: new Date(log.timestamp).toISOString(),
-            userDisplayName: log.userdisplayname,
+            userdisplay_name: log.userdisplay_name,
             action: log.action,
             entity_type: log.entity_type,
             entity_id: log.entity_id,
@@ -93,11 +93,11 @@ export async function getFullApprovalFromLog(entity_id: string): Promise<Approva
                 entityLabel: record.entitylabel,
                 entity_typeName: record.entity_typename,
                 requestedAt: new Date(record.requestedat).toISOString(),
-                requestedByUserDisplayName: record.requestedbyuserdisplayname,
+                requestedByUserdisplay_name: record.requestedbyuserdisplay_name,
                 details: details,
                 status: record.status,
                 resolverNotes: record.resolvernotes,
-                resolvedByUserDisplayName: record.resolvedbyuserdisplayname,
+                resolvedByUserdisplay_name: record.resolvedbyuserdisplay_name,
                 resolvedAt: record.resolvedat ? new Date(record.resolvedat).toISOString() : undefined
             } as ApprovalRequest;
         }

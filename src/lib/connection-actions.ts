@@ -45,7 +45,7 @@ export interface ConnectionDetail {
     connectionType: string;
     connectionTypeId: string;
     status: string;
-    imageUrl: string | null;
+    image_url: string | null;
     labelText: string | null;
 }
 
@@ -109,7 +109,7 @@ export async function getAllConnections(building_id?: string): Promise<Connectio
             connectionType: c.connectiontypes?.name || 'N/A',
             connectionTypeId: c.connectiontypeid,
             status: c.status,
-            imageUrl: c.imageurl,
+            image_url: c.image_url,
             labelText: c.labeltext
         }));
     } catch (error) {
@@ -122,7 +122,7 @@ export async function createConnection(data: {
     portB_id?: string | null; 
     connectionTypeId: string; 
     labelText?: string | null;
-    imageUrl?: string | null;
+    image_url?: string | null;
     user_id: string;
 }) {
     const user = await _getUserById(data.user_id);
@@ -139,7 +139,7 @@ export async function createConnection(data: {
             portB_id: data.portB_id || null,
             connectiontypeid: data.connectionTypeId,
             labeltext: data.labelText || null,
-            imageurl: data.imageUrl || null,
+            image_url: data.image_url || null,
             status
         })
     });

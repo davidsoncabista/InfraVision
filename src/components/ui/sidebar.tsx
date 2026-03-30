@@ -120,7 +120,7 @@ const SidebarProvider = React.forwardRef<
     </SidebarContext.Provider>
   )
 })
-SidebarProvider.displayName = "SidebarProvider"
+SidebarProvider.display_name = "SidebarProvider"
 
 
 const Sidebar = React.forwardRef<
@@ -176,7 +176,7 @@ const Sidebar = React.forwardRef<
     )
   }
 )
-Sidebar.displayName = "Sidebar"
+Sidebar.display_name = "Sidebar"
 
 const SidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
@@ -223,7 +223,7 @@ const SidebarTrigger = React.forwardRef<
     </Tooltip>
   )
 })
-SidebarTrigger.displayName = "SidebarTrigger"
+SidebarTrigger.display_name = "SidebarTrigger"
 
 const SidebarInset = React.forwardRef<
   HTMLDivElement,
@@ -243,7 +243,7 @@ const SidebarInset = React.forwardRef<
     />
   )
 })
-SidebarInset.displayName = "SidebarInset"
+SidebarInset.display_name = "SidebarInset"
 
 const SidebarHeader = React.forwardRef<
   HTMLDivElement,
@@ -257,7 +257,7 @@ const SidebarHeader = React.forwardRef<
     />
   )
 })
-SidebarHeader.displayName = "SidebarHeader"
+SidebarHeader.display_name = "SidebarHeader"
 
 const SidebarFooter = React.forwardRef<
   HTMLDivElement,
@@ -271,7 +271,7 @@ const SidebarFooter = React.forwardRef<
     />
   )
 })
-SidebarFooter.displayName = "SidebarFooter"
+SidebarFooter.display_name = "SidebarFooter"
 
 const SidebarContent = React.forwardRef<
   HTMLDivElement,
@@ -289,7 +289,7 @@ const SidebarContent = React.forwardRef<
     />
   )
 })
-SidebarContent.displayName = "SidebarContent"
+SidebarContent.display_name = "SidebarContent"
 
 const SidebarMenu = React.forwardRef<
   HTMLUListElement,
@@ -301,7 +301,7 @@ const SidebarMenu = React.forwardRef<
     {...props}
   />
 ))
-SidebarMenu.displayName = "SidebarMenu"
+SidebarMenu.display_name = "SidebarMenu"
 
 const SidebarMenuItem = React.forwardRef<
   HTMLLIElement,
@@ -313,7 +313,7 @@ const SidebarMenuItem = React.forwardRef<
     {...props}
   />
 ))
-SidebarMenuItem.displayName = "SidebarMenuItem"
+SidebarMenuItem.display_name = "SidebarMenuItem"
 
 
 const SidebarMenuButton = React.forwardRef<
@@ -363,7 +363,7 @@ const SidebarMenuButton = React.forwardRef<
     )
   }
 )
-SidebarMenuButton.displayName = "SidebarMenuButton"
+SidebarMenuButton.display_name = "SidebarMenuButton"
 
 export {
   Sidebar,

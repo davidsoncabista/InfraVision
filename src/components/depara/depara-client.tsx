@@ -500,12 +500,12 @@ export function DeParaClient() {
                                                     </Tooltip>
                                                      <Tooltip>
                                                         <TooltipTrigger asChild>
-                                                            <Button variant="ghost" size="icon" disabled={!conn.imageUrl}>
+                                                            <Button variant="ghost" size="icon" disabled={!conn.image_url}>
                                                                 <Camera className="h-4 w-4" />
                                                             </Button>
                                                         </TooltipTrigger>
                                                         <TooltipContent>
-                                                            {conn.imageUrl ? <img src={conn.imageUrl} alt="Evidência" className="h-48 w-auto rounded-md" data-ai-hint="cable connection"/> : <p>Sem evidência fotográfica</p>}
+                                                            {conn.image_url ? <img src={conn.image_url} alt="Evidência" className="h-48 w-auto rounded-md" data-ai-hint="cable connection"/> : <p>Sem evidência fotográfica</p>}
                                                         </TooltipContent>
                                                     </Tooltip>
                                                 </TableCell>

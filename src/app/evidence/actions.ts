@@ -10,8 +10,8 @@ export interface Evidence {
     entity_id: string;
     entity_type: string;
     user_id: string;
-    userDisplayName: string;
-    userPhotoURL?: string | null;
+    userdisplay_name: string;
+    userphoto_url?: string | null;
     timestamp: string;
     type: 'note' | 'image' | 'file';
     data: {
@@ -24,27 +24,27 @@ export interface Evidence {
 
 interface SubmitEvidencePayload {
   description: string;
-  imageUrls: string[]; 
+  image_urls: string[]; 
   user_id: string;
 }
 
 export async function submitEvidence(payload: SubmitEvidencePayload) {
-  const { description, imageUrls, user_id } = payload;
+  const { description, image_urls, user_id } = payload;
   const user = await _getUserById(user_id);
 
   if (!user) {
     throw new Error("Usuário não autenticado. Não é possível registrar a evidência.");
   }
   
-  if (!description && imageUrls.length === 0) {
+  if (!description && image_urls.length === 0) {
       throw new Error("É necessário fornecer uma descrição ou pelo menos uma imagem.");
   }
 
   const uploadedFileUrls: string[] = [];
 
   try {
-    for (let i = 0; i < imageUrls.length; i++) {
-        const dataURI = imageUrls[i];
+    for (let i = 0; i < image_urls.length; i++) {
+        const dataURI = image_urls[i];
         const blobName = `evidence-general-${user.id}-${Date.now()}-${i}.jpg`;
         const url = await uploadImage(dataURI, blobName);
         uploadedFileUrls.push(url);
@@ -87,8 +87,8 @@ export async function submitEvidence(payload: SubmitEvidencePayload) {
 export async function getRecentIncidentEvidence(): Promise<Evidence[]> {
     try {
         // PostgREST: Resource Embedding para simular o JOIN
-        // Buscamos evidências de incidentes, trazendo displayname do usuário e descrição do incidente
-        const url = `/evidence?entity_type=eq.Incidents&select=*,users:user_id(displayname,photourl),incidents:entity_id(description)&order=timestamp.desc&limit=20`;
+        // Buscamos evidências de incidentes, trazendo display_name do usuário e descrição do incidente
+        const url = `/evidence?entity_type=eq.Incidents&select=*,users:user_id(display_name,photo_url),incidents:entity_id(description)&order=timestamp.desc&limit=20`;
         
         const data = await apiFetch(url);
 
@@ -97,8 +97,8 @@ export async function getRecentIncidentEvidence(): Promise<Evidence[]> {
             entity_id: record.entity_id,
             entity_type: record.entity_type,
             user_id: record.user_id,
-            userDisplayName: record.users?.displayname || record.user_id,
-            userPhotoURL: record.users?.photourl || null,
+            userdisplay_name: record.users?.display_name || record.user_id,
+            userphoto_url: record.users?.photo_url || null,
             timestamp: new Date(record.timestamp).toISOString(),
             type: record.type,
             // PostgREST retorna JSON como objeto se a coluna for JSONB, senão fazemos o parse

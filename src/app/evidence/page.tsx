@@ -88,13 +88,13 @@ const IncidentEvidenceHistoryCard = () => {
                          evidences.map(ev => (
                             <div key={ev.id} className="flex items-start gap-4">
                                 <Avatar>
-                                    <AvatarImage src={ev.userPhotoURL ?? undefined} />
-                                    <AvatarFallback>{getInitials(ev.userDisplayName)}</AvatarFallback>
+                                    <AvatarImage src={ev.userphoto_url ?? undefined} />
+                                    <AvatarFallback>{getInitials(ev.userdisplay_name)}</AvatarFallback>
                                 </Avatar>
                                 <div className="flex-1 space-y-1">
                                     <div className="flex items-center justify-between">
                                         <div>
-                                            <p className="font-semibold text-sm">{ev.userDisplayName}</p>
+                                            <p className="font-semibold text-sm">{ev.userdisplay_name}</p>
                                             <p className="text-xs text-muted-foreground">{new Date(ev.timestamp).toLocaleString()}</p>
                                         </div>
                                          <Link href="/incidents">
@@ -212,7 +212,7 @@ export default function EvidencePage() {
     try {
         await submitEvidence({
             description: data.description,
-            imageUrls: previews,
+            image_urls: previews,
             user_id: user.id,
         });
 

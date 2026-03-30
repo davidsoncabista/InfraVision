@@ -148,7 +148,7 @@ const Carousel = React.forwardRef<
     )
   }
 )
-Carousel.displayName = "Carousel"
+Carousel.display_name = "Carousel"
 
 const CarouselContent = React.forwardRef<
   HTMLDivElement,
@@ -170,7 +170,7 @@ const CarouselContent = React.forwardRef<
     </div>
   )
 })
-CarouselContent.displayName = "CarouselContent"
+CarouselContent.display_name = "CarouselContent"
 
 const CarouselItem = React.forwardRef<
   HTMLDivElement,
@@ -192,7 +192,7 @@ const CarouselItem = React.forwardRef<
     />
   )
 })
-CarouselItem.displayName = "CarouselItem"
+CarouselItem.display_name = "CarouselItem"
 
 const CarouselPrevious = React.forwardRef<
   HTMLButtonElement,
@@ -221,7 +221,7 @@ const CarouselPrevious = React.forwardRef<
     </Button>
   )
 })
-CarouselPrevious.displayName = "CarouselPrevious"
+CarouselPrevious.display_name = "CarouselPrevious"
 
 const CarouselNext = React.forwardRef<
   HTMLButtonElement,
@@ -250,7 +250,7 @@ const CarouselNext = React.forwardRef<
     </Button>
   )
 })
-CarouselNext.displayName = "CarouselNext"
+CarouselNext.display_name = "CarouselNext"
 
 export {
   type CarouselApi,

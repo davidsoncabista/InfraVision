@@ -12,7 +12,7 @@ export interface ApprovalRequest {
     entityLabel: string;
     entity_typeName: string;
     requestedAt: string;
-    requestedByUserDisplayName: string;
+    requestedByUserdisplay_name: string;
     details: { 
         from: string;
         to: string;
@@ -21,7 +21,7 @@ export interface ApprovalRequest {
     };
     status: string;
     resolverNotes?: string;
-    resolvedByUserDisplayName?: string;
+    resolvedByUserdisplay_name?: string;
     resolvedAt?: string;
 }
 
@@ -78,7 +78,7 @@ export async function getPendingApprovals(building_id: string): Promise<Approval
                     entityLabel: item.label || record.entity_id,
                     entity_typeName: item.type || 'N/A',
                     requestedAt: new Date(record.requestedat).toISOString(),
-                    requestedByUserDisplayName: record.requestedbyuserdisplayname,
+                    requestedByUserdisplay_name: record.requestedbyuserdisplay_name,
                     details: {
                         ...details,
                         fromName: statusMap.get(details.from) || details.from,
@@ -130,7 +130,7 @@ export async function resolveApproval(
             body: JSON.stringify({
                 status: decision,
                 resolvedbyuser_id: user.id,
-                resolvedbyuserdisplayname: user.displayName,
+                resolvedbyuserdisplay_name: user.display_name,
                 resolvernotes: notes,
                 resolvedat: new Date().toISOString()
             })

@@ -22,7 +22,7 @@ import { useRouter } from 'next/navigation';
 interface AuditLog {
     id: number;
     timestamp: string;
-    userDisplayName: string;
+    userdisplay_name: string;
     action: string;
     entity_type: string;
     entity_id: string;
@@ -250,7 +250,7 @@ export default function AuditPage() {
                                             <TooltipContent>{new Date(log.timestamp).toLocaleString()}</TooltipContent>
                                         </Tooltip>
                                     </TableCell>
-                                    <TableCell>{log.userDisplayName}</TableCell>
+                                    <TableCell>{log.userdisplay_name}</TableCell>
                                     <TableCell>
                                         <Badge variant="outline" className={cn("whitespace-nowrap", displayInfo.color)}>
                                             <Icon className="mr-2 h-3.5 w-3.5" />

@@ -192,8 +192,8 @@ export function DatacenterClient({ initialData }: { initialData: Building[] }) {
   }), [activeRoom]);
 
   const gridNaming = React.useMemo(() => ({
-    x: activeRoom?.xAxisNaming || 'alpha',
-    y: activeRoom?.yAxisNaming || 'numeric',
+    x: activeRoom?.x_axis_naming || 'alpha',
+    y: activeRoom?.y_axis_naming || 'numeric',
   }), [activeRoom]);
 
   React.useEffect(() => {

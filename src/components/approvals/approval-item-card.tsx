@@ -28,7 +28,7 @@ export function ApprovalItemCard({ request, onSuccess }: { request: ApprovalRequ
         <CardContent className="text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <User className="h-4 w-4" />
-            <span>Solicitado por: <strong>{request.requestedByUserDisplayName}</strong></span>
+            <span>Solicitado por: <strong>{request.requestedByUserdisplay_name}</strong></span>
           </div>
            <div className="flex items-center gap-2 mt-1">
             <Clock className="h-4 w-4" />

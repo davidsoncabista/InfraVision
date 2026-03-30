@@ -57,7 +57,7 @@ const resolutionFormSchema = z.object({
   sideB_itemId: z.string({ required_error: "Selecione o equipamento de destino."}),
   sideB_portId: z.string({ required_error: "Selecione a porta de destino."}),
   labelText: z.string().optional().nullable(),
-  imageUrl: z.string().optional().nullable(),
+  image_url: z.string().optional().nullable(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -117,11 +117,11 @@ const ConnectionResolutionForm = ({ incident, user, onSuccess }: { incident: Inc
 
     const form = useForm<ResolutionFormData>({
         resolver: zodResolver(resolutionFormSchema),
-        defaultValues: { sideB_itemId: '', sideB_portId: '', labelText: '', imageUrl: null },
+        defaultValues: { sideB_itemId: '', sideB_portId: '', labelText: '', image_url: null },
     });
     
     const selectedItemId = form.watch('sideB_itemId');
-    const imageUrl = form.watch('imageUrl');
+    const image_url = form.watch('image_url');
 
     useEffect(() => {
         async function fetchData() {
@@ -163,7 +163,7 @@ const ConnectionResolutionForm = ({ incident, user, onSuccess }: { incident: Inc
             toast({ variant: 'destructive', title: 'Erro', description: 'Selecione o equipamento e a porta de destino.' });
             return;
         }
-        await onSubmit({ ...sideBData, labelText: null, imageUrl: null });
+        await onSubmit({ ...sideBData, labelText: null, image_url: null });
     }
 
     const onSubmit = async (data: ResolutionFormData) => {
@@ -175,7 +175,7 @@ const ConnectionResolutionForm = ({ incident, user, onSuccess }: { incident: Inc
                     user_id: user.id,
                     portB_id: data.sideB_portId,
                     labelText: data.labelText,
-                    imageUrl: data.imageUrl,
+                    image_url: data.image_url,
                 }
             });
             toast({ title: "Sucesso!", description: "A conexão foi resolvida e o incidente fechado." });
@@ -208,10 +208,10 @@ const ConnectionResolutionForm = ({ incident, user, onSuccess }: { incident: Inc
 
     const handleUpload = async (dataURI: string, blobName: string) => {
         setIsUploading(true);
-        form.setValue('imageUrl', '');
+        form.setValue('image_url', '');
         try {
             const url = await uploadImage(dataURI, blobName);
-            form.setValue('imageUrl', url);
+            form.setValue('image_url', url);
             toast({ title: 'Sucesso!', description: 'A imagem foi carregada.' });
         } catch (error) {
             const msg = error instanceof Error ? error.message : "Erro desconhecido.";
@@ -334,10 +334,10 @@ const ConnectionResolutionForm = ({ incident, user, onSuccess }: { incident: Inc
                  <FormItem>
                     <FormLabel>Evidência Fotográfica</FormLabel>
                     <div className="relative p-2 border rounded-md bg-muted/30 min-h-[128px] w-full flex justify-center items-center group/image">
-                        {isUploading ? <Loader2 className="h-8 w-8 animate-spin" /> : imageUrl ? (
+                        {isUploading ? <Loader2 className="h-8 w-8 animate-spin" /> : image_url ? (
                             <>
-                            <img src={imageUrl} alt="Preview" className="max-h-48 object-contain rounded-md" data-ai-hint="cable connection"/>
-                            <Button variant="destructive" size="icon" className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover/image:opacity-100 transition-opacity" onClick={() => form.setValue('imageUrl', null)} type="button">
+                            <img src={image_url} alt="Preview" className="max-h-48 object-contain rounded-md" data-ai-hint="cable connection"/>
+                            <Button variant="destructive" size="icon" className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover/image:opacity-100 transition-opacity" onClick={() => form.setValue('image_url', null)} type="button">
                                 <Trash2 className="h-4 w-4" />
                             </Button>
                             </>
