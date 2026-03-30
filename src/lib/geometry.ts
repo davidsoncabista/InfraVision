@@ -55,18 +55,18 @@ export function checkCollision(
   allItems: GridItem[],
   room: Room
 ): boolean {
-  if (!room.tileWidthCm || !room.tileHeightCm) return false;
+  if (!room.tile_width_cm || !room.tile_height_cm) return false;
 
   const tileDimensions: TileDimensions = {
-    widthCm: room.tileWidthCm,
-    heightCm: room.tileHeightCm,
+    widthCm: room.tile_width_cm,
+    heightCm: room.tile_height_cm,
   };
 
-  const GRID_COLS = Math.floor((room.widthM * 100) / tileDimensions.widthCm);
-  const GRID_ROWS = Math.floor((room.depthM * 100) / tileDimensions.heightCm);
+  const GRID_COLS = Math.floor((room.width_m * 100) / tileDimensions.widthCm);
+  const GRID_ROWS = Math.floor((room.width_m * 100) / tileDimensions.heightCm);
 
   // Calcula as dimensões do item em células do grid
-  const itemWidthInCells = itemToCheck.widthM / (tileDimensions.widthCm / 100);
+  const itemWidthInCells = itemToCheck.width_m / (tileDimensions.widthCm / 100);
   const itemHeightInCells = itemToCheck.heightM / (tileDimensions.heightCm / 100);
 
   const itemToCheckEndX = itemToCheck.x + itemWidthInCells;
@@ -82,7 +82,7 @@ export function checkCollision(
     // Ignora a verificação do item com ele mesmo
     if (otherItem.id === itemToCheck.id) continue;
 
-    const otherItemWidthInCells = otherItem.widthM / (tileDimensions.widthCm / 100);
+    const otherItemWidthInCells = otherItem.width_m / (tileDimensions.widthCm / 100);
     const otherItemHeightInCells = otherItem.heightM / (tileDimensions.heightCm / 100);
     const otherItemEndX = otherItem.x + otherItemWidthInCells;
     const otherItemEndY = otherItem.y + otherItemHeightInCells;

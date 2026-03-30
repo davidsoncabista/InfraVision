@@ -14,10 +14,10 @@ export interface Room {
   id: string;
   name: string;
   building_id: string;
-  widthM?: number;
-  depthM?: number;
-  tileWidthCm?: number;
-  tileHeightCm?: number;
+  width_m?: number;
+  width_m?: number;
+  tile_width_cm?: number;
+  tile_height_cm?: number;
 }
 
 export interface BuildingWithRooms {
@@ -30,7 +30,7 @@ export interface BuildingWithRooms {
 async function getBuildings(): Promise<BuildingWithRooms[]> {
     try {
         // No PostgREST usamos Resource Embedding para trazer salas dentro de prédios em uma só chamada
-        const url = '/buildings?select=id,name,address,rooms(id,name,building_id,widthm,depthm,tilewidthcm,tileheightcm)&order=name.asc';
+        const url = '/buildings?select=id,name,address,rooms(id,name,building_id,width_m,width_m,tile_width_cm,tile_height_cm)&order=name.asc';
         const data = await apiFetch(url);
         
         return (data || []).map((b: any) => ({
@@ -41,10 +41,10 @@ async function getBuildings(): Promise<BuildingWithRooms[]> {
                 id: r.id,
                 name: r.name,
                 building_id: r.building_id,
-                widthM: r.widthm,
-                depthM: r.depthm,
-                tileWidthCm: r.tilewidthcm || 60,
-                tileHeightCm: r.tileheightcm || 60,
+                width_m: r.width_m,
+                width_m: r.width_m,
+                tile_width_cm: r.tile_width_cm || 60,
+                tile_height_cm: r.tile_height_cm || 60,
             })).sort((ra: any, rb: any) => ra.name.localeCompare(rb.name))
         }));
 
@@ -112,17 +112,17 @@ export default async function BuildingsPage() {
                                   {room.name}
                                 </TableCell>
                                 <TableCell>
-                                  {room.widthM && room.depthM ? (
-                                    <span>{room.widthM}m x {room.depthM}m</span>
+                                  {room.width_m && room.width_m ? (
+                                    <span>{room.width_m}m x {room.width_m}m</span>
                                   ) : (
                                     <span className="text-xs text-muted-foreground/60 italic">Não definido</span>
                                   )}
                                 </TableCell>
                                 <TableCell>
-                                  {room.tileWidthCm && room.tileHeightCm ? (
+                                  {room.tile_width_cm && room.tile_height_cm ? (
                                     <span className="flex items-center gap-2">
                                       <Grid className="h-4 w-4 text-muted-foreground" />
-                                      {room.tileWidthCm}cm x {room.tileHeightCm}cm
+                                      {room.tile_width_cm}cm x {room.tile_height_cm}cm
                                     </span>
                                   ) : (
                                     <span className="text-xs text-muted-foreground/60 italic">Padrão (60x60cm)</span>

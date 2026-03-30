@@ -11,10 +11,10 @@ export interface ItemType {
   name: string;
   category: string;
   shape: 'rectangle' | 'circle';
-  defaultWidthM: number;
+  defaultwidth_m: number;
   defaultHeightM: number;
   defaultRadiusM?: number | null;
-  iconName?: string;
+  icon_name?: string;
   canHaveChildren?: boolean;
   isResizable?: boolean;
   status: 'active' | 'deleted';
@@ -31,10 +31,10 @@ const mapItemType = (r: any): ItemType => ({
     name: r.name,
     category: r.category,
     shape: r.shape || 'rectangle',
-    defaultWidthM: r.defaultwidthm || 0,
+    defaultwidth_m: r.defaultwidth_m || 0,
     defaultHeightM: r.defaultheightm || 0,
     defaultRadiusM: r.defaultradiusm,
-    iconName: r.iconname,
+    icon_name: r.icon_name,
     canHaveChildren: !!r.canhavechildren,
     isResizable: !!r.isresizable,
     status: r.status,
@@ -65,14 +65,14 @@ export async function addItemType(data: any, isParentType: boolean) {
         id: newId,
         name: data.name,
         category: data.category || 'Equipamento',
-        iconname: data.iconName || null,
+        icon_name: data.icon_name || null,
         canhavechildren: data.canHaveChildren ? true : false,
         isresizable: data.isResizable ? true : false,
         status: 'active',
         is_test_data: false,
         defaultcolor: data.defaultColor || null,
         shape: data.shape || 'rectangle',
-        defaultwidthm: data.shape === 'circle' ? data.defaultRadiusM : (data.defaultWidthM || 0.6),
+        defaultwidth_m: data.shape === 'circle' ? data.defaultRadiusM : (data.defaultwidth_m || 0.6),
         defaultheightm: data.shape === 'circle' ? data.defaultRadiusM : (data.defaultHeightM || 1.0),
         defaultradiusm: data.defaultRadiusM || null,
         isdefault: false
@@ -96,8 +96,8 @@ export async function updateItemType(id: string, data: any, isParentType: boolea
   const dataForDb: any = {};
   if (data.name) dataForDb.name = data.name;
   if (data.category) dataForDb.category = data.category;
-  if (data.iconName !== undefined) dataForDb.iconname = data.iconName;
-  if (data.defaultWidthM !== undefined) dataForDb.defaultwidthm = data.defaultWidthM;
+  if (data.icon_name !== undefined) dataForDb.icon_name = data.icon_name;
+  if (data.defaultwidth_m !== undefined) dataForDb.defaultwidth_m = data.defaultwidth_m;
   if (data.defaultHeightM !== undefined) dataForDb.defaultheightm = data.defaultHeightM;
   if (data.defaultRadiusM !== undefined) dataForDb.defaultradiusm = data.defaultRadiusM;
   if (data.defaultColor !== undefined) dataForDb.defaultcolor = data.defaultColor;

@@ -59,15 +59,15 @@ const parentitem_typeschema = z.object({
   name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres."),
   category: z.string().min(3, "A categoria deve ter pelo menos 3 caracteres."),
   shape: z.enum(['rectangle', 'circle']),
-  defaultWidthM: z.coerce.number().optional().nullable(),
+  defaultwidth_m: z.coerce.number().optional().nullable(),
   defaultHeightM: z.coerce.number().optional().nullable(),
   defaultRadiusM: z.coerce.number().optional().nullable(),
-  iconName: z.string().optional(),
+  icon_name: z.string().optional(),
   canHaveChildren: z.boolean(),
   isResizable: z.boolean(),
   defaultColor: z.string().optional(),
 }).refine(data => {
-    if (data.shape === 'rectangle' && (!data.defaultWidthM || !data.defaultHeightM)) {
+    if (data.shape === 'rectangle' && (!data.defaultwidth_m || !data.defaultHeightM)) {
         return false;
     }
     if (data.shape === 'circle' && !data.defaultRadiusM) {
@@ -82,10 +82,10 @@ const parentitem_typeschema = z.object({
 // Esquema simplificado para tipos de item filho (equipamentos aninhados)
 const childitem_typeschema = z.object({
     name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres."),
-    iconName: z.string().optional(),
+    icon_name: z.string().optional(),
     // Campos que não serão mostrados na UI, mas precisam de valores padrão para a action.
     category: z.string().default('Equipamento'), 
-    defaultWidthM: z.coerce.number().default(0),
+    defaultwidth_m: z.coerce.number().default(0),
     defaultHeightM: z.coerce.number().default(0),
     defaultColor: z.string().optional(),
 });
@@ -107,18 +107,18 @@ export function AddItemTypeDialog({ isParentType, children }: AddItemTypeDialogP
       name: "",
       category: "",
       shape: "rectangle",
-      defaultWidthM: 0.6,
+      defaultwidth_m: 0.6,
       defaultHeightM: 1.0,
       defaultRadiusM: 0.5,
-      iconName: "",
+      icon_name: "",
       canHaveChildren: true,
       isResizable: true,
       defaultColor: "",
     } : {
       name: "",
-      iconName: "",
+      icon_name: "",
       category: 'Equipamento',
-      defaultWidthM: 0,
+      defaultwidth_m: 0,
       defaultHeightM: 0,
       defaultColor: null,
     }
@@ -132,18 +132,18 @@ export function AddItemTypeDialog({ isParentType, children }: AddItemTypeDialogP
             name: "",
             category: "",
             shape: "rectangle",
-            defaultWidthM: 0.6,
+            defaultwidth_m: 0.6,
             defaultHeightM: 1.0,
             defaultRadiusM: 0.5,
-            iconName: "",
+            icon_name: "",
             canHaveChildren: true,
             isResizable: true,
             defaultColor: "",
         } : {
             name: "",
-            iconName: "",
+            icon_name: "",
             category: 'Equipamento',
-            defaultWidthM: 0,
+            defaultwidth_m: 0,
             defaultHeightM: 0,
             defaultColor: null,
         });
@@ -160,7 +160,7 @@ export function AddItemTypeDialog({ isParentType, children }: AddItemTypeDialogP
         title: "Sucesso!",
         description: `O tipo de item "${data.name}" foi adicionado.`,
       });
-      form.reset({ ...form.getValues(), name: "", iconName: "" });
+      form.reset({ ...form.getValues(), name: "", icon_name: "" });
       setIsOpen(false);
       router.refresh(); 
     } catch (error: any) {
@@ -213,7 +213,7 @@ export function AddItemTypeDialog({ isParentType, children }: AddItemTypeDialogP
         
         {selectedShape === 'rectangle' ? (
              <div className="grid grid-cols-2 gap-4">
-                <FormField control={form.control} name="defaultWidthM" render={({ field }) => (
+                <FormField control={form.control} name="defaultwidth_m" render={({ field }) => (
                     <FormItem><FormLabel>Largura Padrão (m)</FormLabel><FormControl><Input type="number" step="0.01" {...field} /></FormControl><FormMessage /></FormItem>
                 )}/>
                 <FormField control={form.control} name="defaultHeightM" render={({ field }) => (
@@ -229,7 +229,7 @@ export function AddItemTypeDialog({ isParentType, children }: AddItemTypeDialogP
         )}
        
         <div className="grid grid-cols-2 gap-4">
-            <FormField control={form.control} name="iconName" render={({ field }) => (
+            <FormField control={form.control} name="icon_name" render={({ field }) => (
                 <FormItem><FormLabel>Ícone</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Selecione um ícone..." /></SelectTrigger></FormControl>
                     <SelectContent><ScrollArea className="h-48">{iconList.map((icon) => (<SelectItem key={icon.name} value={icon.name}><div className="flex items-center gap-2"><icon.icon className="h-4 w-4" /><span>{icon.name}</span></div></SelectItem>))}</ScrollArea></SelectContent>
@@ -255,7 +255,7 @@ export function AddItemTypeDialog({ isParentType, children }: AddItemTypeDialogP
         <FormField control={form.control} name="name" render={({ field }) => (
             <FormItem><FormLabel>Nome do Tipo de Equipamento</FormLabel><FormControl><Input placeholder="Ex: Servidor, Switch, Patch Panel" {...field} /></FormControl><FormMessage /></FormItem>
         )}/>
-        <FormField control={form.control} name="iconName" render={({ field }) => (
+        <FormField control={form.control} name="icon_name" render={({ field }) => (
             <FormItem><FormLabel>Ícone</FormLabel>
             <Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Selecione um ícone..." /></SelectTrigger></FormControl>
                 <SelectContent><ScrollArea className="h-48">{iconList.map((icon) => (<SelectItem key={icon.name} value={icon.name}><div className="flex items-center gap-2"><icon.icon className="h-4 w-4" /><span>{icon.name}</span></div></SelectItem>))}</ScrollArea></SelectContent>

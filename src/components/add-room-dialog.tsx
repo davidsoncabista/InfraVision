@@ -32,10 +32,10 @@ import { Separator } from "@/components/ui/separator";
 
 const formSchema = z.object({
   name: z.string().min(3, "O nome da sala deve ter pelo menos 3 caracteres."),
-  widthM: z.coerce.number().optional(),
-  depthM: z.coerce.number().optional(),
-  tileWidthCm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
-  tileHeightCm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
+  width_m: z.coerce.number().optional(),
+  width_m: z.coerce.number().optional(),
+  tile_width_cm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
+  tile_height_cm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -55,10 +55,10 @@ export function AddRoomDialog({ building_id, buildingName, open, onOpenChange }:
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      widthM: undefined,
-      depthM: undefined,
-      tileWidthCm: 60,
-      tileHeightCm: 60,
+      width_m: undefined,
+      width_m: undefined,
+      tile_width_cm: 60,
+      tile_height_cm: 60,
     },
   });
 
@@ -119,7 +119,7 @@ export function AddRoomDialog({ building_id, buildingName, open, onOpenChange }:
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="widthM"
+                name="width_m"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Largura (m)</FormLabel>
@@ -132,7 +132,7 @@ export function AddRoomDialog({ building_id, buildingName, open, onOpenChange }:
               />
               <FormField
                 control={form.control}
-                name="depthM"
+                name="width_m"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Profundidade (m)</FormLabel>
@@ -150,7 +150,7 @@ export function AddRoomDialog({ building_id, buildingName, open, onOpenChange }:
              <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="tileWidthCm"
+                name="tile_width_cm"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Largura do Piso (cm)</FormLabel>
@@ -163,7 +163,7 @@ export function AddRoomDialog({ building_id, buildingName, open, onOpenChange }:
               />
               <FormField
                 control={form.control}
-                name="tileHeightCm"
+                name="tile_height_cm"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Profundidade do Piso (cm)</FormLabel>

@@ -8,7 +8,7 @@ export interface IncidentStatus {
   name: string;
   description: string | null;
   color: string;
-  iconName: string | null;
+  icon_name: string | null;
   isDefault: boolean;
 }
 
@@ -36,7 +36,7 @@ export async function getIncidentStatuses(): Promise<IncidentStatus[]> {
     const data = await apiFetch('/incidentstatuses?order=isdefault.desc,name.asc');
     return (data || []).map((s: any) => ({
         ...s,
-        iconName: s.iconname,
+        icon_name: s.icon_name,
         isDefault: !!s.isdefault
     }));
   } catch (error) {
@@ -54,7 +54,7 @@ export async function addIncidentStatus(data: any) {
             name: data.name, 
             description: data.description, 
             color: data.color, 
-            iconname: data.iconName,
+            icon_name: data.icon_name,
             isdefault: false 
         })
     });
@@ -70,7 +70,7 @@ export async function updateIncidentStatus(id: string, data: any) {
         if(data.name) dbData.name = data.name;
         if(data.description) dbData.description = data.description;
         if(data.color) dbData.color = data.color;
-        if(data.iconName) dbData.iconname = data.iconName;
+        if(data.icon_name) dbData.icon_name = data.icon_name;
 
         await apiFetch(`/incidentstatuses?id=eq.${id}&isdefault=eq.false`, {
             method: 'PATCH',

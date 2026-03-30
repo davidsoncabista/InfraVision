@@ -182,13 +182,13 @@ export function DatacenterClient({ initialData }: { initialData: Building[] }) {
   const activeRoom = React.useMemo(() => availableRooms.find(r => r.id === activeroom_id), [availableRooms, activeroom_id]);
 
   const roomDimensions = React.useMemo(() => ({
-    widthM: activeRoom?.widthM || 20,
-    depthM: activeRoom?.depthM || 20,
+    width_m: activeRoom?.width_m || 20,
+    width_m: activeRoom?.width_m || 20,
   }), [activeRoom]);
 
   const tileDimensions = React.useMemo(() => ({
-      widthCm: activeRoom?.tileWidthCm || 60,
-      heightCm: activeRoom?.tileHeightCm || 60,
+      widthCm: activeRoom?.tile_width_cm || 60,
+      heightCm: activeRoom?.tile_height_cm || 60,
   }), [activeRoom]);
 
   const gridNaming = React.useMemo(() => ({
@@ -233,8 +233,8 @@ export function DatacenterClient({ initialData }: { initialData: Building[] }) {
   }, [activebuilding_id, activeroom_id, gridItems]);
 
 
-  const GRID_COLS = Math.floor((roomDimensions.widthM * 100) / tileDimensions.widthCm);
-  const GRID_ROWS = Math.floor((roomDimensions.depthM * 100) / tileDimensions.heightCm);
+  const GRID_COLS = Math.floor((roomDimensions.width_m * 100) / tileDimensions.widthCm);
+  const GRID_ROWS = Math.floor((roomDimensions.width_m * 100) / tileDimensions.heightCm);
 
   const handleWheel = (e: React.WheelEvent) => {
     if (!floorPlanRef.current) return;
@@ -276,7 +276,7 @@ export function DatacenterClient({ initialData }: { initialData: Building[] }) {
       const draggedItem = gridItems.find(item => item.id === draggingItem.id);
       if (draggedItem && (draggedItem.x !== draggingItem.originalX || draggedItem.y !== draggingItem.originalY)) {
         
-        const itemWidthInCells = draggedItem.widthM / (tileDimensions.widthCm / 100);
+        const itemWidthInCells = draggedItem.width_m / (tileDimensions.widthCm / 100);
         const itemHeightInCells = draggedItem.heightM / (tileDimensions.heightCm / 100);
         let collidesWithExclusion = false;
         for (const zone of exclusionZones) {
@@ -479,14 +479,14 @@ export function DatacenterClient({ initialData }: { initialData: Building[] }) {
         itemPixelWidth = (item.radiusM * 2) / (tileDimensions.widthCm / 100) * cellSize;
         itemPixelHeight = itemPixelWidth;
         borderRadius = '50%';
-    } else if (item.widthM != null && item.heightM != null) {
-        itemPixelWidth = (item.widthM / (tileDimensions.widthCm / 100)) * cellSize;
+    } else if (item.width_m != null && item.heightM != null) {
+        itemPixelWidth = (item.width_m / (tileDimensions.widthCm / 100)) * cellSize;
         itemPixelHeight = (item.heightM / (tileDimensions.heightCm / 100)) * cellSize;
     } else {
         return null;
     }
 
-    const Icon = itemIcons[item.iconName || 'default'] || Box;
+    const Icon = itemIcons[item.icon_name || 'default'] || Box;
     const itemColor = item.color || item.itemTypeColor || '#cccccc';
 
     const currentStatus = statuses.find(s => s.id === item.status);

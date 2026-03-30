@@ -31,7 +31,7 @@ export async function getIncidents(building_id: string): Promise<Incident[]> {
     try {
         // Resource embedding para trazer nomes de tipos, severidades e status em uma só chamada REST
         // Nota: O PostgREST usa o nome da relação definida pela FK
-        const url = `/incidents?select=*,incidenttypes(name),incidentseverities(name,color,rank),incidentstatuses(name,color,iconname)&incidentstatuses.name=not.in.(Resolvido,Fechado)&order=detectedat.desc`;
+        const url = `/incidents?select=*,incidenttypes(name),incidentseverities(name,color,rank),incidentstatuses(name,color,icon_name)&incidentstatuses.name=not.in.(Resolvido,Fechado)&order=detectedat.desc`;
         
         const data = await apiFetch(url);
         
@@ -48,7 +48,7 @@ export async function getIncidents(building_id: string): Promise<Incident[]> {
             resolvedAt: r.resolvedat ? new Date(r.resolvedat).toISOString() : null,
             severityColor: r.incidentseverities?.color || 'gray',
             statusColor: r.incidentstatuses?.color || 'gray',
-            statusIcon: r.incidentstatuses?.iconname || 'Info',
+            statusIcon: r.incidentstatuses?.icon_name || 'Info',
             evidenceCount: 0 // Será preenchido assincronamente se necessário
         }));
     } catch (err) {

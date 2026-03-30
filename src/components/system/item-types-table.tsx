@@ -52,7 +52,7 @@ export function item_typesTable({ isParentTypeTable }: item_typesTableProps) {
                     <TableRow key={type.id}>
                         <TableCell className="font-medium">{type.name}</TableCell>
                         <TableCell>{type.category}</TableCell>
-                        <TableCell>{type.defaultWidthM}m x {type.defaultHeightM}m</TableCell>
+                        <TableCell>{type.defaultwidth_m}m x {type.defaultHeightM}m</TableCell>
                         {isParentTypeTable && (
                             <TableCell className="space-x-2">
                                 {type.isResizable && <Badge variant="outline">Redimensionável</Badge>}

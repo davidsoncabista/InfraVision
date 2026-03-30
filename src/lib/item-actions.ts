@@ -16,7 +16,7 @@ export async function addItem({ label, itemType, room }: { label: string; itemTy
       label: label,
       x: 0,
       y: 0,
-      widthm: itemType.defaultWidthM,
+      width_m: itemType.defaultwidth_m,
       heightm: itemType.defaultHeightM,
       radiusm: itemType.defaultRadiusM || null,
       type: itemType.name,

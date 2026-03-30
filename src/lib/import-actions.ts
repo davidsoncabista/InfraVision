@@ -99,7 +99,7 @@ export async function importparent_items(items: ParentItemImportData[]): Promise
                     label: item.label, 
                     type: item.type,
                     status: 'draft',
-                    widthm: 0.6,
+                    width_m: 0.6,
                     heightm: 1.0,
                     is_test_data: false 
                 })

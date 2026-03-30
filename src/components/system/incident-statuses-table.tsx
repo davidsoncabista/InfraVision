@@ -25,8 +25,8 @@ const iconMap: Record<string, React.ElementType> = {
   Info,
 };
 
-const StatusBadge = ({ status, color, iconName }: { status: string, color: string, iconName: string | null }) => {
-    const IconComponent = iconName ? iconMap[iconName] || Info : Info;
+const StatusBadge = ({ status, color, icon_name }: { status: string, color: string, icon_name: string | null }) => {
+    const IconComponent = icon_name ? iconMap[icon_name] || Info : Info;
     return (
         <Badge variant="outline" className={cn("capitalize", colorVariants[color] || colorVariants.gray)}>
             <IconComponent className="h-4 w-4 mr-2" />
@@ -70,7 +70,7 @@ export function IncidentStatusesTable() {
                         statuses.map(status => (
                             <TableRow key={status.id}>
                                 <TableCell>
-                                    <StatusBadge status={status.name} color={status.color} iconName={status.iconName} />
+                                    <StatusBadge status={status.name} color={status.color} icon_name={status.icon_name} />
                                 </TableCell>
                                 <TableCell className="text-muted-foreground">{status.description}</TableCell>
                                 <TableCell className="text-right">

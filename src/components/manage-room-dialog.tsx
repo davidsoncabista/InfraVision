@@ -64,10 +64,10 @@ function indexToNumeric(index: number): string {
 
 const formSchema = z.object({
   name: z.string().min(3, "O nome da sala deve ter pelo menos 3 caracteres."),
-  widthM: z.coerce.number().optional(),
-  depthM: z.coerce.number().optional(),
-  tileWidthCm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
-  tileHeightCm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
+  width_m: z.coerce.number().optional(),
+  width_m: z.coerce.number().optional(),
+  tile_width_cm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
+  tile_height_cm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
   xAxisNaming: z.enum(['alpha', 'numeric']),
   yAxisNaming: z.enum(['alpha', 'numeric']),
   newExclusionZone: z.object({
@@ -98,10 +98,10 @@ export function ManageRoomDialog({ room, open, onOpenChange }: ManageRoomDialogP
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: room.name,
-      widthM: room.widthM,
-      depthM: room.depthM, 
-      tileWidthCm: room.tileWidthCm || 60,
-      tileHeightCm: room.tileHeightCm || 60,
+      width_m: room.width_m,
+      width_m: room.width_m, 
+      tile_width_cm: room.tile_width_cm || 60,
+      tile_height_cm: room.tile_height_cm || 60,
       xAxisNaming: room.xAxisNaming || 'alpha',
       yAxisNaming: room.yAxisNaming || 'numeric',
       newExclusionZone: { xStr: '', yStr: '', width: 1, height: 1 }
@@ -132,10 +132,10 @@ export function ManageRoomDialog({ room, open, onOpenChange }: ManageRoomDialogP
     if (open) {
       form.reset({
         name: room.name,
-        widthM: room.widthM,
-        depthM: room.depthM, 
-        tileWidthCm: room.tileWidthCm || 60,
-        tileHeightCm: room.tileHeightCm || 60,
+        width_m: room.width_m,
+        width_m: room.width_m, 
+        tile_width_cm: room.tile_width_cm || 60,
+        tile_height_cm: room.tile_height_cm || 60,
         xAxisNaming: room.xAxisNaming || 'alpha',
         yAxisNaming: room.yAxisNaming || 'numeric',
       });
@@ -219,10 +219,10 @@ export function ManageRoomDialog({ room, open, onOpenChange }: ManageRoomDialogP
           <form onSubmit={form.handleSubmit(onRoomSubmit)} className="space-y-4 pt-4">
              <FormField control={form.control} name="name" render={({ field }) => ( <FormItem><FormLabel>Nome da Sala</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem> )}/>
              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <FormField control={form.control} name="widthM" render={({ field }) => ( <FormItem><FormLabel>Largura (m)</FormLabel><FormControl><Input type="number" step="0.1" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem> )}/>
-              <FormField control={form.control} name="depthM" render={({ field }) => ( <FormItem><FormLabel>Profundidade (m)</FormLabel><FormControl><Input type="number" step="0.1" {...field} value={field.value ?? ''}/></FormControl><FormMessage /></FormItem> )}/>
-              <FormField control={form.control} name="tileWidthCm" render={({ field }) => ( <FormItem><FormLabel>Piso (cm L)</FormLabel><FormControl><Input type="number" {...field} value={field.value ?? ''}/></FormControl><FormMessage /></FormItem> )}/>
-              <FormField control={form.control} name="tileHeightCm" render={({ field }) => ( <FormItem><FormLabel>Piso (cm P)</FormLabel><FormControl><Input type="number" {...field} value={field.value ?? ''}/></FormControl><FormMessage /></FormItem> )}/>
+              <FormField control={form.control} name="width_m" render={({ field }) => ( <FormItem><FormLabel>Largura (m)</FormLabel><FormControl><Input type="number" step="0.1" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem> )}/>
+              <FormField control={form.control} name="width_m" render={({ field }) => ( <FormItem><FormLabel>Profundidade (m)</FormLabel><FormControl><Input type="number" step="0.1" {...field} value={field.value ?? ''}/></FormControl><FormMessage /></FormItem> )}/>
+              <FormField control={form.control} name="tile_width_cm" render={({ field }) => ( <FormItem><FormLabel>Piso (cm L)</FormLabel><FormControl><Input type="number" {...field} value={field.value ?? ''}/></FormControl><FormMessage /></FormItem> )}/>
+              <FormField control={form.control} name="tile_height_cm" render={({ field }) => ( <FormItem><FormLabel>Piso (cm P)</FormLabel><FormControl><Input type="number" {...field} value={field.value ?? ''}/></FormControl><FormMessage /></FormItem> )}/>
             </div>
             <DialogFooter className="pt-4">
               <Button type="submit" disabled={isSubmitting}>

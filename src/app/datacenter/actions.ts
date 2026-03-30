@@ -14,7 +14,7 @@ export async function getDatacenterData(): Promise<Building[]> {
             apiFetch('/buildings?select=id,name&order=name.asc'),
             apiFetch('/rooms?order=name.asc'),
             apiFetch('/parent_items?status=not.in.(decommissioned,deleted)'),
-            apiFetch('/item_types?select=name,shape,iconname,defaultcolor')
+            apiFetch('/item_types?select=name,shape,icon_name,defaultcolor')
         ]);
 
         // Criamos um mapa de tipos para enriquecer os itens com ícones e formas
@@ -25,10 +25,10 @@ export async function getDatacenterData(): Promise<Building[]> {
             id: r.id,
             name: r.name,
             building_id: r.building_id,
-            widthM: r.widthm || 20, 
-            depthM: r.depthm || 20, 
-            tileWidthCm: r.tilewidthcm || 60,
-            tileHeightCm: r.tileheightcm || 60,
+            width_m: r.width_m || 20, 
+            width_m: r.width_m || 20, 
+            tile_width_cm: r.tile_width_cm || 60,
+            tile_height_cm: r.tile_height_cm || 60,
             xAxisNaming: r.xaxisnaming || 'alpha',
             yAxisNaming: r.yaxisnaming || 'numeric',
             items: []
@@ -40,7 +40,7 @@ export async function getDatacenterData(): Promise<Building[]> {
             return {
                 ...item,
                 room_id: item.room_id,
-                widthM: item.widthm,
+                width_m: item.width_m,
                 heightM: item.heightm,
                 radiusM: item.radiusm,
                 serial_number: item.serial_number,
@@ -53,7 +53,7 @@ export async function getDatacenterData(): Promise<Building[]> {
                 is_test_data: !!item.is_test_data,
                 // Dados vindos da tabela de tipos
                 shape: typeInfo.shape,
-                iconName: typeInfo.iconname,
+                icon_name: typeInfo.icon_name,
                 itemTypeColor: typeInfo.defaultcolor
             };
         });

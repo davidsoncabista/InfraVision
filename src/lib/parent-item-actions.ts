@@ -37,7 +37,7 @@ export async function getUnallocatedparent_items(): Promise<GridItem[]> {
         return (data || []).map((item: any) => ({
             ...item,
             room_id: item.room_id,
-            widthM: item.widthm,
+            width_m: item.width_m,
             heightM: item.heightm,
             radiusM: item.radiusm,
             serial_number: item.serial_number,

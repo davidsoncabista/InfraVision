@@ -439,7 +439,7 @@ export const ItemDetailDialog = ({
                         name: i.roomName,
                         building_id: building.id,
                         items: [],
-                        widthM: 20, depthM: 20, tileWidthCm: 60, tileHeightCm: 60,
+                        width_m: 20, width_m: 20, tile_width_cm: 60, tile_height_cm: 60,
                         xAxisNaming: 'alpha', yAxisNaming: 'numeric'
                     });
                 }
@@ -582,8 +582,8 @@ export const ItemDetailDialog = ({
                     {isParentItem && shape === 'rectangle' && (
                     <>
                         <div>
-                            <Label htmlFor="widthM">Largura (m)</Label>
-                            <Input id="widthM" type="number" step="0.01" value={editFormData.widthM ?? ''} onChange={(e) => handleNumericFormChange('widthM', e.target.value)} />
+                            <Label htmlFor="width_m">Largura (m)</Label>
+                            <Input id="width_m" type="number" step="0.01" value={editFormData.width_m ?? ''} onChange={(e) => handleNumericFormChange('width_m', e.target.value)} />
                         </div>
                          <div>
                             <Label htmlFor="heightM">Comprimento (m)</Label>

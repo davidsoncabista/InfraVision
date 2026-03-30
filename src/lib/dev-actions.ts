@@ -66,8 +66,8 @@ export async function populateRooms() {
             id: 'R_DEV_01A', 
             name: 'Sala de Teste 01', 
             building_id: 'B_DEV_01', 
-            widthm: 20, 
-            depthm: 20, 
+            width_m: 20, 
+            width_m: 20, 
             is_test_data: true 
         })
     });
@@ -85,7 +85,7 @@ export async function populateparent_items() {
             label: 'RACK-TESTE-01', 
             x: 2, 
             y: 2, 
-            widthm: 0.6, 
+            width_m: 0.6, 
             heightm: 1.2, 
             type: 'Rack 42U', 
             status: 'active', 

@@ -6,7 +6,7 @@ export interface GridItem {
   label: string;
   x: number;
   y: number;
-  widthM: number; 
+  width_m: number; 
   heightM: number; 
   radiusM?: number | null; // Adicionando raio
   type: string;
@@ -35,7 +35,7 @@ export interface GridItem {
   parentName?: string | null;
   // Propriedade para definir a forma
   shape?: 'rectangle' | 'circle';
-  iconName?: string;
+  icon_name?: string;
 }
 
 export type AxisNaming = 'alpha' | 'numeric';
@@ -44,10 +44,10 @@ export interface Room {
   id: string;
   name: string;
   building_id: string;
-  widthM: number;
-  depthM: number;
-  tileWidthCm: number;
-  tileHeightCm: number;
+  width_m: number;
+  width_m: number;
+  tile_width_cm: number;
+  tile_height_cm: number;
   xAxisNaming: AxisNaming;
   yAxisNaming: AxisNaming;
   items: GridItem[];

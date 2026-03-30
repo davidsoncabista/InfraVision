@@ -46,7 +46,7 @@ const formSchema = z.object({
   name: z.string().min(2, "O nome deve ter pelo menos 2 caracteres."),
   description: z.string().optional().nullable(),
   color: z.enum(colors),
-  iconName: z.enum(icons).optional().nullable(),
+  icon_name: z.enum(icons).optional().nullable(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -73,7 +73,7 @@ export function ManageIncidentStatusDialog({ mode, status, open, onOpenChange }:
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", description: "", color: "gray", iconName: "Info" },
+    defaultValues: { name: "", description: "", color: "gray", icon_name: "Info" },
   });
 
   useEffect(() => {
@@ -83,10 +83,10 @@ export function ManageIncidentStatusDialog({ mode, status, open, onOpenChange }:
           name: status.name,
           description: status.description || "",
           color: status.color as (typeof colors)[number],
-          iconName: status.iconName as (typeof icons)[number] || "Info",
+          icon_name: status.icon_name as (typeof icons)[number] || "Info",
         });
       } else {
-        form.reset({ name: "", description: "", color: "gray", iconName: "Info" });
+        form.reset({ name: "", description: "", color: "gray", icon_name: "Info" });
       }
     }
   }, [status, mode, open, form]);
@@ -138,13 +138,13 @@ export function ManageIncidentStatusDialog({ mode, status, open, onOpenChange }:
                   </Select><FormMessage />
                 </FormItem>
               )}/>
-              <FormField control={form.control} name="iconName" render={({ field }) => (
+              <FormField control={form.control} name="icon_name" render={({ field }) => (
                 <FormItem>
                   <FormLabel>Ícone</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value || "Info"}><FormControl><SelectTrigger><SelectValue/></SelectTrigger></FormControl>
-                    <SelectContent>{icons.map(iconName => {
-                      const Icon = iconMap[iconName];
-                      return (<SelectItem key={iconName} value={iconName}><div className="flex items-center gap-2"><Icon className="h-4 w-4"/><span>{iconName}</span></div></SelectItem>)
+                    <SelectContent>{icons.map(icon_name => {
+                      const Icon = iconMap[icon_name];
+                      return (<SelectItem key={icon_name} value={icon_name}><div className="flex items-center gap-2"><Icon className="h-4 w-4"/><span>{icon_name}</span></div></SelectItem>)
                     })}</SelectContent>
                   </Select><FormMessage />
                 </FormItem>

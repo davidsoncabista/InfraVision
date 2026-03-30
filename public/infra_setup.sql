@@ -72,14 +72,14 @@ BEGIN
         id NVARCHAR(50) PRIMARY KEY,
         name NVARCHAR(100) NOT NULL UNIQUE,
         category NVARCHAR(100) NOT NULL,
-        iconName NVARCHAR(50),
+        icon_name NVARCHAR(50),
         canHaveChildren BIT NOT NULL DEFAULT 0,
         isResizable BIT NOT NULL DEFAULT 1,
         status NVARCHAR(50) NOT NULL DEFAULT 'active',
         is_test_data BIT NOT NULL DEFAULT 0,
         defaultColor NVARCHAR(50),
         shape NVARCHAR(50) NOT NULL DEFAULT 'rectangle',
-        defaultWidthM FLOAT,
+        defaultwidth_m FLOAT,
         defaultHeightM FLOAT,
         defaultRadiusM FLOAT,
         isDefault BIT NOT NULL DEFAULT 0
@@ -93,12 +93,12 @@ USING (
         ('type_rack_default', 'Rack 42U', 'Gabinetes', 'Box', 1, 1, '#3b82f6', 'rectangle', 0.6, 1.2, NULL, 1),
         ('type_qdf', 'QDF', 'Cabeamento', 'Network', 1, 0, '#f97316', 'rectangle', 0.8, 0.6, NULL, 1),
         ('type_ac_row', 'Ar Condicionado In-Row', 'Climatização', 'Snowflake', 0, 0, '#64748b', 'rectangle', 0.3, 1, NULL, 1)
-) AS Source (id, name, category, iconName, canHaveChildren, isResizable, defaultColor, shape, defaultWidthM, defaultHeightM, defaultRadiusM, isDefault)
+) AS Source (id, name, category, icon_name, canHaveChildren, isResizable, defaultColor, shape, defaultwidth_m, defaultHeightM, defaultRadiusM, isDefault)
 ON (Target.id = Source.id)
 WHEN MATCHED THEN
-    UPDATE SET name = Source.name, category = Source.category, iconName = Source.iconName, canHaveChildren = Source.canHaveChildren, isResizable = Source.isResizable, defaultColor = Source.defaultColor, shape = Source.shape, defaultWidthM = Source.defaultWidthM, defaultHeightM = Source.defaultHeightM, defaultRadiusM = Source.defaultRadiusM, isDefault = Source.isDefault
+    UPDATE SET name = Source.name, category = Source.category, icon_name = Source.icon_name, canHaveChildren = Source.canHaveChildren, isResizable = Source.isResizable, defaultColor = Source.defaultColor, shape = Source.shape, defaultwidth_m = Source.defaultwidth_m, defaultHeightM = Source.defaultHeightM, defaultRadiusM = Source.defaultRadiusM, isDefault = Source.isDefault
 WHEN NOT MATCHED BY TARGET THEN
-    INSERT (id, name, category, iconName, canHaveChildren, isResizable, defaultColor, shape, defaultWidthM, defaultHeightM, defaultRadiusM, status, isDefault) VALUES (Source.id, Source.name, Source.category, Source.iconName, Source.canHaveChildren, Source.isResizable, Source.defaultColor, Source.shape, Source.defaultWidthM, Source.defaultHeightM, Source.defaultRadiusM, 'active', Source.isDefault);
+    INSERT (id, name, category, icon_name, canHaveChildren, isResizable, defaultColor, shape, defaultwidth_m, defaultHeightM, defaultRadiusM, status, isDefault) VALUES (Source.id, Source.name, Source.category, Source.icon_name, Source.canHaveChildren, Source.isResizable, Source.defaultColor, Source.shape, Source.defaultwidth_m, Source.defaultHeightM, Source.defaultRadiusM, 'active', Source.isDefault);
 GO
 
 
@@ -109,7 +109,7 @@ BEGIN
         id NVARCHAR(50) PRIMARY KEY,
         name NVARCHAR(100) NOT NULL UNIQUE,
         category NVARCHAR(100) NOT NULL,
-        iconName NVARCHAR(50),
+        icon_name NVARCHAR(50),
         status NVARCHAR(50) NOT NULL DEFAULT 'active',
         is_test_data BIT NOT NULL DEFAULT 0,
         defaultColor NVARCHAR(50)
@@ -128,12 +128,12 @@ USING (
         ('type_eqp_pdu_rack', 'PDU de Rack', 'Energia', 'Power', NULL),
         ('type_eqp_ups', 'UPS', 'Energia', 'BatteryCharging', NULL),
         ('type_eqp_telecom', 'Equipamento Telecom', 'Equipamentos de Telecom', 'Router', NULL)
-) AS Source (id, name, category, iconName, defaultColor)
+) AS Source (id, name, category, icon_name, defaultColor)
 ON (Target.id = Source.id)
 WHEN MATCHED THEN
-    UPDATE SET name = Source.name, category = Source.category, iconName = Source.iconName, defaultColor = Source.defaultColor
+    UPDATE SET name = Source.name, category = Source.category, icon_name = Source.icon_name, defaultColor = Source.defaultColor
 WHEN NOT MATCHED BY TARGET THEN
-    INSERT (id, name, category, iconName, defaultColor, status) VALUES (Source.id, Source.name, Source.category, Source.iconName, Source.defaultColor, 'active');
+    INSERT (id, name, category, icon_name, defaultColor, status) VALUES (Source.id, Source.name, Source.category, Source.icon_name, Source.defaultColor, 'active');
 GO
 
 

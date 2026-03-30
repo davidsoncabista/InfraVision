@@ -125,7 +125,7 @@ export function AddItemDialog({ room, open, onOpenChange, onItemAdded }: AddItem
                     <ScrollArea className="h-40 mt-2">
                       <div className="grid grid-cols-2 gap-2 pr-4">
                         {item_types.map((type) => {
-                          const Icon = iconMap[type.iconName || 'default'] || Box;
+                          const Icon = iconMap[type.icon_name || 'default'] || Box;
                           return (
                             <Card
                               key={type.id}

@@ -16,10 +16,10 @@ export interface ExclusionZone {
 interface AddRoomParams {
   building_id: string;
   name: string;
-  widthM?: number;
-  depthM?: number;
-  tileWidthCm?: number;
-  tileHeightCm?: number;
+  width_m?: number;
+  width_m?: number;
+  tile_width_cm?: number;
+  tile_height_cm?: number;
   xAxisNaming?: string;
   yAxisNaming?: string;
 }
@@ -43,10 +43,10 @@ export async function addRoom(params: AddRoomParams): Promise<void> {
           id: newId,
           name: params.name,
           building_id: params.building_id,
-          widthm: params.widthM || null,
-          depthm: params.depthM || null,
-          tilewidthcm: params.tileWidthCm || 60,
-          tileheightcm: params.tileHeightCm || 60,
+          width_m: params.width_m || null,
+          width_m: params.width_m || null,
+          tile_width_cm: params.tile_width_cm || 60,
+          tile_height_cm: params.tile_height_cm || 60,
           xaxisnaming: params.xAxisNaming || 'alpha',
           yaxisnaming: params.yAxisNaming || 'numeric',
           is_test_data: false
@@ -64,10 +64,10 @@ export async function updateRoom(params: any): Promise<void> {
   // Mapeia para minúsculo esperado pelo PostgreSQL no PostgREST
   const dbUpdates: any = {};
   if(updates.name) dbUpdates.name = updates.name;
-  if(updates.widthM !== undefined) dbUpdates.widthm = updates.widthM;
-  if(updates.depthM !== undefined) dbUpdates.depthm = updates.depthM;
-  if(updates.tileWidthCm !== undefined) dbUpdates.tilewidthcm = updates.tileWidthCm;
-  if(updates.tileHeightCm !== undefined) dbUpdates.tileheightcm = updates.tileHeightCm;
+  if(updates.width_m !== undefined) dbUpdates.width_m = updates.width_m;
+  if(updates.width_m !== undefined) dbUpdates.width_m = updates.width_m;
+  if(updates.tile_width_cm !== undefined) dbUpdates.tile_width_cm = updates.tile_width_cm;
+  if(updates.tile_height_cm !== undefined) dbUpdates.tile_height_cm = updates.tile_height_cm;
   if(updates.xAxisNaming) dbUpdates.xaxisnaming = updates.xAxisNaming;
   if(updates.yAxisNaming) dbUpdates.yaxisnaming = updates.yAxisNaming;
 

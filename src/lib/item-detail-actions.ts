@@ -54,7 +54,7 @@ export async function updateItemDetails(itemData: any, user_id: string): Promise
     const existingItem = existing[0];
 
     // Limpeza de campos injetados pela UI que não existem no DB
-    const { iconName, shape, itemTypeColor, roomName, buildingName, parentName, ...rest } = fields;
+    const { icon_name, shape, itemTypeColor, roomName, buildingName, parentName, ...rest } = fields;
     
     // Mapeamento manual para camelCase -> snake_case/minúsculo do Postgres
     const validFields: any = {};

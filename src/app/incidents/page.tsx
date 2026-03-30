@@ -37,8 +37,8 @@ const iconMap: Record<string, React.ElementType> = {
   Info,
 };
 
-const StatusBadge = ({ status, color, iconName }: { status: string, color: string, iconName: string | null }) => {
-    const IconComponent = iconName ? iconMap[iconName] || Info : Info;
+const StatusBadge = ({ status, color, icon_name }: { status: string, color: string, icon_name: string | null }) => {
+    const IconComponent = icon_name ? iconMap[icon_name] || Info : Info;
     return (
         <Badge variant="outline" className={cn("capitalize", colorVariants[color] || colorVariants.gray)}>
             <IconComponent className="h-4 w-4 mr-2" />
@@ -157,7 +157,7 @@ export default function IncidentsPage() {
                           <p className="text-xs text-muted-foreground font-mono">ID: {incident.id}</p>
                         </TableCell>
                         <TableCell>
-                          <StatusBadge status={incident.status} color={incident.statusColor} iconName={incident.statusIcon} />
+                          <StatusBadge status={incident.status} color={incident.statusColor} icon_name={incident.statusIcon} />
                         </TableCell>
                         <TableCell>
                           <Badge variant="outline" className={cn("capitalize", colorVariants[incident.severityColor] || colorVariants.gray)}>
