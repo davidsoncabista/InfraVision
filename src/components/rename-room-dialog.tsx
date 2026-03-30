@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 "use client";
 
@@ -263,7 +262,5 @@ export function RenameRoomDialog({ room, open, onOpenChange }: RenameRoomDialogP
     </Dialog>
   );
 }
-=======
 // ESTE ARQUIVO SERÁ RENOMEADO PARA manage-room-dialog.tsx E SEU CONTEÚDO SUBSTITUÍDO.
 // A exclusão deste arquivo será feita na próxima etapa pelo sistema de arquivos.
->>>>>>> aeab69a4bef08288bb83ab6b6f582ddc201084a2
