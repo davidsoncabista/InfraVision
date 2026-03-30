@@ -19,7 +19,8 @@ Consulte os documentos técnicos para entender a arquitetura:
 - **Frontend:** [Next.js 15](https://nextjs.org/) (App Router) + [TypeScript](https://www.typescriptlang.org/)
 - **UI & Style:** [Tailwind CSS](https://tailwindcss.com/) + [ShadCN/UI](https://ui.shadcn.com/)
 - **Banco de Dados:** [PostgreSQL](https://www.postgresql.org/) (Container Isolado)
-- **API REST:** [PostgREST](https://postgrest.org/) (Backend Serverless)
+- **API REST:** [PostgREST](https://postgrest.org/) (Backend veloz e leve)
+- **Armazenamento de Arquivos (S3):** [MinIO](https://min.io/) (Object Storage Self-Hosted)
 - **Autenticação:** [NextAuth.js](https://next-auth.js.org/) (Credenciais Locais)
 - **Infraestrutura (IaC):** Ansible, Docker Compose e Proxmox LXC.
 
