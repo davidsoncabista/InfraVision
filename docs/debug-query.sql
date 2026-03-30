@@ -1,27 +1,27 @@
--- Esta é a consulta SQL usada pela função `getAllEquipmentPorts` para popular a página "Inventário de Portas".
--- Use esta query para testar diretamente no seu cliente de banco de dados (ex: SSMS, Azure Data Studio).
+-- Esta é a consulta SQL para popular a página "Inventário de Portas".
+-- Atualizado para o padrão PostgreSQL (snake_case) do ambiente Self-Hosted.
 
 SELECT 
     ep.id,
     ep.label,
-    pt.name AS portTypeName,
+    pt.name AS port_type_name,
     ep.status,
-    ci.label AS equipmentName,
-    ci.id AS equipmentId,
-    pi.label AS locationName,
-    connectedPort.label AS connectedToPortLabel,
-    connectedItem.label AS connectedToEquipmentName
+    ci.label AS equipment_name,
+    ci.id AS equipment_id,
+    pi.label AS location_name,
+    connected_port.label AS connected_to_port_label,
+    connected_item.label AS connected_to_equipment_name
 FROM 
-    EquipmentPorts ep
+    equipment_ports ep
 JOIN 
-    ChildItems ci ON ep.childItemId = ci.id
+    child_items ci ON ep.child_item_id = ci.id
 JOIN 
-    PortTypes pt ON ep.portTypeId = pt.id
+    port_types pt ON ep.port_type_id = pt.id
 LEFT JOIN 
-    ParentItems pi ON ci.parentId = pi.id
+    parent_items pi ON ci.parent_id = pi.id
 LEFT JOIN 
-    EquipmentPorts connectedPort ON ep.connectedToPortId = connectedPort.id
+    equipment_ports connected_port ON ep.connected_to_port_id = connected_port.id
 LEFT JOIN 
-    ChildItems connectedItem ON connectedPort.childItemId = connectedItem.id
+    child_items connected_item ON connected_port.child_item_id = connected_item.id
 ORDER BY 
-    locationName, equipmentName, ep.id;
+    location_name, equipment_name, ep.id;
