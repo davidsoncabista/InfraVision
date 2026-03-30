@@ -17,7 +17,7 @@ export interface User {
   signature_url: string | null;
   role: UserRole;
   permissions: string[];
-  accessiblebuilding_ids: string[];
+  accessible_building_ids: string[];
   last_login_at: string;
   preferences?: UserPreferences;
   is_test_data?: boolean;
@@ -42,9 +42,9 @@ const parseUser = (dbRecord: any): User => {
       signature_url: dbRecord.signature_url || dbRecord.signature_url || null,
       last_login_at: dbRecord.last_login_at || dbRecord.last_login_at ? new Date(dbRecord.last_login_at || dbRecord.last_login_at).toISOString() : new Date().toISOString(),
       permissions: typeof dbRecord.permissions === 'string' ? JSON.parse(dbRecord.permissions) : (dbRecord.permissions || []),
-      accessiblebuilding_ids: typeof (dbRecord.accessiblebuilding_ids || dbRecord.accessiblebuilding_ids) === 'string' 
-        ? JSON.parse(dbRecord.accessiblebuilding_ids || dbRecord.accessiblebuilding_ids) 
-        : (dbRecord.accessiblebuilding_ids || dbRecord.accessiblebuilding_ids || []),
+      accessible_building_ids: typeof (dbRecord.accessible_building_ids || dbRecord.accessible_building_ids) === 'string' 
+        ? JSON.parse(dbRecord.accessible_building_ids || dbRecord.accessible_building_ids) 
+        : (dbRecord.accessible_building_ids || dbRecord.accessible_building_ids || []),
       preferences: typeof dbRecord.preferences === 'string' ? JSON.parse(dbRecord.preferences) : (dbRecord.preferences || {}),
       is_test_data: !!(dbRecord.is_test_data || dbRecord.is_test_data),
     };
@@ -87,7 +87,7 @@ export async function _updateUserInDb(userData: Partial<User>): Promise<User> {
             display_name: merged.display_name,
             photo_url: merged.photo_url,
             last_login_at: merged.last_login_at || new Date().toISOString(),
-            accessiblebuilding_ids: merged.accessiblebuilding_ids,
+            accessible_building_ids: merged.accessible_building_ids,
             is_test_data: merged.is_test_data,
             signature_url: merged.signature_url
         };
@@ -109,7 +109,7 @@ export async function _updateUserInDb(userData: Partial<User>): Promise<User> {
             role: role,
             last_login_at: new Date().toISOString(),
             permissions: rolePermissions[role] || [],
-            accessiblebuilding_ids: [],
+            accessible_building_ids: [],
             preferences: {},
             is_test_data: !!userData.is_test_data
         };

@@ -139,9 +139,9 @@ export async function importConnections(items: ConnectionImportData[], building_
             const portBInfo = conn.to_equipment && conn.to_port ? await findPort(conn.to_equipment, conn.to_port) : null;
             
             await createConnection({
-                portA_id: portAInfo.id,
-                portB_id: portBInfo?.id,
-                connectionTypeId: defaultConnTypeId,
+                port_a_id: portAInfo.id,
+                port_b_id: portBInfo?.id,
+                connection_type_id: defaultConnTypeId,
                 user_id: 'system' 
             });
             

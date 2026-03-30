@@ -31,7 +31,7 @@ CREATE TABLE Users (
     photo_url NVARCHAR(MAX),
     role NVARCHAR(50) NOT NULL,
     permissions NVARCHAR(MAX),
-    accessiblebuilding_ids NVARCHAR(MAX),
+    accessible_building_ids NVARCHAR(MAX),
     last_login_at DATETIME2 NOT NULL,
     preferences NVARCHAR(MAX),
     is_test_data BIT NOT NULL DEFAULT 0
@@ -210,17 +210,17 @@ GO
 
 CREATE TABLE Connections (
     id NVARCHAR(50) PRIMARY KEY,
-    portA_id NVARCHAR(50) NOT NULL,
-    portB_id NVARCHAR(50) NOT NULL,
-    connectionTypeId NVARCHAR(50) NOT NULL,
+    port_a_id NVARCHAR(50) NOT NULL,
+    port_b_id NVARCHAR(50) NOT NULL,
+    connection_type_id NVARCHAR(50) NOT NULL,
     label NVARCHAR(255),
     status NVARCHAR(50) NOT NULL DEFAULT 'active',
     is_test_data BIT NOT NULL DEFAULT 0,
-    FOREIGN KEY (portA_id) REFERENCES equipment_ports(id),
-    FOREIGN KEY (portB_id) REFERENCES equipment_ports(id),
-    FOREIGN KEY (connectionTypeId) REFERENCES ConnectionTypes(id),
-    UNIQUE (portA_id),
-    UNIQUE (portB_id)
+    FOREIGN KEY (port_a_id) REFERENCES equipment_ports(id),
+    FOREIGN KEY (port_b_id) REFERENCES equipment_ports(id),
+    FOREIGN KEY (connection_type_id) REFERENCES ConnectionTypes(id),
+    UNIQUE (port_a_id),
+    UNIQUE (port_b_id)
 );
 GO
 
@@ -270,7 +270,7 @@ CREATE TABLE Sensors (
 GO
 
 -- Insert Initial Data
-INSERT INTO Users (id, email, display_name, photo_url, role, permissions, accessiblebuilding_ids, last_login_at, is_test_data) 
+INSERT INTO Users (id, email, display_name, photo_url, role, permissions, accessible_building_ids, last_login_at, is_test_data) 
 VALUES ('dev_user', 'dev@dev.com', 'Desenvolvedor Padrão', NULL, 'developer', '["*"]', '[]', GETUTCDATE(), 1);
 GO
 

@@ -132,14 +132,14 @@ export async function resolveConnectionIncident({ incidentId, action, resolution
     }
     
     if (action === 'resolve' && resolutionData) {
-        const { user_id, portB_id, labelText, image_url } = resolutionData;
+        const { user_id, port_b_id, labelText, image_url } = resolutionData;
         const user = await _getUserById(user_id);
         if (!user) throw new Error("Usuário inválido.");
 
         // 1. Busca os dados do incidente para saber qual é a porta A
         const incidents = await apiFetch(`/incidents?id=eq.${incidentId}`);
         if (!incidents || !incidents.length) throw new Error("Incidente não encontrado.");
-        const portA_id = incidents[0].entity_id;
+        const port_a_id = incidents[0].entity_id;
 
         // 2. Cria a conexão no PostgREST
         const connectionId = `conn_res_${Date.now()}`;
@@ -147,9 +147,9 @@ export async function resolveConnectionIncident({ incidentId, action, resolution
             method: 'POST',
             body: JSON.stringify({
                 id: connectionId,
-                portA_id,
-                portB_id,
-                connectiontypeid: 'ctype_dados_utp', // Hardcoded por enquanto ou buscar dinamicamente
+                port_a_id,
+                port_b_id,
+                connection_type_id: 'ctype_dados_utp', // Hardcoded por enquanto ou buscar dinamicamente
                 status: 'active',
                 labeltext: labelText || null,
                 image_url: image_url || null
@@ -157,8 +157,8 @@ export async function resolveConnectionIncident({ incidentId, action, resolution
         });
 
         // 3. Atualiza as portas
-        await apiFetch(`/equipment_ports?id=eq.${portA_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'up', connectedtoportid: portB_id }) });
-        await apiFetch(`/equipment_ports?id=eq.${portB_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'up', connectedtoportid: portA_id }) });
+        await apiFetch(`/equipment_ports?id=eq.${port_a_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'up', connectedtoportid: port_b_id }) });
+        await apiFetch(`/equipment_ports?id=eq.${port_b_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'up', connectedtoportid: port_a_id }) });
 
         // 4. Fecha o incidente
         const closedStatus = await apiFetch('/incidentstatuses?name=eq.Resolvido');

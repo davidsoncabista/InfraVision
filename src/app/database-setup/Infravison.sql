@@ -98,9 +98,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Connections](
 	[id] [nvarchar](50) NOT NULL,
-	[portA_id] [nvarchar](50) NOT NULL,
-	[portB_id] [nvarchar](50) NULL,
-	[connectionTypeId] [nvarchar](50) NOT NULL,
+	[port_a_id] [nvarchar](50) NOT NULL,
+	[port_b_id] [nvarchar](50) NULL,
+	[connection_type_id] [nvarchar](50) NOT NULL,
 	[status] [nvarchar](50) NOT NULL,
 	[is_test_data] [bit] NOT NULL,
 	[image_url] [nvarchar](max) NULL,
@@ -470,7 +470,7 @@ CREATE TABLE [dbo].[Users](
 	[role] [nvarchar](50) NOT NULL,
 	[last_login_at] [datetime2](7) NOT NULL,
 	[permissions] [nvarchar](max) NULL,
-	[accessiblebuilding_ids] [nvarchar](max) NULL,
+	[accessible_building_ids] [nvarchar](max) NULL,
 	[preferences] [nvarchar](max) NULL,
 	[modelo] [nvarchar](100) NULL,
 	[preco] [float] NULL,
@@ -526,11 +526,11 @@ INSERT [dbo].[child_items] ([id], [label], [parent_id], [type], [status], [seria
 INSERT [dbo].[child_items] ([id], [label], [parent_id], [type], [status], [serial_number], [brand], [tag], [isTagEligible], [ownerEmail], [dataSheetUrl], [description], [image_url], [modelo], [preco], [trellisId], [tamanho_u], [posicao_u], [is_test_data]) VALUES (N'citem_004', N'PDU-TESTE-01-L', N'pitem_001', N'PDU', N'active', NULL, N'Vertiv', NULL, NULL, NULL, NULL, NULL, NULL, N'Liebert MPH2 Vertical PDU', NULL, NULL, 0, 1, 1)
 INSERT [dbo].[child_items] ([id], [label], [parent_id], [type], [status], [serial_number], [brand], [tag], [isTagEligible], [ownerEmail], [dataSheetUrl], [description], [image_url], [modelo], [preco], [trellisId], [tamanho_u], [posicao_u], [is_test_data]) VALUES (N'citem_1755279025220', N'SWPABLM-01', N'pitem_1755025212787', N'Switch', N'draft', NULL, N'Cisco', NULL, NULL, NULL, NULL, NULL, NULL, N'Catalyst 9300 48-port', NULL, NULL, 1, 10, 0)
 GO
-INSERT [dbo].[Connections] ([id], [portA_id], [portB_id], [connectionTypeId], [status], [is_test_data], [image_url], [labelText]) VALUES (N'conn_1755123174803', N'eport_citem_002_5', N'eport_citem_001_10', N'conn_utp', N'active', 1, N'https://infravisionstorage.blob.core.windows.net/infravision-images/connection-eport_citem_002_5-eport_citem_001_10.jpeg', N'teste de evidencia em conexão')
-INSERT [dbo].[Connections] ([id], [portA_id], [portB_id], [connectionTypeId], [status], [is_test_data], [image_url], [labelText]) VALUES (N'conn_1755127178538', N'eport_citem_001_11', N'eport_citem_002_6', N'conn_utp', N'active', 0, NULL, NULL)
-INSERT [dbo].[Connections] ([id], [portA_id], [portB_id], [connectionTypeId], [status], [is_test_data], [image_url], [labelText]) VALUES (N'conn_1755186532165', N'eport_citem_002_1', NULL, N'conn_utp', N'unresolved', 0, NULL, NULL)
-INSERT [dbo].[Connections] ([id], [portA_id], [portB_id], [connectionTypeId], [status], [is_test_data], [image_url], [labelText]) VALUES (N'conn_1755557539270', N'eport_citem_1755279025220_1', NULL, N'conn_utp', N'unresolved', 0, NULL, NULL)
-INSERT [dbo].[Connections] ([id], [portA_id], [portB_id], [connectionTypeId], [status], [is_test_data], [image_url], [labelText]) VALUES (N'conn_test_001', N'eport_citem_001_1', N'eport_citem_002_3', N'conn_utp', N'active', 1, NULL, NULL)
+INSERT [dbo].[Connections] ([id], [port_a_id], [port_b_id], [connection_type_id], [status], [is_test_data], [image_url], [labelText]) VALUES (N'conn_1755123174803', N'eport_citem_002_5', N'eport_citem_001_10', N'conn_utp', N'active', 1, N'https://infravisionstorage.blob.core.windows.net/infravision-images/connection-eport_citem_002_5-eport_citem_001_10.jpeg', N'teste de evidencia em conexão')
+INSERT [dbo].[Connections] ([id], [port_a_id], [port_b_id], [connection_type_id], [status], [is_test_data], [image_url], [labelText]) VALUES (N'conn_1755127178538', N'eport_citem_001_11', N'eport_citem_002_6', N'conn_utp', N'active', 0, NULL, NULL)
+INSERT [dbo].[Connections] ([id], [port_a_id], [port_b_id], [connection_type_id], [status], [is_test_data], [image_url], [labelText]) VALUES (N'conn_1755186532165', N'eport_citem_002_1', NULL, N'conn_utp', N'unresolved', 0, NULL, NULL)
+INSERT [dbo].[Connections] ([id], [port_a_id], [port_b_id], [connection_type_id], [status], [is_test_data], [image_url], [labelText]) VALUES (N'conn_1755557539270', N'eport_citem_1755279025220_1', NULL, N'conn_utp', N'unresolved', 0, NULL, NULL)
+INSERT [dbo].[Connections] ([id], [port_a_id], [port_b_id], [connection_type_id], [status], [is_test_data], [image_url], [labelText]) VALUES (N'conn_test_001', N'eport_citem_001_1', N'eport_citem_002_3', N'conn_utp', N'active', 1, NULL, NULL)
 GO
 INSERT [dbo].[ConnectionTypes] ([id], [name], [description], [isDefault]) VALUES (N'conn_coaxial', N'Coaxial', N'Cabo coaxial para rádio frequência.', 0)
 INSERT [dbo].[ConnectionTypes] ([id], [name], [description], [isDefault]) VALUES (N'conn_fiber_mm', N'Fibra Óptica (MM)', N'Cabo de fibra óptica multimodo.', 0)
@@ -848,15 +848,15 @@ INSERT [dbo].[Rooms] ([id], [name], [building_id], [width_m], [width_m], [tile_w
 INSERT [dbo].[Rooms] ([id], [name], [building_id], [width_m], [width_m], [tile_width_cm], [tile_height_cm], [x_axis_naming], [y_axis_naming], [is_test_data], [background_image_url], [backgroundScale], [backgroundPosX], [backgroundPosY], [width_m_new], [width_m_new]) VALUES (N'R1753383480097', N'Controle', N'B1753382923932', 10, 10, 60, 60, N'alpha', N'numeric', 0, NULL, NULL, NULL, NULL, NULL, NULL)
 INSERT [dbo].[Rooms] ([id], [name], [building_id], [width_m], [width_m], [tile_width_cm], [tile_height_cm], [x_axis_naming], [y_axis_naming], [is_test_data], [background_image_url], [backgroundScale], [backgroundPosX], [backgroundPosY], [width_m_new], [width_m_new]) VALUES (N'R1753383491302', N'Transporte', N'B1753382923932', 5, 5, 60, 60, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL)
 GO
-INSERT [dbo].[Users] ([id], [email], [display_name], [photo_url], [role], [last_login_at], [permissions], [accessiblebuilding_ids], [preferences], [modelo], [preco], [trellisId], [tamanho_u], [potencia_w], [is_test_data], [signature_url]) VALUES (N'99Ak71dBJogZbpgT6Lxgl5EVhtu1', N'davidson.php@gmail.com', N'davidson', NULL, N'developer', CAST(N'2025-08-08T22:55:17.2100000' AS DateTime2), N'["*"]', N'[]', N'{}', NULL, NULL, NULL, NULL, NULL, 0, NULL)
-INSERT [dbo].[Users] ([id], [email], [display_name], [photo_url], [role], [last_login_at], [permissions], [accessiblebuilding_ids], [preferences], [modelo], [preco], [trellisId], [tamanho_u], [potencia_w], [is_test_data], [signature_url]) VALUES (N'bIG0LVYH9paPEzBfayjU699tuxE2', N'davidson.php@outlook.com', N'Davidson Santos Conceição', N'https://infravisionstorage.blob.core.windows.net/infravision-images/photo-bIG0LVYH9paPEzBfayjU699tuxE2.jfif', N'developer', CAST(N'2025-08-21T12:11:42.2790000' AS DateTime2), N'["section:management:view","section:supervisor:view","page:datacenter:view","page:inventory:view","page:connections:view","page:depara:view","page:import:view","page:reports:view","page:users:view","page:permissions:view","page:settings:view","page:buildings:view","page:system:view","page:incidents:view","page:approvals:view","page:audit:view","page:trash:view","item:image:upload","item:delete:draft","item:decommission:active","user:create","user:edit:role","user:edit:permissions"]', N'["B1753382923932"]', N'{"inventoryColumns":{"child":{"preco":false,"ownerEmail":false,"type":false,"modelo":false,"serial_number":false,"brand":false,"tag":false},"parent":{"serial_number":false,"ownerEmail":false,"brand":false,"tamanho_u":false,"potencia_w":false,"tag":false,"type":false}}}', NULL, NULL, NULL, NULL, NULL, 0, N'https://infravisionstorage.blob.core.windows.net/infravision-images/signature-bIG0LVYH9paPEzBfayjU699tuxE2.jfif')
+INSERT [dbo].[Users] ([id], [email], [display_name], [photo_url], [role], [last_login_at], [permissions], [accessible_building_ids], [preferences], [modelo], [preco], [trellisId], [tamanho_u], [potencia_w], [is_test_data], [signature_url]) VALUES (N'99Ak71dBJogZbpgT6Lxgl5EVhtu1', N'davidson.php@gmail.com', N'davidson', NULL, N'developer', CAST(N'2025-08-08T22:55:17.2100000' AS DateTime2), N'["*"]', N'[]', N'{}', NULL, NULL, NULL, NULL, NULL, 0, NULL)
+INSERT [dbo].[Users] ([id], [email], [display_name], [photo_url], [role], [last_login_at], [permissions], [accessible_building_ids], [preferences], [modelo], [preco], [trellisId], [tamanho_u], [potencia_w], [is_test_data], [signature_url]) VALUES (N'bIG0LVYH9paPEzBfayjU699tuxE2', N'davidson.php@outlook.com', N'Davidson Santos Conceição', N'https://infravisionstorage.blob.core.windows.net/infravision-images/photo-bIG0LVYH9paPEzBfayjU699tuxE2.jfif', N'developer', CAST(N'2025-08-21T12:11:42.2790000' AS DateTime2), N'["section:management:view","section:supervisor:view","page:datacenter:view","page:inventory:view","page:connections:view","page:depara:view","page:import:view","page:reports:view","page:users:view","page:permissions:view","page:settings:view","page:buildings:view","page:system:view","page:incidents:view","page:approvals:view","page:audit:view","page:trash:view","item:image:upload","item:delete:draft","item:decommission:active","user:create","user:edit:role","user:edit:permissions"]', N'["B1753382923932"]', N'{"inventoryColumns":{"child":{"preco":false,"ownerEmail":false,"type":false,"modelo":false,"serial_number":false,"brand":false,"tag":false},"parent":{"serial_number":false,"ownerEmail":false,"brand":false,"tamanho_u":false,"potencia_w":false,"tag":false,"type":false}}}', NULL, NULL, NULL, NULL, NULL, 0, N'https://infravisionstorage.blob.core.windows.net/infravision-images/signature-bIG0LVYH9paPEzBfayjU699tuxE2.jfif')
 GO
 SET ANSI_PADDING ON
 GO
 /****** Object:  Index [UQ__Connecti__A4920CA13CEDA349]    Script Date: 22/08/2025 15:49:11 ******/
 ALTER TABLE [dbo].[Connections] ADD UNIQUE NONCLUSTERED 
 (
-	[portA_id] ASC
+	[port_a_id] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
 SET ANSI_PADDING ON
@@ -864,8 +864,8 @@ GO
 /****** Object:  Index [UQ_portA_portB]    Script Date: 22/08/2025 15:49:11 ******/
 ALTER TABLE [dbo].[Connections] ADD  CONSTRAINT [UQ_portA_portB] UNIQUE NONCLUSTERED 
 (
-	[portA_id] ASC,
-	[portB_id] ASC
+	[port_a_id] ASC,
+	[port_b_id] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
 SET ANSI_PADDING ON
@@ -1035,13 +1035,13 @@ ALTER TABLE [dbo].[child_items]  WITH NOCHECK ADD FOREIGN KEY([parent_id])
 REFERENCES [dbo].[parent_items] ([id])
 ON DELETE CASCADE
 GO
-ALTER TABLE [dbo].[Connections]  WITH CHECK ADD FOREIGN KEY([connectionTypeId])
+ALTER TABLE [dbo].[Connections]  WITH CHECK ADD FOREIGN KEY([connection_type_id])
 REFERENCES [dbo].[ConnectionTypes] ([id])
 GO
-ALTER TABLE [dbo].[Connections]  WITH CHECK ADD FOREIGN KEY([portA_id])
+ALTER TABLE [dbo].[Connections]  WITH CHECK ADD FOREIGN KEY([port_a_id])
 REFERENCES [dbo].[equipment_ports] ([id])
 GO
-ALTER TABLE [dbo].[Connections]  WITH CHECK ADD FOREIGN KEY([portB_id])
+ALTER TABLE [dbo].[Connections]  WITH CHECK ADD FOREIGN KEY([port_b_id])
 REFERENCES [dbo].[equipment_ports] ([id])
 GO
 ALTER TABLE [dbo].[equipment_ports]  WITH CHECK ADD FOREIGN KEY([childItemId])

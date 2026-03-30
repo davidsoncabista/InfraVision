@@ -30,7 +30,7 @@ async function getchild_items() {
  * Busca todas as conexões ativas que não são dados de teste.
  */
 async function getConnections() {
-    const data = await apiFetch('/connections?is_test_data=eq.false&select=*,portA:portA_id(label,child_items(label,parent_items(label))),portB:portB_id(label,child_items(label,parent_items(label))),connectiontypes(name)');
+    const data = await apiFetch('/connections?is_test_data=eq.false&select=*,portA:port_a_id(label,child_items(label,parent_items(label))),portB:port_b_id(label,child_items(label,parent_items(label))),connectiontypes(name)');
     
     return (data || []).map((c: any) => ({
         id: c.id,

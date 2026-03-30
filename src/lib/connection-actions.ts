@@ -34,8 +34,8 @@ export interface EquipmentSummary {
 
 export interface ConnectionDetail {
     id: string;
-    portA_id: string;
-    portB_id: string | null;
+    port_a_id: string;
+    port_b_id: string | null;
     itemA_label: string;
     itemA_parentName: string | null;
     portA_label: string;
@@ -43,7 +43,7 @@ export interface ConnectionDetail {
     itemB_parentName: string | null;
     portB_label: string | null;
     connectionType: string;
-    connectionTypeId: string;
+    connection_type_id: string;
     status: string;
     image_url: string | null;
     labelText: string | null;
@@ -72,7 +72,7 @@ export async function getPortsByChildItemId(childItemId: string | null): Promise
     if (!childItemId) return [];
     try {
         // PostgREST select com nomes de tabelas em minúsculo
-        const data = await apiFetch(`/equipment_ports?childitemid=eq.${childItemId}&select=*,port_types(name),connections!portA_id(*),connectedport:connectedtoportid(label,child_items(label))&order=label.asc`);
+        const data = await apiFetch(`/equipment_ports?childitemid=eq.${childItemId}&select=*,port_types(name),connections!port_a_id(*),connectedport:connectedtoportid(label,child_items(label))&order=label.asc`);
         
         return data.map((ep: any) => ({
             id: ep.id,
@@ -91,15 +91,15 @@ export async function getPortsByChildItemId(childItemId: string | null): Promise
 
 export async function getAllConnections(building_id?: string): Promise<ConnectionDetail[]> {
     try {
-        let url = '/connections?select=*,portA:portA_id(label,child_items(label,parent_items(label,rooms(building_id)))),portB:portB_id(label,child_items(label,parent_items(label))),connectiontypes(name)';
+        let url = '/connections?select=*,portA:port_a_id(label,child_items(label,parent_items(label,rooms(building_id)))),portB:port_b_id(label,child_items(label,parent_items(label))),connectiontypes(name)';
         if (building_id) {
             url += `&portA.child_items.parent_items.rooms.building_id=eq.${building_id}`;
         }
         const data = await apiFetch(url);
         return data.map((c: any) => ({
             id: c.id,
-            portA_id: c.portA_id,
-            portB_id: c.portB_id,
+            port_a_id: c.port_a_id,
+            port_b_id: c.port_b_id,
             itemA_label: c.portA?.child_items?.label || 'N/A',
             itemA_parentName: c.portA?.child_items?.parent_items?.label || null,
             portA_label: c.portA?.label || 'N/A',
@@ -107,7 +107,7 @@ export async function getAllConnections(building_id?: string): Promise<Connectio
             itemB_parentName: c.portB?.child_items?.parent_items?.label || null,
             portB_label: c.portB?.label || null,
             connectionType: c.connectiontypes?.name || 'N/A',
-            connectionTypeId: c.connectiontypeid,
+            connection_type_id: c.connection_type_id,
             status: c.status,
             image_url: c.image_url,
             labelText: c.labeltext
@@ -118,9 +118,9 @@ export async function getAllConnections(building_id?: string): Promise<Connectio
 }
 
 export async function createConnection(data: { 
-    portA_id: string; 
-    portB_id?: string | null; 
-    connectionTypeId: string; 
+    port_a_id: string; 
+    port_b_id?: string | null; 
+    connection_type_id: string; 
     labelText?: string | null;
     image_url?: string | null;
     user_id: string;
@@ -129,15 +129,15 @@ export async function createConnection(data: {
     if (!user) throw new Error("Usuário inválido.");
 
     const connectionId = `conn_${Date.now()}`;
-    const status = data.portB_id ? 'active' : 'unresolved';
+    const status = data.port_b_id ? 'active' : 'unresolved';
 
     await apiFetch('/connections', {
         method: 'POST',
         body: JSON.stringify({
             id: connectionId,
-            portA_id: data.portA_id,
-            portB_id: data.portB_id || null,
-            connectiontypeid: data.connectionTypeId,
+            port_a_id: data.port_a_id,
+            port_b_id: data.port_b_id || null,
+            connection_type_id: data.connection_type_id,
             labeltext: data.labelText || null,
             image_url: data.image_url || null,
             status
@@ -145,15 +145,15 @@ export async function createConnection(data: {
     });
 
     // Atualiza portas
-    await apiFetch(`/equipment_ports?id=eq.${data.portA_id}`, {
+    await apiFetch(`/equipment_ports?id=eq.${data.port_a_id}`, {
         method: 'PATCH',
-        body: JSON.stringify({ status: 'up', connectedtoportid: data.portB_id || null })
+        body: JSON.stringify({ status: 'up', connectedtoportid: data.port_b_id || null })
     });
 
-    if (data.portB_id) {
-        await apiFetch(`/equipment_ports?id=eq.${data.portB_id}`, {
+    if (data.port_b_id) {
+        await apiFetch(`/equipment_ports?id=eq.${data.port_b_id}`, {
             method: 'PATCH',
-            body: JSON.stringify({ status: 'up', connectedtoportid: data.portA_id })
+            body: JSON.stringify({ status: 'up', connectedtoportid: data.port_a_id })
         });
     }
 
@@ -168,12 +168,12 @@ export async function disconnectConnection(connectionId: string, user_id: string
     const connData = await apiFetch(`/connections?id=eq.${connectionId}`);
     if (connData.length === 0) throw new Error("Conexão não encontrada.");
     
-    const { portA_id, portB_id } = connData[0];
+    const { port_a_id, port_b_id } = connData[0];
 
     await apiFetch(`/connections?id=eq.${connectionId}`, { method: 'DELETE' });
     
-    if (portA_id) await apiFetch(`/equipment_ports?id=eq.${portA_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'down', connectedtoportid: null }) });
-    if (portB_id) await apiFetch(`/equipment_ports?id=eq.${portB_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'down', connectedtoportid: null }) });
+    if (port_a_id) await apiFetch(`/equipment_ports?id=eq.${port_a_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'down', connectedtoportid: null }) });
+    if (port_b_id) await apiFetch(`/equipment_ports?id=eq.${port_b_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'down', connectedtoportid: null }) });
 
     await logAuditEvent({ user, action: 'CONNECTION_DELETED', entity_type: 'connections', entity_id: connectionId });
     revalidatePath('/depara');

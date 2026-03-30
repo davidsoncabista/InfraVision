@@ -62,7 +62,7 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
 ### Corrigido
 - **Corrigida Falha Crítica de Carregamento da Planta Baixa:** Resolvido o problema recorrente onde a planta baixa não carregava as salas disponíveis. A nova arquitetura de busca de dados desacoplada solucionou a causa raiz do problema.
-- **Corrigida Falha de Conexão Unilateral:** A tabela `Connections` foi corretamente alterada para permitir valores `NULL` na coluna `portB_id`, possibilitando o registro de conexões não resolvidas.
+- **Corrigida Falha de Conexão Unilateral:** A tabela `Connections` foi corretamente alterada para permitir valores `NULL` na coluna `port_b_id`, possibilitando o registro de conexões não resolvidas.
 - Resolvido erro "Maximum update depth exceeded" que causava um loop infinito de renderização.
 - Corrigida a `server action` `updateItem` que não salvava as posições `x` ou `y` quando eram `0`.
 - Corrigido o erro "Usuário não autenticado" ao salvar a posição de um item.

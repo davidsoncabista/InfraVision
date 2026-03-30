@@ -66,7 +66,7 @@ export async function getPrintableReportData(): Promise<PrintableReportData> {
             apiFetch('/rooms?select=id,name,building_id,x_axis_naming,y_axis_naming&order=name.asc'),
             apiFetch('/parent_items?status=not.in.(decommissioned,deleted)'),
             apiFetch('/child_items?status=not.in.(decommissioned,deleted)'),
-            apiFetch('/connections?select=*,portA:portA_id(label,child_items(label,parent_items(label))),portB:portB_id(label,child_items(label,parent_items(label))),connectiontypes(name)'),
+            apiFetch('/connections?select=*,portA:port_a_id(label,child_items(label,parent_items(label))),portB:port_b_id(label,child_items(label,parent_items(label))),connectiontypes(name)'),
             apiFetch('/users?signature_url=not.is.null&select=id,display_name,role,signature_url&order=display_name.asc'),
             apiFetch('/itemstatuses?select=id,name')
         ]);

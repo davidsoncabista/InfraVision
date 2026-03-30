@@ -90,7 +90,7 @@ export function DeParaClient() {
 
     const [sideA, setSideA] = useState<{ itemId: string | null; portId: string | null; ports: EquipmentPort[]; isLoading: boolean; }>({ itemId: null, portId: null, ports: [], isLoading: false });
     const [sideB, setSideB] = useState<{ itemId: string | null; portId: string | null; ports: EquipmentPort[]; isLoading: boolean; }>({ itemId: null, portId: null, ports: [], isLoading: false });
-    const [connectionTypeId, setConnectionTypeId] = useState<string | null>(null);
+    const [connection_type_id, setconnection_type_id] = useState<string | null>(null);
     const [isCreating, setIsCreating] = useState(false);
     const [isAdvancedModalOpen, setIsAdvancedModalOpen] = useState(false);
 
@@ -160,7 +160,7 @@ export function DeParaClient() {
 
 
     const handleQuickConnect = async () => {
-        if (!user || !connectionTypeId || !sideA.portId) {
+        if (!user || !connection_type_id || !sideA.portId) {
             toast({ variant: 'destructive', title: 'Erro', description: 'Selecione pelo menos a Origem (Lado A) e o tipo de conexão.' });
             return;
         }
@@ -168,9 +168,9 @@ export function DeParaClient() {
         setIsCreating(true);
         try {
             await createConnection({
-                portA_id: sideA.portId,
-                portB_id: sideB.portId,
-                connectionTypeId,
+                port_a_id: sideA.portId,
+                port_b_id: sideB.portId,
+                connection_type_id,
                 user_id: user.id
             });
             toast({
@@ -208,7 +208,7 @@ export function DeParaClient() {
     const resetForm = () => {
         setSideA({ itemId: null, portId: null, ports: [], isLoading: false });
         setSideB({ itemId: null, portId: null, ports: [], isLoading: false });
-        setConnectionTypeId(null);
+        setconnection_type_id(null);
     }
     
     const requestSort = (key: SortableKeys) => {
@@ -230,7 +230,7 @@ export function DeParaClient() {
     const filteredAndSortedConnections = useMemo(() => {
         let filtered = connections
             .filter(conn => statusFilter === 'all' || conn.status === statusFilter)
-            .filter(conn => typeFilter === 'all' || conn.connectionTypeId === typeFilter)
+            .filter(conn => typeFilter === 'all' || conn.connection_type_id === typeFilter)
             .filter(conn => {
                 const term = searchTerm.toLowerCase();
                 return (
@@ -260,8 +260,8 @@ export function DeParaClient() {
     const selectedItemA = connectableItems.find(i => i.id === sideA.itemId);
     const selectedItemB = connectableItems.find(i => i.id === sideB.itemId);
     
-    const canConnectWithEvidence = sideA.portId && sideB.portId && connectionTypeId && !isCreating;
-    const canQuickConnect = sideA.portId && connectionTypeId && !isCreating;
+    const canConnectWithEvidence = sideA.portId && sideB.portId && connection_type_id && !isCreating;
+    const canQuickConnect = sideA.portId && connection_type_id && !isCreating;
     
     if (isLoading) {
         return <div className="flex justify-center items-center h-64"><Loader2 className="h-12 w-12 animate-spin text-muted-foreground" /></div>;
@@ -336,7 +336,7 @@ export function DeParaClient() {
                              <Button variant="ghost" size="icon" className="h-12 w-12" disabled>
                                 <ArrowRightLeft className="h-6 w-6 text-muted-foreground" />
                             </Button>
-                             <Select onValueChange={setConnectionTypeId} value={connectionTypeId || ''}>
+                             <Select onValueChange={setconnection_type_id} value={connection_type_id || ''}>
                                 <SelectTrigger className="w-48">
                                     <SelectValue placeholder="Tipo de Conexão..." />
                                 </SelectTrigger>
@@ -531,8 +531,8 @@ export function DeParaClient() {
                     onOpenChange={setIsAdvancedModalOpen}
                     sideA={{ item: selectedItemA!, port: sideA.ports.find(p => p.id === sideA.portId)! }}
                     sideB={{ item: selectedItemB!, port: sideB.ports.find(p => p.id === sideB.portId)! }}
-                    connectionTypeId={connectionTypeId!}
-                    connectionTypeName={connectionTypes.find(c => c.id === connectionTypeId)?.name || ''}
+                    connection_type_id={connection_type_id!}
+                    connectionTypeName={connectionTypes.find(c => c.id === connection_type_id)?.name || ''}
                     onSuccess={() => {
                         resetForm();
                         fetchData();

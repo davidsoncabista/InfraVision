@@ -47,7 +47,7 @@ interface AddConnectionDialogProps {
   onSuccess: () => void;
   sideA: { item: ConnectableItem; port: EquipmentPort };
   sideB: { item: ConnectableItem; port: EquipmentPort };
-  connectionTypeId: string;
+  connection_type_id: string;
   connectionTypeName: string;
 }
 
@@ -60,7 +60,7 @@ export function AddConnectionDialog({
   onSuccess,
   sideA, 
   sideB, 
-  connectionTypeId,
+  connection_type_id,
   connectionTypeName 
 }: AddConnectionDialogProps) {
     const router = useRouter();
@@ -197,9 +197,9 @@ export function AddConnectionDialog({
         }
         try {
             await createConnection({
-                portA_id: sideA.port.id,
-                portB_id: sideB.port.id,
-                connectionTypeId,
+                port_a_id: sideA.port.id,
+                port_b_id: sideB.port.id,
+                connection_type_id,
                 labelText: data.labelText,
                 image_url: data.image_url,
                 user_id: user.id
