@@ -17,12 +17,12 @@ export async function addItem({ label, itemType, room }: { label: string; itemTy
       x: 0,
       y: 0,
       width_m: itemType.defaultwidth_m,
-      heightm: itemType.defaultHeightM,
-      radiusm: itemType.defaultRadiusM || null,
+      heightm: itemType.default_height_m,
+      radiusm: itemType.default_radius_m || null,
       type: itemType.name,
       status: 'draft',
       room_id: room.id,
-      color: itemType.defaultColor || null,
+      color: itemType.default_color || null,
       shape: itemType.shape,
       is_test_data: false
   };

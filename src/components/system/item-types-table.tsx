@@ -52,11 +52,11 @@ export function item_typesTable({ isParentTypeTable }: item_typesTableProps) {
                     <TableRow key={type.id}>
                         <TableCell className="font-medium">{type.name}</TableCell>
                         <TableCell>{type.category}</TableCell>
-                        <TableCell>{type.defaultwidth_m}m x {type.defaultHeightM}m</TableCell>
+                        <TableCell>{type.defaultwidth_m}m x {type.default_height_m}m</TableCell>
                         {isParentTypeTable && (
                             <TableCell className="space-x-2">
-                                {type.isResizable && <Badge variant="outline">Redimensionável</Badge>}
-                                {type.canHaveChildren && <Badge variant="outline">Aninha Itens</Badge>}
+                                {type.is_resizable && <Badge variant="outline">Redimensionável</Badge>}
+                                {type.can_have_children && <Badge variant="outline">Aninha Itens</Badge>}
                             </TableCell>
                         )}
                         <TableCell className="text-right">

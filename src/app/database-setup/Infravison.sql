@@ -269,15 +269,15 @@ CREATE TABLE [dbo].[item_types](
 	[name] [nvarchar](100) NOT NULL,
 	[category] [nvarchar](100) NOT NULL,
 	[defaultwidth_m] [float] NOT NULL,
-	[defaultHeightM] [float] NOT NULL,
+	[default_height_m] [float] NOT NULL,
 	[icon_name] [nvarchar](50) NULL,
-	[canHaveChildren] [bit] NOT NULL,
-	[isResizable] [bit] NOT NULL,
+	[can_have_children] [bit] NOT NULL,
+	[is_resizable] [bit] NOT NULL,
 	[status] [nvarchar](50) NOT NULL,
-	[defaultColor] [nvarchar](50) NULL,
+	[default_color] [nvarchar](50) NULL,
 	[is_test_data] [bit] NOT NULL,
 	[shape] [nvarchar](50) NOT NULL,
-	[defaultRadiusM] [float] NULL,
+	[default_radius_m] [float] NULL,
 	[isDefault] [bit] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
@@ -295,11 +295,11 @@ CREATE TABLE [dbo].[item_typesEqp](
 	[name] [nvarchar](100) NOT NULL,
 	[category] [nvarchar](100) NOT NULL,
 	[defaultwidth_m] [float] NOT NULL,
-	[defaultHeightM] [float] NOT NULL,
+	[default_height_m] [float] NOT NULL,
 	[icon_name] [nvarchar](50) NULL,
 	[status] [nvarchar](50) NOT NULL,
 	[is_test_data] [bit] NOT NULL,
-	[defaultColor] [nvarchar](50) NULL,
+	[default_color] [nvarchar](50) NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -718,33 +718,33 @@ INSERT [dbo].[ItemStatuses] ([id], [name], [description], [color], [isArchived],
 INSERT [dbo].[ItemStatuses] ([id], [name], [description], [color], [isArchived], [isDefault]) VALUES (N'status_1722384196145', N'Aguardando Peças', N'Item aguardando a chegada de peças para reparo.', N'sky', 0, 0)
 INSERT [dbo].[ItemStatuses] ([id], [name], [description], [color], [isArchived], [isDefault]) VALUES (N'status_1722384214434', N'Em Testes', N'Item em fase de testes após manutenção ou instalação.', N'violet', 0, 0)
 GO
-INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [canHaveChildren], [isResizable], [status], [defaultColor], [is_test_data], [shape], [defaultRadiusM], [isDefault]) VALUES (N'type_1722383794354', N'Switch de Rede', N'Rede', 0.48, 0.044, N'Network', 0, 1, N'deleted', NULL, 0, N'rectangle', NULL, 0)
-INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [canHaveChildren], [isResizable], [status], [defaultColor], [is_test_data], [shape], [defaultRadiusM], [isDefault]) VALUES (N'type_1753714242558', N'Cilindro FM200', N'Segurança', 0.4, 0.4, N'Flame', 0, 0, N'active', N'#c026d3', 0, N'circle', 0.4, 0)
-INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [canHaveChildren], [isResizable], [status], [defaultColor], [is_test_data], [shape], [defaultRadiusM], [isDefault]) VALUES (N'type_ac_default', N'Ar Condicionado de Precisão', N'Climatização', 0.8, 2, N'Snowflake', 0, 1, N'active', NULL, 0, N'rectangle', NULL, 0)
-INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [canHaveChildren], [isResizable], [status], [defaultColor], [is_test_data], [shape], [defaultRadiusM], [isDefault]) VALUES (N'type_ac_row', N'Ar Condicionado In-Row', N'Climatização', 0.3, 1, N'Snowflake', 0, 0, N'active', N'#64748b', 0, N'rectangle', NULL, 0)
-INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [canHaveChildren], [isResizable], [status], [defaultColor], [is_test_data], [shape], [defaultRadiusM], [isDefault]) VALUES (N'type_ats', N'ATS', N'Energia', 0.6, 0.6, N'Power', 0, 0, N'active', N'#dc2626', 0, N'rectangle', NULL, 0)
-INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [canHaveChildren], [isResizable], [status], [defaultColor], [is_test_data], [shape], [defaultRadiusM], [isDefault]) VALUES (N'type_clima_fc', N'Unidade de Climatização (CLIMA FC)', N'Climatização', 1.2, 1.2, N'Fan', 0, 0, N'active', N'#34d399', 0, N'rectangle', NULL, 0)
-INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [canHaveChildren], [isResizable], [status], [defaultColor], [is_test_data], [shape], [defaultRadiusM], [isDefault]) VALUES (N'type_cmc', N'CMC (Chassis Controller)', N'Gerenciamento', 0.5, 0.5, N'Server', 1, 0, N'active', N'#6366f1', 0, N'rectangle', NULL, 0)
-INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [canHaveChildren], [isResizable], [status], [defaultColor], [is_test_data], [shape], [defaultRadiusM], [isDefault]) VALUES (N'type_patchpanel_default', N'Patch Panel', N'Redes', 0.48, 0.04, N'PanelTop', 0, 0, N'deleted', NULL, 0, N'rectangle', NULL, 0)
-INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [canHaveChildren], [isResizable], [status], [defaultColor], [is_test_data], [shape], [defaultRadiusM], [isDefault]) VALUES (N'type_pdi', N'Painel de Incêndio (PDI)', N'Segurança', 0.6, 0.6, N'ShieldAlert', 0, 0, N'active', N'#a855f7', 0, N'rectangle', NULL, 0)
-INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [canHaveChildren], [isResizable], [status], [defaultColor], [is_test_data], [shape], [defaultRadiusM], [isDefault]) VALUES (N'type_pdu', N'PDU', N'Energia', 0.8, 0.1, N'Plug', 0, 1, N'active', N'#ef4444', 0, N'rectangle', NULL, 0)
-INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [canHaveChildren], [isResizable], [status], [defaultColor], [is_test_data], [shape], [defaultRadiusM], [isDefault]) VALUES (N'type_pdu_floor', N'PDU de Piso', N'Energia', 0.6, 0.3, N'Power', 0, 0, N'active', N'#ef4444', 0, N'rectangle', NULL, 0)
-INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [canHaveChildren], [isResizable], [status], [defaultColor], [is_test_data], [shape], [defaultRadiusM], [isDefault]) VALUES (N'type_qdf', N'QDF', N'Cabeamento', 0.8, 0.6, N'Network', 1, 0, N'active', N'#f97316', 0, N'rectangle', NULL, 0)
-INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [canHaveChildren], [isResizable], [status], [defaultColor], [is_test_data], [shape], [defaultRadiusM], [isDefault]) VALUES (N'type_qdf_default', N'Quadro de Distribuição', N'Elétrica', 0.8, 1.2, N'Router', 0, 1, N'active', NULL, 0, N'rectangle', NULL, 0)
-INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [canHaveChildren], [isResizable], [status], [defaultColor], [is_test_data], [shape], [defaultRadiusM], [isDefault]) VALUES (N'type_rack_22u', N'Rack 22U', N'Gabinetes', 0.6, 1, N'Box', 1, 1, N'active', N'#60a5fa', 0, N'rectangle', NULL, 0)
-INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [canHaveChildren], [isResizable], [status], [defaultColor], [is_test_data], [shape], [defaultRadiusM], [isDefault]) VALUES (N'type_rack_default', N'Rack 42U', N'Gabinetes', 0.6, 1.2, N'Box', 1, 1, N'active', N'#3b82f6', 0, N'rectangle', NULL, 0)
-INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [canHaveChildren], [isResizable], [status], [defaultColor], [is_test_data], [shape], [defaultRadiusM], [isDefault]) VALUES (N'type_sdf', N'Detector de Fumaça (SDF)', N'Segurança', 0.15, 0.15, N'Cloud', 0, 0, N'active', N'#a855f7', 0, N'circle', 0.15, 0)
-INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [canHaveChildren], [isResizable], [status], [defaultColor], [is_test_data], [shape], [defaultRadiusM], [isDefault]) VALUES (N'type_switch_default', N'Switch de Acesso', N'Redes', 0.48, 0.04, N'Network', 0, 0, N'deleted', NULL, 0, N'rectangle', NULL, 0)
+INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [can_have_children], [is_resizable], [status], [default_color], [is_test_data], [shape], [default_radius_m], [isDefault]) VALUES (N'type_1722383794354', N'Switch de Rede', N'Rede', 0.48, 0.044, N'Network', 0, 1, N'deleted', NULL, 0, N'rectangle', NULL, 0)
+INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [can_have_children], [is_resizable], [status], [default_color], [is_test_data], [shape], [default_radius_m], [isDefault]) VALUES (N'type_1753714242558', N'Cilindro FM200', N'Segurança', 0.4, 0.4, N'Flame', 0, 0, N'active', N'#c026d3', 0, N'circle', 0.4, 0)
+INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [can_have_children], [is_resizable], [status], [default_color], [is_test_data], [shape], [default_radius_m], [isDefault]) VALUES (N'type_ac_default', N'Ar Condicionado de Precisão', N'Climatização', 0.8, 2, N'Snowflake', 0, 1, N'active', NULL, 0, N'rectangle', NULL, 0)
+INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [can_have_children], [is_resizable], [status], [default_color], [is_test_data], [shape], [default_radius_m], [isDefault]) VALUES (N'type_ac_row', N'Ar Condicionado In-Row', N'Climatização', 0.3, 1, N'Snowflake', 0, 0, N'active', N'#64748b', 0, N'rectangle', NULL, 0)
+INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [can_have_children], [is_resizable], [status], [default_color], [is_test_data], [shape], [default_radius_m], [isDefault]) VALUES (N'type_ats', N'ATS', N'Energia', 0.6, 0.6, N'Power', 0, 0, N'active', N'#dc2626', 0, N'rectangle', NULL, 0)
+INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [can_have_children], [is_resizable], [status], [default_color], [is_test_data], [shape], [default_radius_m], [isDefault]) VALUES (N'type_clima_fc', N'Unidade de Climatização (CLIMA FC)', N'Climatização', 1.2, 1.2, N'Fan', 0, 0, N'active', N'#34d399', 0, N'rectangle', NULL, 0)
+INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [can_have_children], [is_resizable], [status], [default_color], [is_test_data], [shape], [default_radius_m], [isDefault]) VALUES (N'type_cmc', N'CMC (Chassis Controller)', N'Gerenciamento', 0.5, 0.5, N'Server', 1, 0, N'active', N'#6366f1', 0, N'rectangle', NULL, 0)
+INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [can_have_children], [is_resizable], [status], [default_color], [is_test_data], [shape], [default_radius_m], [isDefault]) VALUES (N'type_patchpanel_default', N'Patch Panel', N'Redes', 0.48, 0.04, N'PanelTop', 0, 0, N'deleted', NULL, 0, N'rectangle', NULL, 0)
+INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [can_have_children], [is_resizable], [status], [default_color], [is_test_data], [shape], [default_radius_m], [isDefault]) VALUES (N'type_pdi', N'Painel de Incêndio (PDI)', N'Segurança', 0.6, 0.6, N'ShieldAlert', 0, 0, N'active', N'#a855f7', 0, N'rectangle', NULL, 0)
+INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [can_have_children], [is_resizable], [status], [default_color], [is_test_data], [shape], [default_radius_m], [isDefault]) VALUES (N'type_pdu', N'PDU', N'Energia', 0.8, 0.1, N'Plug', 0, 1, N'active', N'#ef4444', 0, N'rectangle', NULL, 0)
+INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [can_have_children], [is_resizable], [status], [default_color], [is_test_data], [shape], [default_radius_m], [isDefault]) VALUES (N'type_pdu_floor', N'PDU de Piso', N'Energia', 0.6, 0.3, N'Power', 0, 0, N'active', N'#ef4444', 0, N'rectangle', NULL, 0)
+INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [can_have_children], [is_resizable], [status], [default_color], [is_test_data], [shape], [default_radius_m], [isDefault]) VALUES (N'type_qdf', N'QDF', N'Cabeamento', 0.8, 0.6, N'Network', 1, 0, N'active', N'#f97316', 0, N'rectangle', NULL, 0)
+INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [can_have_children], [is_resizable], [status], [default_color], [is_test_data], [shape], [default_radius_m], [isDefault]) VALUES (N'type_qdf_default', N'Quadro de Distribuição', N'Elétrica', 0.8, 1.2, N'Router', 0, 1, N'active', NULL, 0, N'rectangle', NULL, 0)
+INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [can_have_children], [is_resizable], [status], [default_color], [is_test_data], [shape], [default_radius_m], [isDefault]) VALUES (N'type_rack_22u', N'Rack 22U', N'Gabinetes', 0.6, 1, N'Box', 1, 1, N'active', N'#60a5fa', 0, N'rectangle', NULL, 0)
+INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [can_have_children], [is_resizable], [status], [default_color], [is_test_data], [shape], [default_radius_m], [isDefault]) VALUES (N'type_rack_default', N'Rack 42U', N'Gabinetes', 0.6, 1.2, N'Box', 1, 1, N'active', N'#3b82f6', 0, N'rectangle', NULL, 0)
+INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [can_have_children], [is_resizable], [status], [default_color], [is_test_data], [shape], [default_radius_m], [isDefault]) VALUES (N'type_sdf', N'Detector de Fumaça (SDF)', N'Segurança', 0.15, 0.15, N'Cloud', 0, 0, N'active', N'#a855f7', 0, N'circle', 0.15, 0)
+INSERT [dbo].[item_types] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [can_have_children], [is_resizable], [status], [default_color], [is_test_data], [shape], [default_radius_m], [isDefault]) VALUES (N'type_switch_default', N'Switch de Acesso', N'Redes', 0.48, 0.04, N'Network', 0, 0, N'deleted', NULL, 0, N'rectangle', NULL, 0)
 GO
-INSERT [dbo].[item_typesEqp] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [status], [is_test_data], [defaultColor]) VALUES (N'type_eqp_firewall', N'Firewall', N'Segurança de Rede', 0, 0, N'ShieldCheck', N'active', 0, NULL)
-INSERT [dbo].[item_typesEqp] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [status], [is_test_data], [defaultColor]) VALUES (N'type_eqp_patch', N'Patch Panel', N'Cabeamento', 0, 0, N'PanelTop', N'active', 0, NULL)
-INSERT [dbo].[item_typesEqp] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [status], [is_test_data], [defaultColor]) VALUES (N'type_eqp_pdu', N'PDU', N'Energia', 0, 0, N'Power', N'active', 0, NULL)
-INSERT [dbo].[item_typesEqp] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [status], [is_test_data], [defaultColor]) VALUES (N'type_eqp_pdu_rack', N'PDU de Rack', N'Energia', 0, 0, N'Power', N'active', 0, NULL)
-INSERT [dbo].[item_typesEqp] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [status], [is_test_data], [defaultColor]) VALUES (N'type_eqp_server', N'Servidor', N'Equipamentos de TI', 0, 0, N'HardDrive', N'active', 0, NULL)
-INSERT [dbo].[item_typesEqp] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [status], [is_test_data], [defaultColor]) VALUES (N'type_eqp_storage', N'Storage', N'Armazenamento', 0, 0, N'Database', N'active', 0, NULL)
-INSERT [dbo].[item_typesEqp] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [status], [is_test_data], [defaultColor]) VALUES (N'type_eqp_switch', N'Switch', N'Equipamentos de Rede', 0, 0, N'Network', N'active', 0, NULL)
-INSERT [dbo].[item_typesEqp] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [status], [is_test_data], [defaultColor]) VALUES (N'type_eqp_telecom', N'Equipamento Telecom', N'Equipamentos de Telecom', 0, 0, N'Router', N'active', 0, NULL)
-INSERT [dbo].[item_typesEqp] ([id], [name], [category], [defaultwidth_m], [defaultHeightM], [icon_name], [status], [is_test_data], [defaultColor]) VALUES (N'type_eqp_ups', N'UPS', N'Energia', 0, 0, N'BatteryCharging', N'active', 0, NULL)
+INSERT [dbo].[item_typesEqp] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [status], [is_test_data], [default_color]) VALUES (N'type_eqp_firewall', N'Firewall', N'Segurança de Rede', 0, 0, N'ShieldCheck', N'active', 0, NULL)
+INSERT [dbo].[item_typesEqp] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [status], [is_test_data], [default_color]) VALUES (N'type_eqp_patch', N'Patch Panel', N'Cabeamento', 0, 0, N'PanelTop', N'active', 0, NULL)
+INSERT [dbo].[item_typesEqp] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [status], [is_test_data], [default_color]) VALUES (N'type_eqp_pdu', N'PDU', N'Energia', 0, 0, N'Power', N'active', 0, NULL)
+INSERT [dbo].[item_typesEqp] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [status], [is_test_data], [default_color]) VALUES (N'type_eqp_pdu_rack', N'PDU de Rack', N'Energia', 0, 0, N'Power', N'active', 0, NULL)
+INSERT [dbo].[item_typesEqp] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [status], [is_test_data], [default_color]) VALUES (N'type_eqp_server', N'Servidor', N'Equipamentos de TI', 0, 0, N'HardDrive', N'active', 0, NULL)
+INSERT [dbo].[item_typesEqp] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [status], [is_test_data], [default_color]) VALUES (N'type_eqp_storage', N'Storage', N'Armazenamento', 0, 0, N'Database', N'active', 0, NULL)
+INSERT [dbo].[item_typesEqp] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [status], [is_test_data], [default_color]) VALUES (N'type_eqp_switch', N'Switch', N'Equipamentos de Rede', 0, 0, N'Network', N'active', 0, NULL)
+INSERT [dbo].[item_typesEqp] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [status], [is_test_data], [default_color]) VALUES (N'type_eqp_telecom', N'Equipamento Telecom', N'Equipamentos de Telecom', 0, 0, N'Router', N'active', 0, NULL)
+INSERT [dbo].[item_typesEqp] ([id], [name], [category], [defaultwidth_m], [default_height_m], [icon_name], [status], [is_test_data], [default_color]) VALUES (N'type_eqp_ups', N'UPS', N'Energia', 0, 0, N'BatteryCharging', N'active', 0, NULL)
 GO
 INSERT [dbo].[Manufacturers] ([id], [name]) VALUES (N'man_arista', N'Arista Networks')
 INSERT [dbo].[Manufacturers] ([id], [name]) VALUES (N'man_ciena', N'Ciena')
@@ -995,9 +995,9 @@ ALTER TABLE [dbo].[ItemStatuses] ADD  DEFAULT ((0)) FOR [isArchived]
 GO
 ALTER TABLE [dbo].[ItemStatuses] ADD  DEFAULT ((0)) FOR [isDefault]
 GO
-ALTER TABLE [dbo].[item_types] ADD  DEFAULT ((0)) FOR [canHaveChildren]
+ALTER TABLE [dbo].[item_types] ADD  DEFAULT ((0)) FOR [can_have_children]
 GO
-ALTER TABLE [dbo].[item_types] ADD  DEFAULT ((1)) FOR [isResizable]
+ALTER TABLE [dbo].[item_types] ADD  DEFAULT ((1)) FOR [is_resizable]
 GO
 ALTER TABLE [dbo].[item_types] ADD  DEFAULT ('active') FOR [status]
 GO

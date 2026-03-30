@@ -14,7 +14,7 @@ export async function getDatacenterData(): Promise<Building[]> {
             apiFetch('/buildings?select=id,name&order=name.asc'),
             apiFetch('/rooms?order=name.asc'),
             apiFetch('/parent_items?status=not.in.(decommissioned,deleted)'),
-            apiFetch('/item_types?select=name,shape,icon_name,defaultcolor')
+            apiFetch('/item_types?select=name,shape,icon_name,default_color')
         ]);
 
         // Criamos um mapa de tipos para enriquecer os itens com ícones e formas
@@ -54,7 +54,7 @@ export async function getDatacenterData(): Promise<Building[]> {
                 // Dados vindos da tabela de tipos
                 shape: typeInfo.shape,
                 icon_name: typeInfo.icon_name,
-                itemTypeColor: typeInfo.defaultcolor
+                itemTypeColor: typeInfo.default_color
             };
         });
 

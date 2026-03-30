@@ -70,13 +70,13 @@ CREATE TABLE item_types (
     name NVARCHAR(100) NOT NULL UNIQUE,
     category NVARCHAR(100) NOT NULL,
     defaultwidth_m FLOAT NOT NULL,
-    defaultHeightM FLOAT NOT NULL,
+    default_height_m FLOAT NOT NULL,
     icon_name NVARCHAR(50),
-    canHaveChildren BIT NOT NULL DEFAULT 0,
-    isResizable BIT NOT NULL DEFAULT 1,
+    can_have_children BIT NOT NULL DEFAULT 0,
+    is_resizable BIT NOT NULL DEFAULT 1,
     status NVARCHAR(50) NOT NULL DEFAULT 'active',
     is_test_data BIT NOT NULL DEFAULT 0,
-    defaultColor NVARCHAR(50)
+    default_color NVARCHAR(50)
 );
 GO
 
@@ -85,11 +85,11 @@ CREATE TABLE item_typesEqp (
     name NVARCHAR(100) NOT NULL UNIQUE,
     category NVARCHAR(100) NOT NULL,
     defaultwidth_m FLOAT NOT NULL,
-    defaultHeightM FLOAT NOT NULL,
+    default_height_m FLOAT NOT NULL,
     icon_name NVARCHAR(50),
     status NVARCHAR(50) NOT NULL DEFAULT 'active',
     is_test_data BIT NOT NULL DEFAULT 0,
-    defaultColor NVARCHAR(50)
+    default_color NVARCHAR(50)
 );
 GO
 

@@ -12,13 +12,13 @@ export interface ItemType {
   category: string;
   shape: 'rectangle' | 'circle';
   defaultwidth_m: number;
-  defaultHeightM: number;
-  defaultRadiusM?: number | null;
+  default_height_m: number;
+  default_radius_m?: number | null;
   icon_name?: string;
-  canHaveChildren?: boolean;
-  isResizable?: boolean;
+  can_have_children?: boolean;
+  is_resizable?: boolean;
   status: 'active' | 'deleted';
-  defaultColor?: string;
+  default_color?: string;
   is_test_data?: boolean;
   isDefault?: boolean;
 }
@@ -32,13 +32,13 @@ const mapItemType = (r: any): ItemType => ({
     category: r.category,
     shape: r.shape || 'rectangle',
     defaultwidth_m: r.defaultwidth_m || 0,
-    defaultHeightM: r.defaultheightm || 0,
-    defaultRadiusM: r.defaultradiusm,
+    default_height_m: r.default_height_m || 0,
+    default_radius_m: r.default_radius_m,
     icon_name: r.icon_name,
-    canHaveChildren: !!r.canhavechildren,
-    isResizable: !!r.isresizable,
+    can_have_children: !!r.can_have_children,
+    is_resizable: !!r.is_resizable,
     status: r.status,
-    defaultColor: r.defaultcolor,
+    default_color: r.default_color,
     is_test_data: !!r.is_test_data,
     isDefault: !!r.isdefault
 });
@@ -66,15 +66,15 @@ export async function addItemType(data: any, isParentType: boolean) {
         name: data.name,
         category: data.category || 'Equipamento',
         icon_name: data.icon_name || null,
-        canhavechildren: data.canHaveChildren ? true : false,
-        isresizable: data.isResizable ? true : false,
+        can_have_children: data.can_have_children ? true : false,
+        is_resizable: data.is_resizable ? true : false,
         status: 'active',
         is_test_data: false,
-        defaultcolor: data.defaultColor || null,
+        default_color: data.default_color || null,
         shape: data.shape || 'rectangle',
-        defaultwidth_m: data.shape === 'circle' ? data.defaultRadiusM : (data.defaultwidth_m || 0.6),
-        defaultheightm: data.shape === 'circle' ? data.defaultRadiusM : (data.defaultHeightM || 1.0),
-        defaultradiusm: data.defaultRadiusM || null,
+        defaultwidth_m: data.shape === 'circle' ? data.default_radius_m : (data.defaultwidth_m || 0.6),
+        default_height_m: data.shape === 'circle' ? data.default_radius_m : (data.default_height_m || 1.0),
+        default_radius_m: data.default_radius_m || null,
         isdefault: false
     };
 
@@ -98,11 +98,11 @@ export async function updateItemType(id: string, data: any, isParentType: boolea
   if (data.category) dataForDb.category = data.category;
   if (data.icon_name !== undefined) dataForDb.icon_name = data.icon_name;
   if (data.defaultwidth_m !== undefined) dataForDb.defaultwidth_m = data.defaultwidth_m;
-  if (data.defaultHeightM !== undefined) dataForDb.defaultheightm = data.defaultHeightM;
-  if (data.defaultRadiusM !== undefined) dataForDb.defaultradiusm = data.defaultRadiusM;
-  if (data.defaultColor !== undefined) dataForDb.defaultcolor = data.defaultColor;
-  if (data.canHaveChildren !== undefined) dataForDb.canhavechildren = data.canHaveChildren;
-  if (data.isResizable !== undefined) dataForDb.isresizable = data.isResizable;
+  if (data.default_height_m !== undefined) dataForDb.default_height_m = data.default_height_m;
+  if (data.default_radius_m !== undefined) dataForDb.default_radius_m = data.default_radius_m;
+  if (data.default_color !== undefined) dataForDb.default_color = data.default_color;
+  if (data.can_have_children !== undefined) dataForDb.can_have_children = data.can_have_children;
+  if (data.is_resizable !== undefined) dataForDb.is_resizable = data.is_resizable;
   if (data.shape) dataForDb.shape = data.shape;
 
   try {

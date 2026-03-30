@@ -59,17 +59,17 @@ const parentitem_typeschema = z.object({
   category: z.string().min(3, "A categoria deve ter pelo menos 3 caracteres."),
   shape: z.enum(['rectangle', 'circle']),
   defaultwidth_m: z.coerce.number().optional().nullable(),
-  defaultHeightM: z.coerce.number().optional().nullable(),
-  defaultRadiusM: z.coerce.number().optional().nullable(),
+  default_height_m: z.coerce.number().optional().nullable(),
+  default_radius_m: z.coerce.number().optional().nullable(),
   icon_name: z.string().optional(),
-  canHaveChildren: z.boolean(),
-  isResizable: z.boolean(),
-  defaultColor: z.string().optional(),
+  can_have_children: z.boolean(),
+  is_resizable: z.boolean(),
+  default_color: z.string().optional(),
 }).refine(data => {
-    if (data.shape === 'rectangle' && (!data.defaultwidth_m || !data.defaultHeightM)) {
+    if (data.shape === 'rectangle' && (!data.defaultwidth_m || !data.default_height_m)) {
         return false;
     }
-    if (data.shape === 'circle' && !data.defaultRadiusM) {
+    if (data.shape === 'circle' && !data.default_radius_m) {
         return false;
     }
     return true;
@@ -85,8 +85,8 @@ const childitem_typeschema = z.object({
     // Para manter a consistência, mesmo que oculto, o schema precisa corresponder à action
     category: z.string().default('Equipamento'),
     defaultwidth_m: z.coerce.number().default(0),
-    defaultHeightM: z.coerce.number().default(0),
-    defaultColor: z.string().optional(),
+    default_height_m: z.coerce.number().default(0),
+    default_color: z.string().optional(),
 });
 
 
@@ -114,12 +114,12 @@ export function EditItemTypeDialog({ itemType, open, onOpenChange, isParentType 
         category: itemType.category,
         shape: itemType.shape || 'rectangle',
         defaultwidth_m: itemType.defaultwidth_m,
-        defaultHeightM: itemType.defaultHeightM,
-        defaultRadiusM: itemType.defaultRadiusM,
+        default_height_m: itemType.default_height_m,
+        default_radius_m: itemType.default_radius_m,
         icon_name: itemType.icon_name || "",
-        canHaveChildren: itemType.canHaveChildren,
-        isResizable: itemType.isResizable,
-        defaultColor: itemType.defaultColor || "",
+        can_have_children: itemType.can_have_children,
+        is_resizable: itemType.is_resizable,
+        default_color: itemType.default_color || "",
       });
     }
   }, [open, itemType, form]);
@@ -189,13 +189,13 @@ export function EditItemTypeDialog({ itemType, open, onOpenChange, isParentType 
                 <FormField control={form.control} name="defaultwidth_m" render={({ field }) => (
                     <FormItem><FormLabel>Largura Padrão (m)</FormLabel><FormControl><Input type="number" step="0.01" {...field} /></FormControl><FormMessage /></FormItem>
                 )}/>
-                <FormField control={form.control} name="defaultHeightM" render={({ field }) => (
+                <FormField control={form.control} name="default_height_m" render={({ field }) => (
                     <FormItem><FormLabel>Comprimento Padrão (m)</FormLabel><FormControl><Input type="number" step="0.01" {...field} /></FormControl><FormMessage /></FormItem>
                 )}/>
             </div>
         ) : (
              <div className="grid grid-cols-2 gap-4">
-                 <FormField control={form.control} name="defaultRadiusM" render={({ field }) => (
+                 <FormField control={form.control} name="default_radius_m" render={({ field }) => (
                     <FormItem><FormLabel>Raio Padrão (m)</FormLabel><FormControl><Input type="number" step="0.01" {...field} /></FormControl><FormMessage /></FormItem>
                 )}/>
              </div>
@@ -208,15 +208,15 @@ export function EditItemTypeDialog({ itemType, open, onOpenChange, isParentType 
                     <SelectContent><ScrollArea className="h-48">{iconList.map((icon) => (<SelectItem key={icon.name} value={icon.name}><div className="flex items-center gap-2"><icon.icon className="h-4 w-4" /><span>{icon.name}</span></div></SelectItem>))}</ScrollArea></SelectContent>
                 </Select><FormMessage /></FormItem>
             )}/>
-            <FormField control={form.control} name="defaultColor" render={({ field }) => (
+            <FormField control={form.control} name="default_color" render={({ field }) => (
                 <FormItem><FormLabel>Cor Padrão</FormLabel><FormControl><Input type="color" {...field} value={field.value ?? ''} className="h-10" /></FormControl><FormMessage /></FormItem>
             )}/>
         </div>
         <div className="flex items-center space-x-8 pt-2">
-            <FormField control={form.control} name="isResizable" render={({ field }) => (
+            <FormField control={form.control} name="is_resizable" render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm"><div className="space-y-0.5 mr-4"><FormLabel>Redimensionável</FormLabel></div><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>
             )}/>
-            <FormField control={form.control} name="canHaveChildren" render={({ field }) => (
+            <FormField control={form.control} name="can_have_children" render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm"><div className="space-y-0.5 mr-4"><FormLabel>Pode Aninhar</FormLabel></div><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>
             )}/>
         </div>
