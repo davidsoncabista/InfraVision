@@ -3,26 +3,26 @@
 import { revalidatePath } from 'next/cache';
 import { apiFetch } from './db';
 
-export interface PortType {
+export interface port_type {
   id: string;
   name: string;
   description: string | null;
   isDefault: boolean;
 }
 
-export async function getPortTypes(): Promise<PortType[]> {
+export async function getport_types(): Promise<port_type[]> {
   try {
-    return apiFetch('/porttypes?order=isdefault.desc,name.asc');
+    return apiFetch('/port_types?order=isdefault.desc,name.asc');
   } catch (error) {
     console.error('Erro ao buscar tipos de porta:', error);
     return [];
   }
 }
 
-export async function addPortType(data: { name: string, description?: string | null }) {
+export async function addport_type(data: { name: string, description?: string | null }) {
   const newId = `ptype_${Date.now()}`;
   try {
-    await apiFetch('/porttypes', {
+    await apiFetch('/port_types', {
       method: 'POST',
       body: JSON.stringify({ id: newId, name: data.name, description: data.description, isdefault: false })
     });
@@ -32,9 +32,9 @@ export async function addPortType(data: { name: string, description?: string | n
   }
 }
 
-export async function updatePortType(id: string, data: any) {
+export async function updateport_type(id: string, data: any) {
     try {
-        await apiFetch(`/porttypes?id=eq.${id}&isdefault=eq.false`, {
+        await apiFetch(`/port_types?id=eq.${id}&isdefault=eq.false`, {
             method: 'PATCH',
             body: JSON.stringify(data)
         });
@@ -44,9 +44,9 @@ export async function updatePortType(id: string, data: any) {
     }
 }
 
-export async function deletePortType(id: string) {
+export async function deleteport_type(id: string) {
     try {
-        await apiFetch(`/porttypes?id=eq.${id}&isdefault=eq.false`, { method: 'DELETE' });
+        await apiFetch(`/port_types?id=eq.${id}&isdefault=eq.false`, { method: 'DELETE' });
         revalidatePath('/system');
     } catch (error: any) {
         throw new Error('Falha ao excluir tipo de porta.');

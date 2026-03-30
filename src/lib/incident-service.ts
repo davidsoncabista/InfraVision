@@ -9,8 +9,8 @@ export interface Incident {
   id: string;
   description: string;
   typeName: string;
-  entityId: string;
-  entityType: string;
+  entity_id: string;
+  entity_type: string;
   severity: string;
   status: string;
   statusId: string;
@@ -39,8 +39,8 @@ export async function getIncidents(building_id: string): Promise<Incident[]> {
             id: r.id,
             description: r.description,
             typeName: r.incidenttypes?.name || 'N/A',
-            entityId: r.entityid,
-            entityType: r.entitytype,
+            entity_id: r.entity_id,
+            entity_type: r.entity_type,
             severity: r.incidentseverities?.name || 'N/A',
             status: r.incidentstatuses?.name || 'N/A',
             statusId: r.statusid,
@@ -80,8 +80,8 @@ export async function updateIncident(incidentId: string, newStatusId: string, us
     await logAuditEvent({ 
         user, 
         action: 'INCIDENT_STATUS_UPDATED', 
-        entityType: 'incidents', 
-        entityId: incidentId, 
+        entity_type: 'incidents', 
+        entity_id: incidentId, 
         details: { to: newStatusId, notes } 
     });
     
@@ -94,8 +94,8 @@ export async function updateIncident(incidentId: string, newStatusId: string, us
 export async function getParentItemIdsWithActiveIncidents(building_id: string): Promise<string[]> {
     try {
         // Busca incidentes vinculados a parent_items que não estão resolvidos
-        const data = await apiFetch(`/incidents?select=entityid,incidentstatuses!inner(name)&entitytype=eq.parent_items&incidentstatuses.name=not.in.(Resolvido,Fechado)`);
-        return (data || []).map((r: any) => r.entityid);
+        const data = await apiFetch(`/incidents?select=entity_id,incidentstatuses!inner(name)&entity_type=eq.parent_items&incidentstatuses.name=not.in.(Resolvido,Fechado)`);
+        return (data || []).map((r: any) => r.entity_id);
     } catch (error) {
         return [];
     }
@@ -109,7 +109,7 @@ export async function resolveConnectionIncident({ incidentId, action, resolution
         const incidents = await apiFetch(`/incidents?id=eq.${incidentId}`);
         if (!incidents || !incidents.length) return { details: null };
         
-        const portId = incidents[0].entityid;
+        const portId = incidents[0].entity_id;
         const ports = await apiFetch(`/equipment_ports?id=eq.${portId}&select=*,child_items(label,parent_items(label))`);
         
         if (!ports || !ports.length) return { details: null };
@@ -125,7 +125,7 @@ export async function resolveConnectionIncident({ incidentId, action, resolution
                 port: {
                     id: port.id,
                     label: port.label,
-                    portTypeName: 'N/A' // Pode ser enriquecido se necessário
+                    port_typeName: 'N/A' // Pode ser enriquecido se necessário
                 }
             }
         };
@@ -139,7 +139,7 @@ export async function resolveConnectionIncident({ incidentId, action, resolution
         // 1. Busca os dados do incidente para saber qual é a porta A
         const incidents = await apiFetch(`/incidents?id=eq.${incidentId}`);
         if (!incidents || !incidents.length) throw new Error("Incidente não encontrado.");
-        const portA_id = incidents[0].entityid;
+        const portA_id = incidents[0].entity_id;
 
         // 2. Cria a conexão no PostgREST
         const connectionId = `conn_res_${Date.now()}`;
@@ -172,7 +172,7 @@ export async function resolveConnectionIncident({ incidentId, action, resolution
             });
         }
 
-        await logAuditEvent({ user, action: 'INCIDENT_RESOLVED_CONNECTION', entityType: 'incidents', entityId: incidentId });
+        await logAuditEvent({ user, action: 'INCIDENT_RESOLVED_CONNECTION', entity_type: 'incidents', entity_id: incidentId });
         revalidatePath('/incidents');
         revalidatePath('/depara');
         return { success: true };

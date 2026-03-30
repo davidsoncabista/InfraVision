@@ -7,8 +7,8 @@ import { revalidatePath } from 'next/cache';
 
 export interface Evidence {
     id: string;
-    entityId: string;
-    entityType: string;
+    entity_id: string;
+    entity_type: string;
     user_id: string;
     userDisplayName: string;
     timestamp: string;
@@ -16,16 +16,16 @@ export interface Evidence {
     data: any;
 }
 
-export async function getEvidenceForEntity(entityId: string, entityType: string): Promise<Evidence[]> {
-    if (!entityId || !entityType) return [];
+export async function getEvidenceForEntity(entity_id: string, entity_type: string): Promise<Evidence[]> {
+    if (!entity_id || !entity_type) return [];
     try {
         // PostgREST: Resource Embedding com nomes em minúsculo
-        const data = await apiFetch(`/evidence?entityid=eq.${entityId}&entitytype=eq.${entityType}&select=*,users:user_id(displayname)&order=timestamp.asc`);
+        const data = await apiFetch(`/evidence?entity_id=eq.${entity_id}&entity_type=eq.${entity_type}&select=*,users:user_id(displayname)&order=timestamp.asc`);
         
         return data.map((record: any) => ({
             id: record.id,
-            entityId: record.entityid,
-            entityType: record.entitytype,
+            entity_id: record.entity_id,
+            entity_type: record.entity_type,
             user_id: record.user_id,
             userDisplayName: record.users?.displayname || record.user_id,
             timestamp: new Date(record.timestamp).toISOString(),
@@ -49,8 +49,8 @@ export async function addEvidence(data: any) {
             method: 'POST',
             body: JSON.stringify({
                 id: newId,
-                entityid: data.entityId,
-                entitytype: data.entityType,
+                entity_id: data.entity_id,
+                entity_type: data.entity_type,
                 user_id: data.user_id,
                 timestamp: new Date().toISOString(),
                 type: data.type,
@@ -58,7 +58,7 @@ export async function addEvidence(data: any) {
             })
         });
 
-        await logAuditEvent({ user, action: 'EVIDENCE_ADDED', entityType: data.entityType, entityId: data.entityId });
+        await logAuditEvent({ user, action: 'EVIDENCE_ADDED', entity_type: data.entity_type, entity_id: data.entity_id });
         revalidatePath('/incidents');
         revalidatePath('/evidence');
     } catch (error: any) {
@@ -72,7 +72,7 @@ export async function deleteEvidence(evidenceId: string, user_id: string) {
     
     try {
         await apiFetch(`/evidence?id=eq.${evidenceId}`, { method: 'DELETE' });
-        await logAuditEvent({ user, action: 'EVIDENCE_DELETED', entityType: 'evidence', entityId: evidenceId });
+        await logAuditEvent({ user, action: 'EVIDENCE_DELETED', entity_type: 'evidence', entity_id: evidenceId });
         revalidatePath('/incidents');
         revalidatePath('/evidence');
     } catch (error: any) {

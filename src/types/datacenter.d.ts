@@ -13,7 +13,7 @@ export interface GridItem {
   status: any;
   room_id?: string;
   parent_id?: string | null;
-  serialNumber?: string;
+  serial_number?: string;
   brand?: string;
   tag?: string;
   isTagEligible?: boolean;
@@ -24,9 +24,9 @@ export interface GridItem {
   modelo?: string;
   preco?: number;
   trellisId?: string;
-  tamanhoU?: number;
-  posicaoU?: number;
-  potenciaW?: number;
+  tamanho_u?: number;
+  posicao_u?: number;
+  potencia_w?: number;
   color?: string;
   // Propriedades que podem vir do JOIN
   roomName?: string;

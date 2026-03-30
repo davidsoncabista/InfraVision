@@ -9,7 +9,7 @@ import type { ApprovalRequest } from './approval-actions';
  * Grava um evento no log de auditoria via API REST.
  * Os campos no body seguem a nomenclatura minúscula do PostgreSQL.
  */
-export async function logAuditEvent(event: { user: User; action: string; entityType?: string; entityId?: string; details?: any }): Promise<void> {
+export async function logAuditEvent(event: { user: User; action: string; entity_type?: string; entity_id?: string; details?: any }): Promise<void> {
     try {
         await apiFetch('/auditlog', {
             method: 'POST',
@@ -17,8 +17,8 @@ export async function logAuditEvent(event: { user: User; action: string; entityT
                 user_id: event.user.id,
                 userdisplayname: event.user.displayName || event.user.email,
                 action: event.action,
-                entitytype: event.entityType || null,
-                entityid: event.entityId || null,
+                entity_type: event.entity_type || null,
+                entity_id: event.entity_id || null,
                 details: event.details ? JSON.stringify(event.details) : null,
                 timestamp: new Date().toISOString()
             })
@@ -39,9 +39,9 @@ export async function getAuditLogs(): Promise<any[]> {
             timestamp: new Date(log.timestamp).toISOString(),
             userDisplayName: log.userdisplayname,
             action: log.action,
-            entityType: log.entitytype,
-            entityId: log.entityid,
-            entityLabel: log.entityid,
+            entity_type: log.entity_type,
+            entity_id: log.entity_id,
+            entityLabel: log.entity_id,
             details: typeof log.details === 'string' ? JSON.parse(log.details) : (log.details || {}),
         }));
     } catch (error) {
@@ -54,24 +54,24 @@ export async function getAuditLogs(): Promise<any[]> {
  * Busca o objeto completo de um item (Parent ou Child) referenciado em um log.
  * Converte as chaves minúsculas do DB para a interface GridItem.
  */
-export async function getFullItemFromLog(entityType: string, entityId: string): Promise<GridItem | null> {
-    const endpoint = entityType.toLowerCase() === 'parent_items' ? '/parent_items' : '/child_items';
+export async function getFullItemFromLog(entity_type: string, entity_id: string): Promise<GridItem | null> {
+    const endpoint = entity_type.toLowerCase() === 'parent_items' ? '/parent_items' : '/child_items';
     try {
-        const data = await apiFetch(`${endpoint}?id=eq.${entityId}`);
+        const data = await apiFetch(`${endpoint}?id=eq.${entity_id}`);
         if (data && data.length > 0) {
             const item = data[0];
             return {
                 ...item,
                 room_id: item.room_id,
                 parent_id: item.parent_id,
-                serialNumber: item.serialnumber,
-                tamanhoU: item.tamanhou,
-                posicaoU: item.posicaou
+                serial_number: item.serial_number,
+                tamanho_u: item.tamanho_u,
+                posicao_u: item.posicao_u
             } as GridItem;
         }
         return null;
     } catch (error) {
-        console.error(`Erro ao buscar item ${entityId} para auditoria:`, error);
+        console.error(`Erro ao buscar item ${entity_id} para auditoria:`, error);
         return null;
     }
 }
@@ -80,18 +80,18 @@ export async function getFullItemFromLog(entityType: string, entityId: string): 
  * Busca o objeto completo de uma aprovação referenciada em um log.
  * Realiza o mapeamento manual das colunas minúsculas do PostgreSQL.
  */
-export async function getFullApprovalFromLog(entityId: string): Promise<ApprovalRequest | null> {
+export async function getFullApprovalFromLog(entity_id: string): Promise<ApprovalRequest | null> {
     try {
-        const data = await apiFetch(`/approvals?id=eq.${entityId}`);
+        const data = await apiFetch(`/approvals?id=eq.${entity_id}`);
         if (data && data.length > 0) {
             const record = data[0];
             const details = typeof record.details === 'string' ? JSON.parse(record.details) : record.details;
             return {
                 id: record.id,
-                entityId: record.entityid,
-                entityType: record.entitytype,
+                entity_id: record.entity_id,
+                entity_type: record.entity_type,
                 entityLabel: record.entitylabel,
-                entityTypeName: record.entitytypename,
+                entity_typeName: record.entity_typename,
                 requestedAt: new Date(record.requestedat).toISOString(),
                 requestedByUserDisplayName: record.requestedbyuserdisplayname,
                 details: details,
@@ -103,7 +103,7 @@ export async function getFullApprovalFromLog(entityId: string): Promise<Approval
         }
         return null;
     } catch (error) {
-        console.error(`Erro ao buscar aprovação ${entityId} para auditoria:`, error);
+        console.error(`Erro ao buscar aprovação ${entity_id} para auditoria:`, error);
         return null;
     }
 }

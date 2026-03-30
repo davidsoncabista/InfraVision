@@ -7,8 +7,8 @@ import { uploadImage } from '@/lib/storage-actions';
 
 export interface Evidence {
     id: string;
-    entityId: string;
-    entityType: string;
+    entity_id: string;
+    entity_type: string;
     user_id: string;
     userDisplayName: string;
     userPhotoURL?: string | null;
@@ -65,16 +65,16 @@ export async function submitEvidence(payload: SubmitEvidencePayload) {
             timestamp: new Date().toISOString(),
             type: 'general_report',
             data: dataToStore,
-            entitytype: 'General',
-            entityid: `gen_${Date.now()}`
+            entity_type: 'General',
+            entity_id: `gen_${Date.now()}`
         })
     });
 
     await logAuditEvent({
         user,
         action: 'EVIDENCE_SUBMITTED',
-        entityType: 'evidence',
-        entityId: evidenceId,
+        entity_type: 'evidence',
+        entity_id: evidenceId,
         details: { description, imageCount: uploadedFileUrls.length }
     });
 
@@ -88,14 +88,14 @@ export async function getRecentIncidentEvidence(): Promise<Evidence[]> {
     try {
         // PostgREST: Resource Embedding para simular o JOIN
         // Buscamos evidências de incidentes, trazendo displayname do usuário e descrição do incidente
-        const url = `/evidence?entitytype=eq.Incidents&select=*,users:user_id(displayname,photourl),incidents:entityid(description)&order=timestamp.desc&limit=20`;
+        const url = `/evidence?entity_type=eq.Incidents&select=*,users:user_id(displayname,photourl),incidents:entity_id(description)&order=timestamp.desc&limit=20`;
         
         const data = await apiFetch(url);
 
         return (data || []).map((record: any) => ({
             id: record.id,
-            entityId: record.entityid,
-            entityType: record.entitytype,
+            entity_id: record.entity_id,
+            entity_type: record.entity_type,
             user_id: record.user_id,
             userDisplayName: record.users?.displayname || record.user_id,
             userPhotoURL: record.users?.photourl || null,

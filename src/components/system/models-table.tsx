@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from '../ui/skeleton';
 import { getManufacturers, Manufacturer } from '@/lib/manufacturer-actions';
-import { getModelsByManufacturerId, Model } from '@/lib/models-actions';
+import { getModelsBymanufacturer_id, Model } from '@/lib/models-actions';
 import { ManageModelMenu } from './manage-model-menu';
 
 export function ModelsTable() {
@@ -28,7 +28,7 @@ export function ModelsTable() {
     React.useEffect(() => {
         if (selectedManufacturer) {
             setIsLoadingModels(true);
-            getModelsByManufacturerId(selectedManufacturer).then(data => {
+            getModelsBymanufacturer_id(selectedManufacturer).then(data => {
                 setModels(data);
                 setIsLoadingModels(false);
             });
@@ -80,7 +80,7 @@ export function ModelsTable() {
                             models.map(model => (
                                 <TableRow key={model.id}>
                                     <TableCell className="font-medium">{model.name}</TableCell>
-                                    <TableCell>{model.tamanhoU || 'N/A'}</TableCell>
+                                    <TableCell>{model.tamanho_u || 'N/A'}</TableCell>
                                     <TableCell className="font-mono text-xs">{model.portConfig || 'N/A'}</TableCell>
                                     <TableCell className="text-right">
                                         <ManageModelMenu model={model} />

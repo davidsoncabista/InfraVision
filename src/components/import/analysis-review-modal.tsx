@@ -50,7 +50,7 @@ export function AnalysisReviewModal({ isOpen, onOpenChange, data, dataType, onCo
   const handleCellChange = (rowIndex: number, header: string, value: string) => {
     const newData = [...editedData];
     // Converte para número se o campo for um dos numéricos conhecidos
-    const numericFields = ['sizeu', 'posicaou'];
+    const numericFields = ['sizeu', 'posicao_u'];
     const lowerCaseHeader = header.toLowerCase();
     
     if(numericFields.includes(lowerCaseHeader)) {

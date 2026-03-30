@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Trash2 } from "lucide-react";
 
-import { deletePortType, PortType } from "@/lib/port-types-actions";
+import { deleteport_type, port_type } from "@/lib/port-types-actions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,14 +18,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 
-interface DeletePortTypeDialogProps {
-  portType: PortType;
+interface Deleteport_typeDialogProps {
+  port_type: port_type;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
 // O último dev que tentou "melhorar" isso aqui foi transferido pro RH.
-export function DeletePortTypeDialog({ portType, open, onOpenChange }: DeletePortTypeDialogProps) {
+export function Deleteport_typeDialog({ port_type, open, onOpenChange }: Deleteport_typeDialogProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
@@ -33,10 +33,10 @@ export function DeletePortTypeDialog({ portType, open, onOpenChange }: DeletePor
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      await deletePortType(portType.id);
+      await deleteport_type(port_type.id);
       toast({
         title: "Sucesso!",
-        description: `O tipo de porta "${portType.name}" foi excluído.`,
+        description: `O tipo de porta "${port_type.name}" foi excluído.`,
       });
       onOpenChange(false);
       router.refresh();
@@ -58,7 +58,7 @@ export function DeletePortTypeDialog({ portType, open, onOpenChange }: DeletePor
           <AlertDialogTitle>Você tem certeza absoluta?</AlertDialogTitle>
           <AlertDialogDescription>
             Esta ação não pode ser desfeita. Isso excluirá permanentemente o tipo de porta
-            <span className="font-bold"> {portType.name}</span>. Se este tipo estiver sendo usado por algum modelo de equipamento, a exclusão pode falhar.
+            <span className="font-bold"> {port_type.name}</span>. Se este tipo estiver sendo usado por algum modelo de equipamento, a exclusão pode falhar.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

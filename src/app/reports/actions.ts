@@ -7,7 +7,7 @@ import * as XLSX from 'xlsx';
  * Busca todos os itens de planta baixa que não são dados de teste.
  */
 async function getparent_items() {
-    const data = await apiFetch('/parent_items?istestdata=eq.false&select=*,rooms(name,buildings(name))');
+    const data = await apiFetch('/parent_items?is_test_data=eq.false&select=*,rooms(name,buildings(name))');
     return (data || []).map((item: any) => ({
         ...item,
         roomName: item.rooms?.name,
@@ -19,7 +19,7 @@ async function getparent_items() {
  * Busca todos os equipamentos aninhados que não são dados de teste.
  */
 async function getchild_items() {
-    const data = await apiFetch('/child_items?istestdata=eq.false&select=*,parent_items(label)');
+    const data = await apiFetch('/child_items?is_test_data=eq.false&select=*,parent_items(label)');
     return (data || []).map((item: any) => ({
         ...item,
         parentName: item.parent_items?.label
@@ -30,7 +30,7 @@ async function getchild_items() {
  * Busca todas as conexões ativas que não são dados de teste.
  */
 async function getConnections() {
-    const data = await apiFetch('/connections?istestdata=eq.false&select=*,portA:portA_id(label,child_items(label,parent_items(label))),portB:portB_id(label,child_items(label,parent_items(label))),connectiontypes(name)');
+    const data = await apiFetch('/connections?is_test_data=eq.false&select=*,portA:portA_id(label,child_items(label,parent_items(label))),portB:portB_id(label,child_items(label,parent_items(label))),connectiontypes(name)');
     
     return (data || []).map((c: any) => ({
         id: c.id,
@@ -66,11 +66,11 @@ export async function exportData(dataTypes: string[]): Promise<string | null> {
                 'Status': item.status,
                 'Sala': item.roomName,
                 'Prédio': item.buildingName,
-                'Nº de Série': item.serialnumber,
+                'Nº de Série': item.serial_number,
                 'Fabricante': item.brand,
                 'Modelo': item.modelo,
-                'Tamanho (U)': item.tamanhou,
-                'Potência (W)': item.potenciaw,
+                'Tamanho (U)': item.tamanho_u,
+                'Potência (W)': item.potencia_w,
                 'TAG': item.tag,
                 'Proprietário (Email)': item.owneremail,
                 'Descrição': item.description,
@@ -90,11 +90,11 @@ export async function exportData(dataTypes: string[]): Promise<string | null> {
                 'Tipo': item.type,
                 'Status': item.status,
                 'Item Pai (Rack)': item.parentName,
-                'Nº de Série': item.serialnumber,
+                'Nº de Série': item.serial_number,
                 'Fabricante': item.brand,
                 'Modelo': item.modelo,
-                'Tamanho (U)': item.tamanhou,
-                'Posição (U)': item.posicaou,
+                'Tamanho (U)': item.tamanho_u,
+                'Posição (U)': item.posicao_u,
             }));
             const ws = XLSX.utils.json_to_sheet(mappedData);
             XLSX.utils.book_append_sheet(wb, ws, 'Equipamentos Aninhados');

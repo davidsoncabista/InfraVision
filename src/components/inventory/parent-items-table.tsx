@@ -196,7 +196,7 @@ export function parent_itemsTable({ items, allItems, statuses }: parent_itemsTab
                                 </Badge>
                             </TableCell>
                             <TableCell>{item.type}</TableCell>
-                            <TableCell>{item.serialNumber || '-'}</TableCell>
+                            <TableCell>{item.serial_number || '-'}</TableCell>
                             <TableCell>{item.brand || '-'}</TableCell>
                         </TableRow>
                     ))

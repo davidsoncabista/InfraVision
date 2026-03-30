@@ -19,7 +19,7 @@ export async function addBuilding(name: string, address?: string): Promise<void>
     const newId = `B${Date.now()}`;
     await apiFetch('/buildings', {
         method: 'POST',
-        body: JSON.stringify({ id: newId, name: name.trim(), address: address?.trim() || null, istestdata: false })
+        body: JSON.stringify({ id: newId, name: name.trim(), address: address?.trim() || null, is_test_data: false })
     });
     revalidatePath('/buildings');
   } catch (error: any) {

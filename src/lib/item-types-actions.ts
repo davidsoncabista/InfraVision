@@ -19,7 +19,7 @@ export interface ItemType {
   isResizable?: boolean;
   status: 'active' | 'deleted';
   defaultColor?: string;
-  isTestData?: boolean;
+  is_test_data?: boolean;
   isDefault?: boolean;
 }
 
@@ -39,7 +39,7 @@ const mapItemType = (r: any): ItemType => ({
     isResizable: !!r.isresizable,
     status: r.status,
     defaultColor: r.defaultcolor,
-    isTestData: !!r.istestdata,
+    is_test_data: !!r.is_test_data,
     isDefault: !!r.isdefault
 });
 
@@ -69,7 +69,7 @@ export async function addItemType(data: any, isParentType: boolean) {
         canhavechildren: data.canHaveChildren ? true : false,
         isresizable: data.isResizable ? true : false,
         status: 'active',
-        istestdata: false,
+        is_test_data: false,
         defaultcolor: data.defaultColor || null,
         shape: data.shape || 'rectangle',
         defaultwidthm: data.shape === 'circle' ? data.defaultRadiusM : (data.defaultWidthM || 0.6),

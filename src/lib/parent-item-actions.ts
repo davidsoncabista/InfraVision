@@ -40,13 +40,13 @@ export async function getUnallocatedparent_items(): Promise<GridItem[]> {
             widthM: item.widthm,
             heightM: item.heightm,
             radiusM: item.radiusm,
-            serialNumber: item.serialnumber,
+            serial_number: item.serial_number,
             ownerEmail: item.owneremail,
             dataSheetUrl: item.datasheeturl,
-            tamanhoU: item.tamanhou,
-            posicaoU: item.posicaou,
-            potenciaW: item.potenciaw,
-            isTestData: !!item.istestdata
+            tamanho_u: item.tamanho_u,
+            posicao_u: item.posicao_u,
+            potencia_w: item.potencia_w,
+            is_test_data: !!item.is_test_data
         }));
     } catch (error) {
         console.error("Erro ao buscar itens de planta não alocados:", error);

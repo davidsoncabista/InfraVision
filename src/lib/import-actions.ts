@@ -9,10 +9,10 @@ interface ChildItemImportData {
     type: string;
     manufacturer: string;
     model: string;
-    serialNumber?: string;
+    serial_number?: string;
     sizeU?: number;
     parentRack: string;
-    posicaoU?: number;
+    posicao_u?: number;
 }
 
 interface ParentItemImportData {
@@ -65,11 +65,11 @@ export async function importchild_items(items: ChildItemImportData[], building_i
                     type: item.type,
                     brand: item.manufacturer,
                     modelo: item.model,
-                    serialnumber: item.serialNumber || null,
-                    tamanhou: item.sizeU || null,
-                    posicaou: item.posicaoU || null,
+                    serial_number: item.serial_number || null,
+                    tamanho_u: item.sizeU || null,
+                    posicao_u: item.posicao_u || null,
                     status: 'draft',
-                    istestdata: false
+                    is_test_data: false
                 })
             });
             successCount++;
@@ -101,7 +101,7 @@ export async function importparent_items(items: ParentItemImportData[]): Promise
                     status: 'draft',
                     widthm: 0.6,
                     heightm: 1.0,
-                    istestdata: false 
+                    is_test_data: false 
                 })
             });
             successCount++;

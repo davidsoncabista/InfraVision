@@ -35,7 +35,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import type { GridItem } from '@/types/datacenter';
 import { getManufacturers, Manufacturer } from '@/lib/manufacturer-actions';
-import { getModelsByManufacturerId, Model } from '@/lib/models-actions';
+import { getModelsBymanufacturer_id, Model } from '@/lib/models-actions';
 import { getitem_types, ItemType } from '@/lib/item-types-actions';
 import { updateItemDetails } from '@/lib/item-detail-actions';
 import { usePermissions } from '../permissions-provider';
@@ -43,10 +43,10 @@ import { usePermissions } from '../permissions-provider';
 const formSchema = z.object({
   parent_id: z.string({ required_error: "Você deve selecionar um item pai." }),
   type: z.string({ required_error: "Você deve selecionar um tipo." }),
-  manufacturerId: z.string({ required_error: "Você deve selecionar um fabricante." }),
+  manufacturer_id: z.string({ required_error: "Você deve selecionar um fabricante." }),
   modelId: z.string({ required_error: "Você deve selecionar um modelo." }),
   label: z.string().min(3, "O nome deve ter pelo menos 3 caracteres."),
-  posicaoU: z.coerce.number().optional(),
+  posicao_u: z.coerce.number().optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -78,15 +78,15 @@ export function AddChildItemDialog({
     defaultValues: {
       parent_id: undefined,
       type: undefined,
-      manufacturerId: undefined,
+      manufacturer_id: undefined,
       modelId: undefined,
       label: "",
-      posicaoU: undefined,
+      posicao_u: undefined,
     }
   });
 
-  const parentCandidates = allItems.filter(item => item.tamanhoU && item.tamanhoU > 0);
-  const selectedManufacturerId = form.watch('manufacturerId');
+  const parentCandidates = allItems.filter(item => item.tamanho_u && item.tamanho_u > 0);
+  const selectedmanufacturer_id = form.watch('manufacturer_id');
   
   useEffect(() => {
     if (open) {
@@ -96,11 +96,11 @@ export function AddChildItemDialog({
   }, [open, form]);
   
   useEffect(() => {
-      if (selectedManufacturerId) {
+      if (selectedmanufacturer_id) {
           setIsLoadingModels(true);
           setModels([]); 
           form.setValue('modelId', ''); 
-          getModelsByManufacturerId(selectedManufacturerId)
+          getModelsBymanufacturer_id(selectedmanufacturer_id)
               .then(setModels)
               .catch(() => toast({ variant: "destructive", title: "Erro", description: "Não foi possível carregar os modelos." }))
               .finally(() => setIsLoadingModels(false));
@@ -109,7 +109,7 @@ export function AddChildItemDialog({
       }
   // A dependência `form` é omitida para evitar um loop, pois `setValue` a modifica.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedManufacturerId]);
+  }, [selectedmanufacturer_id]);
 
 
   const onSubmit = async (data: FormData) => {
@@ -128,11 +128,11 @@ export function AddChildItemDialog({
             label: data.label,
             type: data.type,
             modelo: selectedModel.name,
-            brand: manufacturers.find(m => m.id === data.manufacturerId)?.name,
+            brand: manufacturers.find(m => m.id === data.manufacturer_id)?.name,
             parent_id: data.parent_id,
             status: 'draft',
-            posicaoU: data.posicaoU || undefined,
-            tamanhoU: selectedModel.tamanhoU,
+            posicao_u: data.posicao_u || undefined,
+            tamanho_u: selectedModel.tamanho_u,
         }, user.id);
 
       toast({
@@ -212,7 +212,7 @@ export function AddChildItemDialog({
              <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
-                  name="manufacturerId"
+                  name="manufacturer_id"
                   render={({ field }) => (
                       <FormItem>
                           <FormLabel>3. Fabricante</FormLabel>
@@ -235,12 +235,12 @@ export function AddChildItemDialog({
                           <Select 
                               onValueChange={field.onChange} 
                               value={field.value} 
-                              disabled={!selectedManufacturerId}
+                              disabled={!selectedmanufacturer_id}
                           >
                               <FormControl>
                                   <SelectTrigger>
                                       <SelectValue placeholder={
-                                          !selectedManufacturerId ? "Primeiro selecione um fabricante" : 
+                                          !selectedmanufacturer_id ? "Primeiro selecione um fabricante" : 
                                           isLoadingModels ? "Carregando..." : 
                                           "Selecione o modelo..."
                                       } />
@@ -276,7 +276,7 @@ export function AddChildItemDialog({
                 />
                  <FormField
                     control={form.control}
-                    name="posicaoU"
+                    name="posicao_u"
                     render={({ field }) => (
                         <FormItem>
                         <FormLabel>Posição U (Opcional)</FormLabel>

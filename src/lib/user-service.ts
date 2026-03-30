@@ -20,7 +20,7 @@ export interface User {
   accessiblebuilding_ids: string[];
   lastLoginAt: string;
   preferences?: UserPreferences;
-  isTestData?: boolean;
+  is_test_data?: boolean;
 }
 
 export async function _ensureDatabaseSchema(): Promise<string> {
@@ -46,7 +46,7 @@ const parseUser = (dbRecord: any): User => {
         ? JSON.parse(dbRecord.accessiblebuilding_ids || dbRecord.accessiblebuilding_ids) 
         : (dbRecord.accessiblebuilding_ids || dbRecord.accessiblebuilding_ids || []),
       preferences: typeof dbRecord.preferences === 'string' ? JSON.parse(dbRecord.preferences) : (dbRecord.preferences || {}),
-      isTestData: !!(dbRecord.isTestData || dbRecord.istestdata),
+      is_test_data: !!(dbRecord.is_test_data || dbRecord.is_test_data),
     };
 };
 
@@ -88,7 +88,7 @@ export async function _updateUserInDb(userData: Partial<User>): Promise<User> {
             photoURL: merged.photoURL,
             lastLoginAt: merged.lastLoginAt || new Date().toISOString(),
             accessiblebuilding_ids: merged.accessiblebuilding_ids,
-            isTestData: merged.isTestData,
+            is_test_data: merged.is_test_data,
             signatureUrl: merged.signatureUrl
         };
 
@@ -111,7 +111,7 @@ export async function _updateUserInDb(userData: Partial<User>): Promise<User> {
             permissions: rolePermissions[role] || [],
             accessiblebuilding_ids: [],
             preferences: {},
-            isTestData: !!userData.isTestData
+            is_test_data: !!userData.is_test_data
         };
 
         const result = await apiFetch('/users', {

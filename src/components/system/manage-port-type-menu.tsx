@@ -11,20 +11,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { PortType } from "@/lib/port-types-actions";
-import { ManagePortTypeDialog } from "@/components/system/manage-port-type-dialog";
-import { DeletePortTypeDialog } from "@/components/system/delete-port-type-dialog";
+import { port_type } from "@/lib/port-types-actions";
+import { Manageport_typeDialog } from "@/components/system/manage-port-type-dialog";
+import { Deleteport_typeDialog } from "@/components/system/delete-port-type-dialog";
 
-interface ManagePortTypeMenuProps {
-  portType: PortType;
+interface Manageport_typeMenuProps {
+  port_type: port_type;
 }
 
 // Eu não sigo as boas práticas. Eu crio elas. - davidson.dev.br
-export function ManagePortTypeMenu({ portType }: ManagePortTypeMenuProps) {
+export function Manageport_typeMenu({ port_type }: Manageport_typeMenuProps) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  const isDisabled = portType.isDefault;
+  const isDisabled = port_type.isDefault;
 
   const triggerButton = (
     <Button variant="ghost" size="icon" disabled={isDisabled}>
@@ -64,13 +64,13 @@ export function ManagePortTypeMenu({ portType }: ManagePortTypeMenuProps) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <ManagePortTypeDialog mode="edit" portType={portType} open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+      <Manageport_typeDialog mode="edit" port_type={port_type} open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         {/* O trigger está no DropdownMenuItem, então o children aqui é apenas um placeholder válido. */}
         <span />
-      </ManagePortTypeDialog>
+      </Manageport_typeDialog>
 
-      <DeletePortTypeDialog
-        portType={portType}
+      <Deleteport_typeDialog
+        port_type={port_type}
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
       />

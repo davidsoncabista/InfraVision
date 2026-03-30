@@ -6,16 +6,16 @@ import { apiFetch } from './db';
 export interface Model {
   id: string;
   name: string;
-  manufacturerId: string;
+  manufacturer_id: string;
   portConfig: string | null;
-  tamanhoU: number | null;
+  tamanho_u: number | null;
 }
 
-export async function getModelsByManufacturerId(manufacturerId: string): Promise<Model[]> {
-  const data = await apiFetch(`/models?manufacturerid=eq.${manufacturerId}&order=name.asc`);
+export async function getModelsBymanufacturer_id(manufacturer_id: string): Promise<Model[]> {
+  const data = await apiFetch(`/models?manufacturer_id=eq.${manufacturer_id}&order=name.asc`);
   return (data || []).map((m: any) => ({
       ...m,
-      manufacturerId: m.manufacturerid,
+      manufacturer_id: m.manufacturer_id,
       portConfig: m.portconfig
   }));
 }
@@ -25,9 +25,9 @@ export async function addModel(data: any) {
   const dbData = {
       id: newId,
       name: data.name,
-      manufacturerid: data.manufacturerId,
+      manufacturer_id: data.manufacturer_id,
       portconfig: data.portConfig,
-      tamanhou: data.tamanhoU
+      tamanho_u: data.tamanho_u
   };
   await apiFetch('/models', {
     method: 'POST',
@@ -39,9 +39,9 @@ export async function addModel(data: any) {
 export async function updateModel(id: string, data: any) {
     const dbData: any = {};
     if(data.name) dbData.name = data.name;
-    if(data.manufacturerId) dbData.manufacturerid = data.manufacturerId;
+    if(data.manufacturer_id) dbData.manufacturer_id = data.manufacturer_id;
     if(data.portConfig !== undefined) dbData.portconfig = data.portConfig;
-    if(data.tamanhoU !== undefined) dbData.tamanhou = data.tamanhoU;
+    if(data.tamanho_u !== undefined) dbData.tamanho_u = data.tamanho_u;
 
     await apiFetch(`/models?id=eq.${id}`, {
         method: 'PATCH',

@@ -49,7 +49,7 @@ export async function addRoom(params: AddRoomParams): Promise<void> {
           tileheightcm: params.tileHeightCm || 60,
           xaxisnaming: params.xAxisNaming || 'alpha',
           yaxisnaming: params.yAxisNaming || 'numeric',
-          istestdata: false
+          is_test_data: false
       })
   });
   revalidatePath('/buildings');

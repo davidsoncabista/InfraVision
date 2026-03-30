@@ -9,12 +9,12 @@ import { revalidatePath } from 'next/cache';
  */
 export async function softCleanTestData() {
     try {
-        await apiFetch('/connections?istestdata=eq.true', { method: 'DELETE' });
-        await apiFetch('/child_items?istestdata=eq.true', { method: 'DELETE' });
-        await apiFetch('/parent_items?istestdata=eq.true', { method: 'DELETE' });
-        await apiFetch('/rooms?istestdata=eq.true', { method: 'DELETE' });
-        await apiFetch('/buildings?istestdata=eq.true', { method: 'DELETE' });
-        await apiFetch('/users?istestdata=eq.true', { method: 'DELETE' });
+        await apiFetch('/connections?is_test_data=eq.true', { method: 'DELETE' });
+        await apiFetch('/child_items?is_test_data=eq.true', { method: 'DELETE' });
+        await apiFetch('/parent_items?is_test_data=eq.true', { method: 'DELETE' });
+        await apiFetch('/rooms?is_test_data=eq.true', { method: 'DELETE' });
+        await apiFetch('/buildings?is_test_data=eq.true', { method: 'DELETE' });
+        await apiFetch('/users?is_test_data=eq.true', { method: 'DELETE' });
         
         revalidatePath('/');
     } catch (error: any) {
@@ -50,7 +50,7 @@ export async function populateBaseEntities() {
             id: 'B_DEV_01', 
             name: 'Prédio Dev', 
             address: 'Ambiente de Testes Automatizados', 
-            istestdata: true 
+            is_test_data: true 
         })
     });
 }
@@ -68,7 +68,7 @@ export async function populateRooms() {
             building_id: 'B_DEV_01', 
             widthm: 20, 
             depthm: 20, 
-            istestdata: true 
+            is_test_data: true 
         })
     });
 }
@@ -90,7 +90,7 @@ export async function populateparent_items() {
             type: 'Rack 42U', 
             status: 'active', 
             room_id: 'R_DEV_01A', 
-            istestdata: true 
+            is_test_data: true 
         })
     });
 }
@@ -109,7 +109,7 @@ export async function populatechild_items() {
             type: 'Servidor', 
             status: 'active', 
             modelo: 'PowerEdge R740', 
-            istestdata: true 
+            is_test_data: true 
         })
     });
 }

@@ -99,7 +99,7 @@ const IncidentEvidenceHistoryCard = () => {
                                         </div>
                                          <Link href="/incidents">
                                             <Badge variant="secondary" className="cursor-pointer hover:bg-primary/20">
-                                                {ev.entityType === 'Incidents' ? `Incidente` : 'Outro'}
+                                                {ev.entity_type === 'Incidents' ? `Incidente` : 'Outro'}
                                             </Badge>
                                         </Link>
                                     </div>

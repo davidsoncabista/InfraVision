@@ -24,8 +24,8 @@ interface AuditLog {
     timestamp: string;
     userDisplayName: string;
     action: string;
-    entityType: string;
-    entityId: string;
+    entity_type: string;
+    entity_id: string;
     entityLabel: string;
     details: any;
 }
@@ -171,14 +171,14 @@ export default function AuditPage() {
     }, [fetchLogs]);
 
     const handleRowClick = async (log: AuditLog) => {
-        if (log.entityType === 'parent_items' || log.entityType === 'child_items') {
-            const item = await getFullItemFromLog(log.entityType, log.entityId);
+        if (log.entity_type === 'parent_items' || log.entity_type === 'child_items') {
+            const item = await getFullItemFromLog(log.entity_type, log.entity_id);
             setSelectedItem(item);
-        } else if (log.entityType === 'Approvals') {
-            const approval = await getFullApprovalFromLog(log.entityId);
+        } else if (log.entity_type === 'Approvals') {
+            const approval = await getFullApprovalFromLog(log.entity_id);
             setSelectedApproval(approval);
-        } else if (log.entityType === 'User') {
-            router.push(`/users#${log.entityId}`); // Exemplo, pode ser um modal no futuro
+        } else if (log.entity_type === 'User') {
+            router.push(`/users#${log.entity_id}`); // Exemplo, pode ser um modal no futuro
         }
     };
 
@@ -258,7 +258,7 @@ export default function AuditPage() {
                                         </Badge>
                                     </TableCell>
                                     <TableCell>
-                                        <div className="font-medium text-sm mb-1">{log.entityLabel || log.entityId}</div>
+                                        <div className="font-medium text-sm mb-1">{log.entityLabel || log.entity_id}</div>
                                         <div className="text-muted-foreground">{renderDetails(log, statusesMap)}</div>
                                     </TableCell>
                                 </TableRow>

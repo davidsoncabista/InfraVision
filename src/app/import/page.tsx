@@ -26,7 +26,7 @@ type DataType = AnalyzeImportInput['dataType'];
 const DATA_TYPE_CONFIGS: Record<DataType, { title: string; description: string; placeholder: string; }> = {
     child_items: {
         title: "Opção 1: Importar Equipamentos Aninhados",
-        description: "Cole dados de servidores, switches, etc. A IA espera colunas como: label;tipo;fabricante;modelo;n_serie;tamanhoU;rackPai.",
+        description: "Cole dados de servidores, switches, etc. A IA espera colunas como: label;tipo;fabricante;modelo;n_serie;tamanho_u;rackPai.",
         placeholder: `Exemplo:\nSW-CORE-01;Switch;CISCO;Catalyst 9300;CAT123;1;RACK-A01\nSRV-WEB-02;Servidor;DELL;PowerEdge R740;DELL456;2;RACK-A01`
     },
     parent_items: {

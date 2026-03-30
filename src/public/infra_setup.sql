@@ -5,7 +5,7 @@
 -- Drop tables in reverse order of creation to handle dependencies
 IF OBJECT_ID('dbo.Connections', 'U') IS NOT NULL DROP TABLE dbo.Connections;
 IF OBJECT_ID('dbo.equipment_ports', 'U') IS NOT NULL DROP TABLE dbo.equipment_ports;
-IF OBJECT_ID('dbo.PortTypes', 'U') IS NOT NULL DROP TABLE dbo.PortTypes;
+IF OBJECT_ID('dbo.port_types', 'U') IS NOT NULL DROP TABLE dbo.port_types;
 IF OBJECT_ID('dbo.ConnectionTypes', 'U') IS NOT NULL DROP TABLE dbo.ConnectionTypes;
 IF OBJECT_ID('dbo.child_items', 'U') IS NOT NULL DROP TABLE dbo.child_items;
 IF OBJECT_ID('dbo.parent_items', 'U') IS NOT NULL DROP TABLE dbo.parent_items;
@@ -34,7 +34,7 @@ CREATE TABLE Users (
     accessiblebuilding_ids NVARCHAR(MAX),
     lastLoginAt DATETIME2 NOT NULL,
     preferences NVARCHAR(MAX),
-    isTestData BIT NOT NULL DEFAULT 0
+    is_test_data BIT NOT NULL DEFAULT 0
 );
 GO
 
@@ -42,7 +42,7 @@ CREATE TABLE Buildings (
     id NVARCHAR(50) PRIMARY KEY,
     name NVARCHAR(100) NOT NULL UNIQUE,
     address NVARCHAR(255),
-    isTestData BIT NOT NULL DEFAULT 0
+    is_test_data BIT NOT NULL DEFAULT 0
 );
 GO
 
@@ -60,7 +60,7 @@ CREATE TABLE Rooms (
     backgroundScale FLOAT,
     backgroundPosX FLOAT,
     backgroundPosY FLOAT,
-    isTestData BIT NOT NULL DEFAULT 0,
+    is_test_data BIT NOT NULL DEFAULT 0,
     FOREIGN KEY (building_id) REFERENCES Buildings(id) ON DELETE CASCADE
 );
 GO
@@ -75,7 +75,7 @@ CREATE TABLE item_types (
     canHaveChildren BIT NOT NULL DEFAULT 0,
     isResizable BIT NOT NULL DEFAULT 1,
     status NVARCHAR(50) NOT NULL DEFAULT 'active',
-    isTestData BIT NOT NULL DEFAULT 0,
+    is_test_data BIT NOT NULL DEFAULT 0,
     defaultColor NVARCHAR(50)
 );
 GO
@@ -88,7 +88,7 @@ CREATE TABLE item_typesEqp (
     defaultHeightM FLOAT NOT NULL,
     iconName NVARCHAR(50),
     status NVARCHAR(50) NOT NULL DEFAULT 'active',
-    isTestData BIT NOT NULL DEFAULT 0,
+    is_test_data BIT NOT NULL DEFAULT 0,
     defaultColor NVARCHAR(50)
 );
 GO
@@ -96,19 +96,19 @@ GO
 CREATE TABLE Manufacturers (
     id NVARCHAR(50) PRIMARY KEY,
     name NVARCHAR(100) NOT NULL UNIQUE,
-    isTestData BIT NOT NULL DEFAULT 0
+    is_test_data BIT NOT NULL DEFAULT 0
 );
 GO
 
 CREATE TABLE Models (
     id NVARCHAR(50) PRIMARY KEY,
     name NVARCHAR(100) NOT NULL,
-    manufacturerId NVARCHAR(50) NOT NULL,
+    manufacturer_id NVARCHAR(50) NOT NULL,
     portConfig NVARCHAR(MAX),
-    tamanhoU INT,
-    isTestData BIT NOT NULL DEFAULT 0,
-    FOREIGN KEY (manufacturerId) REFERENCES Manufacturers(id) ON DELETE CASCADE,
-    UNIQUE (name, manufacturerId)
+    tamanho_u INT,
+    is_test_data BIT NOT NULL DEFAULT 0,
+    FOREIGN KEY (manufacturer_id) REFERENCES Manufacturers(id) ON DELETE CASCADE,
+    UNIQUE (name, manufacturer_id)
 );
 GO
 
@@ -132,7 +132,7 @@ CREATE TABLE parent_items (
     type NVARCHAR(50) NOT NULL,
     status NVARCHAR(50) NOT NULL,
     room_id NVARCHAR(50),
-    serialNumber NVARCHAR(100),
+    serial_number NVARCHAR(100),
     brand NVARCHAR(100),
     tag NVARCHAR(100),
     isTagEligible BIT,
@@ -143,10 +143,10 @@ CREATE TABLE parent_items (
     modelo NVARCHAR(100),
     preco FLOAT,
     trellisId NVARCHAR(100),
-    tamanhoU INT,
-    potenciaW INT,
+    tamanho_u INT,
+    potencia_w INT,
     color NVARCHAR(50),
-    isTestData BIT NOT NULL DEFAULT 0,
+    is_test_data BIT NOT NULL DEFAULT 0,
     FOREIGN KEY (room_id) REFERENCES Rooms(id) ON DELETE SET NULL,
     FOREIGN KEY (status) REFERENCES ItemStatuses(id)
 );
@@ -158,7 +158,7 @@ CREATE TABLE child_items (
     parent_id NVARCHAR(50) NOT NULL,
     type NVARCHAR(50) NOT NULL,
     status NVARCHAR(50) NOT NULL,
-    serialNumber NVARCHAR(100),
+    serial_number NVARCHAR(100),
     brand NVARCHAR(100),
     tag NVARCHAR(100),
     isTagEligible BIT,
@@ -169,15 +169,15 @@ CREATE TABLE child_items (
     modelo NVARCHAR(100),
     preco FLOAT,
     trellisId NVARCHAR(100),
-    tamanhoU INT,
-    posicaoU INT,
-    isTestData BIT NOT NULL DEFAULT 0,
+    tamanho_u INT,
+    posicao_u INT,
+    is_test_data BIT NOT NULL DEFAULT 0,
     FOREIGN KEY (parent_id) REFERENCES parent_items(id) ON DELETE CASCADE,
     FOREIGN KEY (status) REFERENCES ItemStatuses(id)
 );
 GO
 
-CREATE TABLE PortTypes (
+CREATE TABLE port_types (
     id NVARCHAR(50) PRIMARY KEY,
     name NVARCHAR(100) NOT NULL UNIQUE,
     description NVARCHAR(255),
@@ -196,13 +196,13 @@ GO
 CREATE TABLE equipment_ports (
     id NVARCHAR(50) PRIMARY KEY,
     childItemId NVARCHAR(50) NOT NULL,
-    portTypeId NVARCHAR(50) NOT NULL,
+    port_typeId NVARCHAR(50) NOT NULL,
     label NVARCHAR(100) NOT NULL,
     status NVARCHAR(50) NOT NULL DEFAULT 'down',
     connectedToPortId NVARCHAR(50),
     notes NVARCHAR(MAX),
     FOREIGN KEY (childItemId) REFERENCES child_items(id) ON DELETE CASCADE,
-    FOREIGN KEY (portTypeId) REFERENCES PortTypes(id),
+    FOREIGN KEY (port_typeId) REFERENCES port_types(id),
     FOREIGN KEY (connectedToPortId) REFERENCES equipment_ports(id),
     UNIQUE(connectedToPortId)
 );
@@ -215,7 +215,7 @@ CREATE TABLE Connections (
     connectionTypeId NVARCHAR(50) NOT NULL,
     label NVARCHAR(255),
     status NVARCHAR(50) NOT NULL DEFAULT 'active',
-    isTestData BIT NOT NULL DEFAULT 0,
+    is_test_data BIT NOT NULL DEFAULT 0,
     FOREIGN KEY (portA_id) REFERENCES equipment_ports(id),
     FOREIGN KEY (portB_id) REFERENCES equipment_ports(id),
     FOREIGN KEY (connectionTypeId) REFERENCES ConnectionTypes(id),
@@ -230,8 +230,8 @@ CREATE TABLE AuditLog (
     user_id NVARCHAR(100) NOT NULL,
     userDisplayName NVARCHAR(255),
     action NVARCHAR(255) NOT NULL,
-    entityType NVARCHAR(50),
-    entityId NVARCHAR(100),
+    entity_type NVARCHAR(50),
+    entity_id NVARCHAR(100),
     details NVARCHAR(MAX)
 );
 GO
@@ -243,8 +243,8 @@ CREATE TABLE Incidents (
     status NVARCHAR(50) NOT NULL CHECK (status IN ('open', 'investigating', 'closed')),
     detectedAt DATETIME2 NOT NULL,
     resolvedAt DATETIME2,
-    entityType NVARCHAR(50),
-    entityId NVARCHAR(100)
+    entity_type NVARCHAR(50),
+    entity_id NVARCHAR(100)
 );
 GO
 
@@ -270,15 +270,15 @@ CREATE TABLE Sensors (
 GO
 
 -- Insert Initial Data
-INSERT INTO Users (id, email, displayName, photoURL, role, permissions, accessiblebuilding_ids, lastLoginAt, isTestData) 
+INSERT INTO Users (id, email, displayName, photoURL, role, permissions, accessiblebuilding_ids, lastLoginAt, is_test_data) 
 VALUES ('dev_user', 'dev@dev.com', 'Desenvolvedor Padrão', NULL, 'developer', '["*"]', '[]', GETUTCDATE(), 1);
 GO
 
-INSERT INTO Buildings (id, name, address, isTestData)
+INSERT INTO Buildings (id, name, address, is_test_data)
 VALUES ('B_initial', 'DC-TESTE', 'Local de Testes Iniciais', 1);
 GO
 
-INSERT INTO Rooms (id, name, building_id, isTestData)
+INSERT INTO Rooms (id, name, building_id, is_test_data)
 VALUES ('R_initial', 'SALA-TESTE', 'B_initial', 1);
 GO
 
@@ -291,7 +291,7 @@ VALUES
 ('decommissioned', 'Descomissionado', 'Item removido e movido para a lixeira.', 'gray', 1, 1);
 GO
 
-INSERT INTO PortTypes (id, name, description, isDefault)
+INSERT INTO port_types (id, name, description, isDefault)
 VALUES
 ('port_rj45', 'RJ45', 'Conector de rede padrão para cabos UTP (par trançado).', 1),
 ('port_sfp', 'SFP/SFP+', 'Conector para transceptores ópticos ou de cobre de pequena dimensão.', 1);

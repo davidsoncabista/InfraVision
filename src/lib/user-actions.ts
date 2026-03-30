@@ -45,8 +45,8 @@ export async function updateUser(userData: Partial<User>): Promise<User> {
             await logAuditEvent({
                 user: adminUser,
                 action: isCreating ? 'USER_CREATED' : 'USER_UPDATED',
-                entityType: 'User',
-                entityId: savedUser.id,
+                entity_type: 'User',
+                entity_id: savedUser.id,
                 details: { data: { email: savedUser.email, role: savedUser.role } }
             });
         }
@@ -75,8 +75,8 @@ export async function deleteUser(user_id: string): Promise<void> {
         await logAuditEvent({
             user: adminUser,
             action: 'USER_DELETED',
-            entityType: 'User',
-            entityId: user_id,
+            entity_type: 'User',
+            entity_id: user_id,
             details: { email: userToDelete.email, displayName: userToDelete.displayName }
         });
         

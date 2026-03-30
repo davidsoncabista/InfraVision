@@ -7,10 +7,10 @@ import { _getUserById } from './user-service';
 
 export interface ApprovalRequest {
     id: string;
-    entityId: string;
-    entityType: 'parent_items' | 'child_items';
+    entity_id: string;
+    entity_type: 'parent_items' | 'child_items';
     entityLabel: string;
-    entityTypeName: string;
+    entity_typeName: string;
     requestedAt: string;
     requestedByUserDisplayName: string;
     details: { 
@@ -41,8 +41,8 @@ export async function getPendingApprovals(building_id: string): Promise<Approval
         const statusMap = new Map(statusRows.map((s: any) => [s.id, s.name]));
 
         // 3. Separa os IDs para buscarmos os itens no banco
-        const parent_ids = pending.filter((a: any) => a.entitytype === 'parent_items').map((a: any) => a.entityid);
-        const childIds = pending.filter((a: any) => a.entitytype === 'child_items').map((a: any) => a.entityid);
+        const parent_ids = pending.filter((a: any) => a.entity_type === 'parent_items').map((a: any) => a.entity_id);
+        const childIds = pending.filter((a: any) => a.entity_type === 'child_items').map((a: any) => a.entity_id);
 
         // Armazena os itens que realmente pertencem a este prédio
         const validItems = new Map<string, any>();
@@ -67,16 +67,16 @@ export async function getPendingApprovals(building_id: string): Promise<Approval
         const result: ApprovalRequest[] = [];
 
         pending.forEach((record: any) => {
-            const item = validItems.get(record.entityid);
+            const item = validItems.get(record.entity_id);
             if (item) {
                 const details = typeof record.details === 'string' ? JSON.parse(record.details) : record.details;
                 
                 result.push({
                     id: record.id,
-                    entityId: record.entityid,
-                    entityType: record.entitytype,
-                    entityLabel: item.label || record.entityid,
-                    entityTypeName: item.type || 'N/A',
+                    entity_id: record.entity_id,
+                    entity_type: record.entity_type,
+                    entityLabel: item.label || record.entity_id,
+                    entity_typeName: item.type || 'N/A',
                     requestedAt: new Date(record.requestedat).toISOString(),
                     requestedByUserDisplayName: record.requestedbyuserdisplayname,
                     details: {
@@ -118,8 +118,8 @@ export async function resolveApproval(
         const details = typeof approval.details === 'string' ? JSON.parse(approval.details) : approval.details;
 
         if (decision === 'approved') {
-            const endpoint = approval.entitytype.toLowerCase();
-            await apiFetch(`/${endpoint}?id=eq.${approval.entityid}`, {
+            const endpoint = approval.entity_type.toLowerCase();
+            await apiFetch(`/${endpoint}?id=eq.${approval.entity_id}`, {
                 method: 'PATCH',
                 body: JSON.stringify({ status: details.to })
             });
@@ -139,9 +139,9 @@ export async function resolveApproval(
         await logAuditEvent({
             user,
             action: `APPROVAL_${decision.toUpperCase()}`,
-            entityType: 'Approvals',
-            entityId: approvalId,
-            details: { item: approval.entityid, decision }
+            entity_type: 'Approvals',
+            entity_id: approvalId,
+            details: { item: approval.entity_id, decision }
         });
 
         revalidatePath('/approvals');
@@ -161,16 +161,16 @@ export async function getPendingApprovalsCount(building_id: string): Promise<num
     }
 }
 
-export async function getPendingApprovalForItem(entityId: string, entityType: string): Promise<ApprovalRequest | null> {
+export async function getPendingApprovalForItem(entity_id: string, entity_type: string): Promise<ApprovalRequest | null> {
     try {
-        const data = await apiFetch(`/approvals?entityid=eq.${entityId}&entitytype=eq.${entityType}&status=eq.pending&order=requestedat.desc&limit=1`);
+        const data = await apiFetch(`/approvals?entity_id=eq.${entity_id}&entity_type=eq.${entity_type}&status=eq.pending&order=requestedat.desc&limit=1`);
         if (data && data.length > 0) {
             const record = data[0];
             const details = typeof record.details === 'string' ? JSON.parse(record.details) : record.details;
             return {
                 id: record.id,
-                entityId: record.entityid,
-                entityType: record.entitytype,
+                entity_id: record.entity_id,
+                entity_type: record.entity_type,
                 entityLabel: record.entitylabel,
                 requestedAt: new Date(record.requestedat).toISOString(),
                 details

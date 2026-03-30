@@ -54,7 +54,7 @@ export function ChildItemDetailDialog({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [editFormData, setEditFormData] = useState<Partial<GridItem>>({});
 
-  const parentCandidates = allItems.filter(i => !i.parent_id && i.tamanhoU && i.tamanhoU > 0);
+  const parentCandidates = allItems.filter(i => !i.parent_id && i.tamanho_u && i.tamanho_u > 0);
 
   useEffect(() => {
     if (item) {
@@ -142,12 +142,12 @@ export function ChildItemDetailDialog({
                 </Select>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="posicaoU" className="text-right">Posição (U)</Label>
-                <Input id="posicaoU" type="number" value={editFormData.posicaoU ?? ''} onChange={(e) => handleNumericFormChange('posicaoU', e.target.value)} className="col-span-3" />
+                <Label htmlFor="posicao_u" className="text-right">Posição (U)</Label>
+                <Input id="posicao_u" type="number" value={editFormData.posicao_u ?? ''} onChange={(e) => handleNumericFormChange('posicao_u', e.target.value)} className="col-span-3" />
             </div>
              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="serialNumber" className="text-right">Nº de Série</Label>
-                <Input id="serialNumber" value={editFormData.serialNumber || ''} onChange={(e) => handleFormChange('serialNumber', e.target.value)} className="col-span-3" />
+                <Label htmlFor="serial_number" className="text-right">Nº de Série</Label>
+                <Input id="serial_number" value={editFormData.serial_number || ''} onChange={(e) => handleFormChange('serial_number', e.target.value)} className="col-span-3" />
             </div>
              <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="modelo" className="text-right">Modelo</Label>

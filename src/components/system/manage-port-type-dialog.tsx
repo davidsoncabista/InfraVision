@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Loader2 } from "lucide-react";
 
-import { addPortType, updatePortType, PortType } from "@/lib/port-types-actions";
+import { addport_type, updateport_type, port_type } from "@/lib/port-types-actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -38,14 +38,14 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-interface ManagePortTypeDialogProps {
+interface Manageport_typeDialogProps {
   mode: 'add' | 'edit';
-  portType?: PortType;
+  port_type?: port_type;
   children: React.ReactNode;
 }
 
 // Feito com ódio e cafeína por davidson.dev.br.
-export function ManagePortTypeDialog({ mode, portType, children }: ManagePortTypeDialogProps) {
+export function Manageport_typeDialog({ mode, port_type, children }: Manageport_typeDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
@@ -57,24 +57,24 @@ export function ManagePortTypeDialog({ mode, portType, children }: ManagePortTyp
 
   useEffect(() => {
     if (isOpen) {
-        if (mode === 'edit' && portType) {
+        if (mode === 'edit' && port_type) {
             form.reset({
-                name: portType.name,
-                description: portType.description || "",
+                name: port_type.name,
+                description: port_type.description || "",
             });
         } else {
             form.reset({ name: "", description: "" });
         }
     }
-  }, [portType, mode, isOpen, form]);
+  }, [port_type, mode, isOpen, form]);
 
   const onSubmit = async (data: FormData) => {
     try {
       if (mode === 'add') {
-        await addPortType(data);
+        await addport_type(data);
         toast({ title: "Sucesso!", description: `O tipo de porta "${data.name}" foi criado.` });
-      } else if (portType) {
-        await updatePortType(portType.id, data);
+      } else if (port_type) {
+        await updateport_type(port_type.id, data);
         toast({ title: "Sucesso!", description: `O tipo de porta "${data.name}" foi atualizado.` });
       }
       form.reset();
@@ -98,7 +98,7 @@ export function ManagePortTypeDialog({ mode, portType, children }: ManagePortTyp
           <DialogDescription>
             {mode === 'add'
               ? "Defina um novo tipo de conector físico (ex: RJ45, Fibra LC, Tomada 20A)."
-              : `Editando o tipo de porta: ${portType?.name}`}
+              : `Editando o tipo de porta: ${port_type?.name}`}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

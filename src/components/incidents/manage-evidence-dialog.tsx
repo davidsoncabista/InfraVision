@@ -97,8 +97,8 @@ export function ManageEvidenceDialog({ incident, isOpen, onOpenChange, onSuccess
     setIsSubmitting(true);
     try {
         await addEvidence({
-            entityId: incident.id,
-            entityType: 'Incidents',
+            entity_id: incident.id,
+            entity_type: 'Incidents',
             user_id: user.id,
             type: 'note',
             data: { text: newNote.trim() }
@@ -119,8 +119,8 @@ export function ManageEvidenceDialog({ incident, isOpen, onOpenChange, onSuccess
         const blobName = `evidence-incident-${incident.id}-${Date.now()}.jpg`;
         const url = await uploadImage(dataURI, blobName);
         await addEvidence({
-            entityId: incident.id,
-            entityType: 'Incidents',
+            entity_id: incident.id,
+            entity_type: 'Incidents',
             user_id: user.id,
             type: 'image',
             data: { url }

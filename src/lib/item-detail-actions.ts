@@ -10,8 +10,8 @@ async function createPortsForModel(childItemId: string, modelName: string) {
     if (models.length === 0 || !models[0].portconfig) return;
 
     const portConfig = models[0].portconfig;
-    const portTypes = await apiFetch('/porttypes?select=id,name');
-    const portTypesMap = new Map(portTypes.map((pt: any) => [pt.name.toUpperCase(), pt.id]));
+    const port_types = await apiFetch('/port_types?select=id,name');
+    const port_typesMap = new Map(port_types.map((pt: any) => [pt.name.toUpperCase(), pt.id]));
     
     const portGroups = portConfig.split(';').filter(Boolean);
     let portCounter = 1;
@@ -21,8 +21,8 @@ async function createPortsForModel(childItemId: string, modelName: string) {
         if (parts.length !== 2) continue;
         const quantity = parseInt(parts[0], 10);
         const typeName = parts[1].toUpperCase();
-        const portTypeId = portTypesMap.get(typeName);
-        if (!portTypeId) continue;
+        const port_typeId = port_typesMap.get(typeName);
+        if (!port_typeId) continue;
 
         for (let i = 0; i < quantity; i++) {
             const portId = `eport_${childItemId}_${portCounter}`;
@@ -32,7 +32,7 @@ async function createPortsForModel(childItemId: string, modelName: string) {
                 body: JSON.stringify({
                     id: portId,
                     childitemid: childItemId,
-                    porttypeid: portTypeId,
+                    port_typeid: port_typeId,
                     label: portLabel,
                     status: 'down'
                 })
@@ -67,7 +67,7 @@ export async function updateItemDetails(itemData: any, user_id: string): Promise
             method: 'PATCH',
             body: JSON.stringify(validFields)
         });
-        await logAuditEvent({ user, action: 'ITEM_UPDATED', entityType: tableName, entityId: id, details: validFields });
+        await logAuditEvent({ user, action: 'ITEM_UPDATED', entity_type: tableName, entity_id: id, details: validFields });
     } else {
         await apiFetch(`/${tableName}`, {
             method: 'POST',
@@ -77,7 +77,7 @@ export async function updateItemDetails(itemData: any, user_id: string): Promise
         if (isChild && validFields.modelo) {
             await createPortsForModel(id, validFields.modelo);
         }
-        await logAuditEvent({ user, action: 'ITEM_CREATED', entityType: tableName, entityId: id, details: validFields });
+        await logAuditEvent({ user, action: 'ITEM_CREATED', entity_type: tableName, entity_id: id, details: validFields });
     }
 
     revalidatePath('/datacenter');

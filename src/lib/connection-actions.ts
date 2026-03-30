@@ -15,7 +15,7 @@ export interface ConnectableItem {
 export interface EquipmentPort {
     id: string;
     label: string;
-    portTypeName: string;
+    port_typeName: string;
     status: 'up' | 'down' | 'disabled';
     connectionId: string | null;
     connectedToPortId: string | null;
@@ -72,12 +72,12 @@ export async function getPortsByChildItemId(childItemId: string | null): Promise
     if (!childItemId) return [];
     try {
         // PostgREST select com nomes de tabelas em minúsculo
-        const data = await apiFetch(`/equipment_ports?childitemid=eq.${childItemId}&select=*,porttypes(name),connections!portA_id(*),connectedport:connectedtoportid(label,child_items(label))&order=label.asc`);
+        const data = await apiFetch(`/equipment_ports?childitemid=eq.${childItemId}&select=*,port_types(name),connections!portA_id(*),connectedport:connectedtoportid(label,child_items(label))&order=label.asc`);
         
         return data.map((ep: any) => ({
             id: ep.id,
             label: ep.label,
-            portTypeName: ep.porttypes?.name || 'N/A',
+            port_typeName: ep.port_types?.name || 'N/A',
             status: ep.status,
             connectionId: ep.connections?.[0]?.id || null,
             connectedToPortId: ep.connectedtoportid,
@@ -157,7 +157,7 @@ export async function createConnection(data: {
         });
     }
 
-    await logAuditEvent({ user, action: 'CONNECTION_CREATED', entityType: 'connections', entityId: connectionId });
+    await logAuditEvent({ user, action: 'CONNECTION_CREATED', entity_type: 'connections', entity_id: connectionId });
     revalidatePath('/depara');
 }
 
@@ -175,7 +175,7 @@ export async function disconnectConnection(connectionId: string, user_id: string
     if (portA_id) await apiFetch(`/equipment_ports?id=eq.${portA_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'down', connectedtoportid: null }) });
     if (portB_id) await apiFetch(`/equipment_ports?id=eq.${portB_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'down', connectedtoportid: null }) });
 
-    await logAuditEvent({ user, action: 'CONNECTION_DELETED', entityType: 'connections', entityId: connectionId });
+    await logAuditEvent({ user, action: 'CONNECTION_DELETED', entity_type: 'connections', entity_id: connectionId });
     revalidatePath('/depara');
 }
 
@@ -196,10 +196,10 @@ export async function getConnectableEquipmentSummary(building_id?: string): Prom
     }
 }
 
-export async function addPortToEquipment(data: { childItemId: string; portTypeId: string; label: string; }) {
+export async function addPortToEquipment(data: { childItemId: string; port_typeId: string; label: string; }) {
     await apiFetch('/equipment_ports', {
         method: 'POST',
-        body: JSON.stringify({ id: `eport_${Date.now()}`, childitemid: data.childItemId, porttypeid: data.portTypeId, label: data.label, status: 'down' })
+        body: JSON.stringify({ id: `eport_${Date.now()}`, childitemid: data.childItemId, port_typeid: data.port_typeId, label: data.label, status: 'down' })
     });
     revalidatePath('/connections');
 }
@@ -208,6 +208,6 @@ export async function deletePortFromEquipment(portId: string, user_id: string) {
     const user = await _getUserById(user_id);
     if (!user) throw new Error("Usuário inválido.");
     await apiFetch(`/equipment_ports?id=eq.${portId}&status=neq.up`, { method: 'DELETE' });
-    await logAuditEvent({ user, action: 'PORT_DELETED', entityType: 'equipment_ports', entityId: portId });
+    await logAuditEvent({ user, action: 'PORT_DELETED', entity_type: 'equipment_ports', entity_id: portId });
     revalidatePath('/connections');
 }

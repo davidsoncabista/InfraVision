@@ -33,12 +33,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { getPortTypes, PortType } from '@/lib/port-types-actions';
+import { getport_types, port_type } from '@/lib/port-types-actions';
 import { addPortToEquipment } from '@/lib/connection-actions';
 import { Skeleton } from '../ui/skeleton';
 
 const formSchema = z.object({
-  portTypeId: z.string({ required_error: "Selecione um tipo de porta." }),
+  port_typeId: z.string({ required_error: "Selecione um tipo de porta." }),
   label: z.string().min(1, "O nome da porta é obrigatório."),
 });
 
@@ -53,20 +53,20 @@ interface AddPortDialogProps {
 
 export function AddPortDialog({ childItemId, isOpen, onOpenChange, onSuccess }: AddPortDialogProps) {
   const { toast } = useToast();
-  const [portTypes, setPortTypes] = React.useState<PortType[]>([]);
+  const [port_types, setport_types] = React.useState<port_type[]>([]);
   const [isLoadingTypes, setIsLoadingTypes] = React.useState(true);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: { portTypeId: undefined, label: "" },
+    defaultValues: { port_typeId: undefined, label: "" },
   });
 
   React.useEffect(() => {
     if (isOpen) {
       setIsLoadingTypes(true);
       form.reset();
-      getPortTypes()
-        .then(setPortTypes)
+      getport_types()
+        .then(setport_types)
         .catch(() => toast({ variant: 'destructive', title: 'Erro', description: 'Não foi possível carregar os tipos de porta.' }))
         .finally(() => setIsLoadingTypes(false));
     }
@@ -76,7 +76,7 @@ export function AddPortDialog({ childItemId, isOpen, onOpenChange, onSuccess }: 
     try {
       await addPortToEquipment({
         childItemId,
-        portTypeId: data.portTypeId,
+        port_typeId: data.port_typeId,
         label: data.label,
       });
       toast({ title: 'Sucesso!', description: 'A nova porta foi adicionada ao equipamento.' });
@@ -100,7 +100,7 @@ export function AddPortDialog({ childItemId, isOpen, onOpenChange, onSuccess }: 
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
             <FormField
               control={form.control}
-              name="portTypeId"
+              name="port_typeId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Tipo de Porta</FormLabel>
@@ -110,7 +110,7 @@ export function AddPortDialog({ childItemId, isOpen, onOpenChange, onSuccess }: 
                         <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {portTypes.map(type => (
+                        {port_types.map(type => (
                           <SelectItem key={type.id} value={type.id}>{type.name}</SelectItem>
                         ))}
                       </SelectContent>

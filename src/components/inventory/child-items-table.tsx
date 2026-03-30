@@ -127,7 +127,7 @@ export function child_itemsTable({ items, allItems, statuses }: child_itemsTable
                                 </Badge>
                             </TableCell>
                             <TableCell>{item.type}</TableCell>
-                            <TableCell>{item.serialNumber || '-'}</TableCell>
+                            <TableCell>{item.serial_number || '-'}</TableCell>
                             <TableCell>{item.brand || '-'}</TableCell>
                             <TableCell>{item.modelo || '-'}</TableCell>
                         </TableRow>

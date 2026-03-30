@@ -41,9 +41,9 @@ import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(1, 'O nome do modelo é obrigatório.'),
-  manufacturerId: z.string({ required_error: "É obrigatório selecionar um fabricante." }),
+  manufacturer_id: z.string({ required_error: "É obrigatório selecionar um fabricante." }),
   portConfig: z.string().optional().nullable(),
-  tamanhoU: z.coerce.number().int().positive().optional().nullable(),
+  tamanho_u: z.coerce.number().int().positive().optional().nullable(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -64,9 +64,9 @@ export function ManageModelDialog({ mode, model, children }: ManageModelDialogPr
     resolver: zodResolver(formSchema),
     defaultValues: {
         name: "",
-        manufacturerId: "",
+        manufacturer_id: "",
         portConfig: "",
-        tamanhoU: undefined,
+        tamanho_u: undefined,
     },
   });
 
@@ -76,12 +76,12 @@ export function ManageModelDialog({ mode, model, children }: ManageModelDialogPr
         if (mode === 'edit' && model) {
             form.reset({
                 name: model.name,
-                manufacturerId: model.manufacturerId,
+                manufacturer_id: model.manufacturer_id,
                 portConfig: model.portConfig || "",
-                tamanhoU: model.tamanhoU || undefined,
+                tamanho_u: model.tamanho_u || undefined,
             });
         } else {
-            form.reset({ name: "", manufacturerId: "", portConfig: "", tamanhoU: undefined });
+            form.reset({ name: "", manufacturer_id: "", portConfig: "", tamanho_u: undefined });
         }
     }
   }, [model, mode, isOpen, form]);
@@ -123,7 +123,7 @@ export function ManageModelDialog({ mode, model, children }: ManageModelDialogPr
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
             <FormField
               control={form.control}
-              name="manufacturerId"
+              name="manufacturer_id"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Fabricante</FormLabel>
@@ -157,7 +157,7 @@ export function ManageModelDialog({ mode, model, children }: ManageModelDialogPr
             <div className="grid grid-cols-2 gap-4">
                <FormField
                 control={form.control}
-                name="tamanhoU"
+                name="tamanho_u"
                 render={({ field }) => (
                     <FormItem>
                     <FormLabel>Tamanho (U)</FormLabel>

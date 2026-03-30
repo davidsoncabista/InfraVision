@@ -12,7 +12,7 @@ BEGIN
     CREATE TABLE Manufacturers (
         id NVARCHAR(50) PRIMARY KEY,
         name NVARCHAR(100) NOT NULL UNIQUE,
-        isTestData BIT NOT NULL DEFAULT 0
+        is_test_data BIT NOT NULL DEFAULT 0
     );
 END
 GO
@@ -76,7 +76,7 @@ BEGIN
         canHaveChildren BIT NOT NULL DEFAULT 0,
         isResizable BIT NOT NULL DEFAULT 1,
         status NVARCHAR(50) NOT NULL DEFAULT 'active',
-        isTestData BIT NOT NULL DEFAULT 0,
+        is_test_data BIT NOT NULL DEFAULT 0,
         defaultColor NVARCHAR(50),
         shape NVARCHAR(50) NOT NULL DEFAULT 'rectangle',
         defaultWidthM FLOAT,
@@ -111,7 +111,7 @@ BEGIN
         category NVARCHAR(100) NOT NULL,
         iconName NVARCHAR(50),
         status NVARCHAR(50) NOT NULL DEFAULT 'active',
-        isTestData BIT NOT NULL DEFAULT 0,
+        is_test_data BIT NOT NULL DEFAULT 0,
         defaultColor NVARCHAR(50)
     );
 END
@@ -137,10 +137,10 @@ WHEN NOT MATCHED BY TARGET THEN
 GO
 
 
--- Tabela: PortTypes
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='PortTypes' AND xtype='U')
+-- Tabela: port_types
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='port_types' AND xtype='U')
 BEGIN
-    CREATE TABLE PortTypes (
+    CREATE TABLE port_types (
         id NVARCHAR(50) PRIMARY KEY,
         name NVARCHAR(100) NOT NULL UNIQUE,
         description NVARCHAR(255),
@@ -149,7 +149,7 @@ BEGIN
 END
 GO
 
-MERGE INTO PortTypes AS Target
+MERGE INTO port_types AS Target
 USING (
     VALUES
         ('port_rj45', 'RJ45', 'Conector de rede padrão para cabos UTP.', 1),
@@ -200,12 +200,12 @@ BEGIN
     CREATE TABLE Models (
         id NVARCHAR(50) PRIMARY KEY,
         name NVARCHAR(100) NOT NULL,
-        manufacturerId NVARCHAR(50) NOT NULL,
+        manufacturer_id NVARCHAR(50) NOT NULL,
         portConfig NVARCHAR(MAX),
-        tamanhoU INT,
-        isTestData BIT NOT NULL DEFAULT 0,
-        FOREIGN KEY (manufacturerId) REFERENCES Manufacturers(id) ON DELETE CASCADE,
-        UNIQUE (name, manufacturerId)
+        tamanho_u INT,
+        is_test_data BIT NOT NULL DEFAULT 0,
+        FOREIGN KEY (manufacturer_id) REFERENCES Manufacturers(id) ON DELETE CASCADE,
+        UNIQUE (name, manufacturer_id)
     );
 END
 GO
@@ -232,13 +232,13 @@ BEGIN
             ('model_nokia_7750', '7750 Service Router (SR-1)', @nokiaId, '12xSFP+;2xQSFP28', 3),
             ('model_padtec_tm800g', 'Transponder 800G', @padtecId, '2xLC_Duplex;4xSFP28', 1),
             ('model_juniper_mx204', 'MX204', @juniperId, '4xQSFP28;8xSFP+', 1)
-    ) AS Source (id, name, manufacturerId, portConfig, tamanhoU)
-    ON (Target.name = Source.name AND Target.manufacturerId = Source.manufacturerId)
+    ) AS Source (id, name, manufacturer_id, portConfig, tamanho_u)
+    ON (Target.name = Source.name AND Target.manufacturer_id = Source.manufacturer_id)
     WHEN MATCHED THEN
-        UPDATE SET portConfig = Source.portConfig, tamanhoU = Source.tamanhoU
+        UPDATE SET portConfig = Source.portConfig, tamanho_u = Source.tamanho_u
     WHEN NOT MATCHED BY TARGET THEN
-        INSERT (id, name, manufacturerId, portConfig, tamanhoU, isTestData)
-        VALUES (Source.id, Source.name, Source.manufacturerId, Source.portConfig, Source.tamanhoU, 0);
+        INSERT (id, name, manufacturer_id, portConfig, tamanho_u, is_test_data)
+        VALUES (Source.id, Source.name, Source.manufacturer_id, Source.portConfig, Source.tamanho_u, 0);
 END
 GO
 

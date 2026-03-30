@@ -50,7 +50,7 @@ Analise a fonte de dados fornecida. Se for uma imagem, use suas capacidades de O
 
 Baseado no tipo de dado, retorne os dados encontrados em um formato de valores separados por ponto e vírgula (CSV-like), com uma linha por item.
 
-- Se dataType for 'child_items', as colunas devem ser: label;type;manufacturer;model;serialNumber;sizeU;parentRack
+- Se dataType for 'child_items', as colunas devem ser: label;type;manufacturer;model;serial_number;sizeU;parentRack
 - Se dataType for 'parent_items', as colunas devem ser: label;type;location
 - Se dataType for 'connections', as colunas devem ser: from_equipment;from_port;to_equipment;to_port
 
@@ -66,7 +66,7 @@ const parseCsvToJson = (csv: string, dataType: AnalyzeImportInput['dataType']): 
     let headers: string[] = [];
     switch(dataType) {
         case 'child_items':
-            headers = ['label', 'type', 'manufacturer', 'model', 'serialNumber', 'sizeU', 'parentRack'];
+            headers = ['label', 'type', 'manufacturer', 'model', 'serial_number', 'sizeU', 'parentRack'];
             break;
         case 'parent_items':
             headers = ['label', 'type', 'location'];
@@ -83,7 +83,7 @@ const parseCsvToJson = (csv: string, dataType: AnalyzeImportInput['dataType']): 
         headers.forEach((header, index) => {
             const value = values[index]?.trim() || '';
             // Converte para número se for o caso
-            if ((header === 'sizeU' || header === 'posicaoU') && value) {
+            if ((header === 'sizeU' || header === 'posicao_u') && value) {
                 const num = parseInt(value, 10);
                 obj[header] = isNaN(num) ? null : num;
             } else {

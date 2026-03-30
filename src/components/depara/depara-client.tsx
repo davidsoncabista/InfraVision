@@ -64,7 +64,7 @@ const PortList = ({
                         <div key={id} className="flex items-center">
                             <RadioGroupItem value={port.id} id={id} disabled={isDisabled} />
                              <Label htmlFor={id} className={cn("ml-2 flex justify-between items-center w-full p-2 rounded-md", isDisabled ? "cursor-not-allowed text-muted-foreground/50 bg-muted/20" : "cursor-pointer hover:bg-muted/50")}>
-                                <span>{port.label} <span className="text-xs text-muted-foreground">({port.portTypeName})</span></span>
+                                <span>{port.label} <span className="text-xs text-muted-foreground">({port.port_typeName})</span></span>
                                 {isDisabled && <span className="text-xs text-red-500/70">Ocupada</span>}
                             </Label>
                         </div>

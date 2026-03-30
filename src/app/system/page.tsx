@@ -13,8 +13,8 @@ import { ManufacturersTable } from '@/components/system/manufacturers-table';
 import { ManageManufacturerDialog } from '@/components/system/manage-manufacturer-dialog';
 import { ModelsTable } from '@/components/system/models-table';
 import { ManageModelDialog } from '@/components/system/manage-model-dialog';
-import { PortTypesTable } from '@/components/system/port-types-table';
-import { ManagePortTypeDialog } from '@/components/system/manage-port-type-dialog';
+import { port_typesTable } from '@/components/system/port-types-table';
+import { Manageport_typeDialog } from '@/components/system/manage-port-type-dialog';
 import { ConnectionTypesTable } from '@/components/system/connection-types-table';
 import { ManageConnectionTypeDialog } from '@/components/system/manage-connection-type-dialog';
 import { IncidentStatusesTable } from '@/components/system/incident-statuses-table';
@@ -123,11 +123,11 @@ async function SystemPage() {
                         <p className="text-muted-foreground text-sm max-w-xl">
                             Gerencie a lista de tipos de porta (conectores) disponíveis no sistema.
                         </p>
-                        <ManagePortTypeDialog mode="add">
+                        <Manageport_typeDialog mode="add">
                           <Button><Plus className="mr-2" />Adicionar Tipo de Porta</Button>
-                        </ManagePortTypeDialog>
+                        </Manageport_typeDialog>
                     </div>
-                    <PortTypesTable />
+                    <port_typesTable />
                  </TabsContent>
                  <TabsContent value="connection_types" className="mt-6 space-y-6">
                     <div className="flex items-center justify-between">

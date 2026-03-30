@@ -68,8 +68,8 @@ const child_itemsList = ({ parent_id, allItems, onItemClick }: { parent_id: stri
                              <TableRow key={child.id} className="cursor-pointer" onClick={() => onItemClick(child)}>
                                 <TableCell>{child.label}</TableCell>
                                 <TableCell><Badge variant="outline">{child.type}</Badge></TableCell>
-                                <TableCell>{child.posicaoU || '-'}</TableCell>
-                                <TableCell>{child.tamanhoU || '-'}</TableCell>
+                                <TableCell>{child.posicao_u || '-'}</TableCell>
+                                <TableCell>{child.tamanho_u || '-'}</TableCell>
                              </TableRow>
                         ))}
                     </TableBody>
@@ -81,7 +81,7 @@ const child_itemsList = ({ parent_id, allItems, onItemClick }: { parent_id: stri
 
 
 const RackView = ({ parentItem, child_items, onItemClick }: { parentItem: Partial<GridItem>, child_items: GridItem[], onItemClick: (item: GridItem) => void }) => {
-    const sizeU = parentItem.tamanhoU;
+    const sizeU = parentItem.tamanho_u;
     if (!sizeU || sizeU <= 0) {
         return (
             <div className="flex items-center justify-center h-full text-muted-foreground bg-muted/20 rounded-md">
@@ -94,9 +94,9 @@ const RackView = ({ parentItem, child_items, onItemClick }: { parentItem: Partia
     // Mapeia quais U's estão ocupados por qual item
     const occupiedUnits = new Map<number, GridItem>();
     child_items.forEach(child => {
-        if(child.posicaoU && child.tamanhoU){
-            for(let i=0; i < child.tamanhoU; i++){
-                occupiedUnits.set(child.posicaoU + i, child);
+        if(child.posicao_u && child.tamanho_u){
+            for(let i=0; i < child.tamanho_u; i++){
+                occupiedUnits.set(child.posicao_u + i, child);
             }
         }
     });
@@ -115,10 +115,10 @@ const RackView = ({ parentItem, child_items, onItemClick }: { parentItem: Partia
                     
                     {/* Renderiza os itens filhos sobre as unidades */}
                     {child_items.map(child => {
-                        if (!child.posicaoU || !child.tamanhoU) return null;
+                        if (!child.posicao_u || !child.tamanho_u) return null;
 
-                        const topPosition = (sizeU - (child.posicaoU + child.tamanhoU - 1)) * 34; // 34px = h-8 + my-0.5
-                        const itemHeight = child.tamanhoU * 34 - 2; // Desconta a margem
+                        const topPosition = (sizeU - (child.posicao_u + child.tamanho_u - 1)) * 34; // 34px = h-8 + my-0.5
+                        const itemHeight = child.tamanho_u * 34 - 2; // Desconta a margem
 
                         return (
                             <TooltipProvider key={child.id}>
@@ -133,7 +133,7 @@ const RackView = ({ parentItem, child_items, onItemClick }: { parentItem: Partia
                                         </div>
                                     </TooltipTrigger>
                                     <TooltipContent side="right">
-                                        <p>{child.label} ({child.tamanhoU}U)</p>
+                                        <p>{child.label} ({child.tamanho_u}U)</p>
                                     </TooltipContent>
                                 </Tooltip>
                             </TooltipProvider>
@@ -408,7 +408,7 @@ export const ItemDetailDialog = ({
     if (item) {
       setEditFormData({
         ...item,
-        tamanhoU: item.type?.toLowerCase().includes('rack') ? item.tamanhoU || 42 : undefined,
+        tamanho_u: item.type?.toLowerCase().includes('rack') ? item.tamanho_u || 42 : undefined,
       });
     }
   }, [item]);
@@ -418,8 +418,8 @@ export const ItemDetailDialog = ({
         getItemStatuses().then(setAvailableStatuses);
 
         if (item.id) {
-          const entityType = item.parent_id ? 'child_items' : 'parent_items';
-          getPendingApprovalForItem(item.id, entityType).then(setPendingApproval);
+          const entity_type = item.parent_id ? 'child_items' : 'parent_items';
+          getPendingApprovalForItem(item.id, entity_type).then(setPendingApproval);
         }
 
         const buildingsMap = new Map<string, Building>();
@@ -606,8 +606,8 @@ export const ItemDetailDialog = ({
                         <Input id="preco" type="number" value={editFormData.preco ?? ''} onChange={(e) => handleNumericFormChange('preco', e.target.value)} />
                     </div>
                     <div>
-                        <Label htmlFor="serialNumber">Serial</Label>
-                        <Input id="serialNumber" value={editFormData.serialNumber || ''} onChange={(e) => handleFormChange('serialNumber', e.target.value)} />
+                        <Label htmlFor="serial_number">Serial</Label>
+                        <Input id="serial_number" value={editFormData.serial_number || ''} onChange={(e) => handleFormChange('serial_number', e.target.value)} />
                     </div>
                     <div>
                         <Label htmlFor="brand">Fabricante</Label>
@@ -622,12 +622,12 @@ export const ItemDetailDialog = ({
                         <Input id="trellisId" value={editFormData.trellisId || ''} onChange={(e) => handleFormChange('trellisId', e.target.value)} />
                     </div>
                     <div>
-                        <Label htmlFor="tamanhoU">Tamanho (U)</Label>
-                        <Input id="tamanhoU" type="number" value={editFormData.tamanhoU ?? ''} onChange={(e) => handleNumericFormChange('tamanhoU', e.target.value)} disabled={!isRackType} />
+                        <Label htmlFor="tamanho_u">Tamanho (U)</Label>
+                        <Input id="tamanho_u" type="number" value={editFormData.tamanho_u ?? ''} onChange={(e) => handleNumericFormChange('tamanho_u', e.target.value)} disabled={!isRackType} />
                     </div>
                     <div>
-                        <Label htmlFor="potenciaW">Potência (W)</Label>
-                        <Input id="potenciaW" type="number" value={editFormData.potenciaW ?? ''} onChange={(e) => handleNumericFormChange('potenciaW', e.target.value)} />
+                        <Label htmlFor="potencia_w">Potência (W)</Label>
+                        <Input id="potencia_w" type="number" value={editFormData.potencia_w ?? ''} onChange={(e) => handleNumericFormChange('potencia_w', e.target.value)} />
                     </div>
                     <div>
                         <Label htmlFor="status">Status</Label>

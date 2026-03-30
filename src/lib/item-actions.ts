@@ -24,7 +24,7 @@ export async function addItem({ label, itemType, room }: { label: string; itemTy
       room_id: room.id,
       color: itemType.defaultColor || null,
       shape: itemType.shape,
-      istestdata: false
+      is_test_data: false
   };
 
   const result = await apiFetch('/parent_items', {

@@ -11,7 +11,7 @@ interface ReportItem {
     gridPosition: string;
     brand: string | null;
     modelo: string | null;
-    serialNumber: string | null;
+    serial_number: string | null;
     tag: string | null;
     child_items?: ReportItem[];
 }
@@ -79,7 +79,7 @@ export async function getPrintableReportData(): Promise<PrintableReportData> {
             if (!acc[parent_id]) acc[parent_id] = [];
             acc[parent_id].push({
                 ...item,
-                serialNumber: item.serialnumber,
+                serial_number: item.serial_number,
                 statusName: statusMap.get(item.status) || item.status,
             });
             return acc;
@@ -91,7 +91,7 @@ export async function getPrintableReportData(): Promise<PrintableReportData> {
             if (!acc[room_id]) acc[room_id] = [];
             acc[room_id].push({
                 ...item,
-                serialNumber: item.serialnumber,
+                serial_number: item.serial_number,
                 statusName: statusMap.get(item.status) || item.status,
                 child_items: child_itemsByParent[item.id] || []
             });

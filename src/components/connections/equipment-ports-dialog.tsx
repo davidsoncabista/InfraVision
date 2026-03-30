@@ -153,7 +153,7 @@ export function equipment_portsDialog({ equipment, isOpen, onOpenChange }: equip
                           ports.map(port => (
                           <TableRow key={port.id}>
                               <TableCell className="font-medium">{port.label}</TableCell>
-                              <TableCell><Badge variant="outline">{port.portTypeName}</Badge></TableCell>
+                              <TableCell><Badge variant="outline">{port.port_typeName}</Badge></TableCell>
                               <TableCell>
                                   <div className="flex items-center gap-2">
                                       <span className={cn("h-2 w-2 rounded-full", statusDotStyles[port.status])} />
