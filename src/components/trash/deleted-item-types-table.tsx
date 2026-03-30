@@ -28,11 +28,11 @@ import { useRouter } from 'next/navigation';
 import { Loader2, Trash, Undo, Puzzle } from 'lucide-react';
 import { restoreItemType, permanentlyDeleteItemType, ItemType } from '@/lib/item-types-actions';
 
-interface DeletedItemTypesTableProps {
-  itemTypes: ItemType[];
+interface Deleteditem_typesTableProps {
+  item_types: ItemType[];
 }
 
-export function DeletedItemTypesTable({ itemTypes }: DeletedItemTypesTableProps) {
+export function Deleteditem_typesTable({ item_types }: Deleteditem_typesTableProps) {
   const { toast } = useToast();
   const router = useRouter();
   const [isProcessing, setIsProcessing] = React.useState<string | null>(null);
@@ -93,7 +93,7 @@ export function DeletedItemTypesTable({ itemTypes }: DeletedItemTypesTableProps)
             </TableRow>
           </TableHeader>
           <TableBody>
-            {itemTypes.map((type) => (
+            {item_types.map((type) => (
               <TableRow key={type.id}>
                 <TableCell className="font-medium flex items-center gap-2">
                     <Puzzle className="h-4 w-4 text-muted-foreground"/>

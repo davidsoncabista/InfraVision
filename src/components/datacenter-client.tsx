@@ -50,7 +50,7 @@ import { usePermissions } from '@/components/permissions-provider';
 import { useToast } from '@/hooks/use-toast';
 import type { Building, Room, GridItem } from '@/types/datacenter';
 import { ManageRoomDialog } from '@/components/manage-room-dialog';
-import { updateParentItemPosition, getUnallocatedParentItems, allocateParentItem } from '@/lib/parent-item-actions';
+import { updateParentItemPosition, getUnallocatedparent_items, allocateParentItem } from '@/lib/parent-item-actions';
 import { ItemDetailDialog } from '@/components/item-detail-dialog'; 
 import { AddItemDialog } from '@/components/add-item-dialog';
 import { cn } from '@/lib/utils';
@@ -170,7 +170,7 @@ export function DatacenterClient({ initialData }: { initialData: Building[] }) {
 
   const refreshData = React.useCallback(() => {
     getDatacenterData().then(setData);
-    getUnallocatedParentItems().then(setUnallocatedItems);
+    getUnallocatedparent_items().then(setUnallocatedItems);
   }, []);
 
   const currentBuilding = React.useMemo(() => 
@@ -198,7 +198,7 @@ export function DatacenterClient({ initialData }: { initialData: Building[] }) {
 
   React.useEffect(() => {
     getItemStatuses().then(setStatuses);
-    getUnallocatedParentItems().then(setUnallocatedItems);
+    getUnallocatedparent_items().then(setUnallocatedItems);
   }, []);
 
   React.useEffect(() => {

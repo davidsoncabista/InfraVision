@@ -28,12 +28,12 @@ export async function updateParentItemPosition(
 }
 
 /**
- * Server Action para buscar todos os ParentItems que não estão alocados em nenhuma sala.
+ * Server Action para buscar todos os parent_items que não estão alocados em nenhuma sala.
  */
-export async function getUnallocatedParentItems(): Promise<GridItem[]> {
+export async function getUnallocatedparent_items(): Promise<GridItem[]> {
     try {
         // Busca itens onde roomid é nulo e não estão descomissionados, usando rota em minúsculo
-        const data = await apiFetch('/parentitems?roomid=is.null&status=neq.decommissioned');
+        const data = await apiFetch('/parent_items?roomid=is.null&status=neq.decommissioned');
         return (data || []).map((item: any) => ({
             ...item,
             roomId: item.roomid,

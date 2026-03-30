@@ -13,7 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { analyzeImport } from '@/ai/flows/analyze-import-flow';
 import type { AnalyzeImportInput } from '@/ai/flows/analyze-import-flow';
 import { AnalysisReviewModal } from '@/components/import/analysis-review-modal';
-import { importChildItems, importParentItems, importConnections } from '@/lib/import-actions';
+import { importchild_items, importparent_items, importConnections } from '@/lib/import-actions';
 import { useBuilding } from '@/components/building-provider';
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Alert, AlertTitle as AlertTitleShadCN } from '@/components/ui/alert';
@@ -396,9 +396,9 @@ export default function ImportPage() {
   const getImportFunction = () => {
     switch(activeTab) {
         case 'child_items':
-            return (data: any[]) => importChildItems(data, activeBuildingId);
+            return (data: any[]) => importchild_items(data, activeBuildingId);
         case 'parent_items':
-            return (data: any[]) => importParentItems(data);
+            return (data: any[]) => importparent_items(data);
         case 'connections':
             return (data: any[]) => importConnections(data, activeBuildingId);
         default:

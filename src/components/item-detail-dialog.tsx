@@ -39,10 +39,10 @@ import { cn } from '@/lib/utils';
 import { Tooltip, TooltipProvider, TooltipContent } from './ui/tooltip';
 
 
-const ChildItemsList = ({ parentId, allItems, onItemClick }: { parentId: string, allItems: GridItem[], onItemClick: (item: GridItem) => void }) => {
-    const childItems = allItems.filter(item => item.parentId === parentId);
+const child_itemsList = ({ parentId, allItems, onItemClick }: { parentId: string, allItems: GridItem[], onItemClick: (item: GridItem) => void }) => {
+    const child_items = allItems.filter(item => item.parentId === parentId);
 
-    if (childItems.length === 0) {
+    if (child_items.length === 0) {
         return (
             <div className="text-center text-sm text-muted-foreground py-4 mt-4 border-t">
                 Nenhum item aninhado neste equipamento.
@@ -64,7 +64,7 @@ const ChildItemsList = ({ parentId, allItems, onItemClick }: { parentId: string,
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {childItems.map(child => (
+                        {child_items.map(child => (
                              <TableRow key={child.id} className="cursor-pointer" onClick={() => onItemClick(child)}>
                                 <TableCell>{child.label}</TableCell>
                                 <TableCell><Badge variant="outline">{child.type}</Badge></TableCell>
@@ -80,7 +80,7 @@ const ChildItemsList = ({ parentId, allItems, onItemClick }: { parentId: string,
 };
 
 
-const RackView = ({ parentItem, childItems, onItemClick }: { parentItem: Partial<GridItem>, childItems: GridItem[], onItemClick: (item: GridItem) => void }) => {
+const RackView = ({ parentItem, child_items, onItemClick }: { parentItem: Partial<GridItem>, child_items: GridItem[], onItemClick: (item: GridItem) => void }) => {
     const sizeU = parentItem.tamanhoU;
     if (!sizeU || sizeU <= 0) {
         return (
@@ -93,7 +93,7 @@ const RackView = ({ parentItem, childItems, onItemClick }: { parentItem: Partial
     
     // Mapeia quais U's estão ocupados por qual item
     const occupiedUnits = new Map<number, GridItem>();
-    childItems.forEach(child => {
+    child_items.forEach(child => {
         if(child.posicaoU && child.tamanhoU){
             for(let i=0; i < child.tamanhoU; i++){
                 occupiedUnits.set(child.posicaoU + i, child);
@@ -114,7 +114,7 @@ const RackView = ({ parentItem, childItems, onItemClick }: { parentItem: Partial
                     ))}
                     
                     {/* Renderiza os itens filhos sobre as unidades */}
-                    {childItems.map(child => {
+                    {child_items.map(child => {
                         if (!child.posicaoU || !child.tamanhoU) return null;
 
                         const topPosition = (sizeU - (child.posicaoU + child.tamanhoU - 1)) * 34; // 34px = h-8 + my-0.5
@@ -360,11 +360,11 @@ const GenericItemView = ({ item, hasPermission, onItemChange }: { item: Partial<
 
 
 const RackItemView = ({ item, allItems, onItemClick }: { item: Partial<GridItem>, allItems: GridItem[], onItemClick: (item: GridItem) => void }) => {
-    const childItems = allItems.filter(i => i.parentId === item.id);
+    const child_items = allItems.filter(i => i.parentId === item.id);
     return (
         <div className="space-y-4 h-full flex flex-col">
             <div className="flex-grow min-h-0">
-                <RackView parentItem={item} childItems={childItems} onItemClick={onItemClick} />
+                <RackView parentItem={item} child_items={child_items} onItemClick={onItemClick} />
             </div>
         </div>
     )
@@ -418,7 +418,7 @@ export const ItemDetailDialog = ({
         getItemStatuses().then(setAvailableStatuses);
 
         if (item.id) {
-          const entityType = item.parentId ? 'ChildItems' : 'ParentItems';
+          const entityType = item.parentId ? 'child_items' : 'parent_items';
           getPendingApprovalForItem(item.id, entityType).then(setPendingApproval);
         }
 
@@ -664,7 +664,7 @@ export const ItemDetailDialog = ({
                       <Textarea id="description" value={editFormData.description || ''} onChange={(e) => handleFormChange('description', e.target.value)} rows={3} />
                   </div>
                   {isRackType && (
-                     <ChildItemsList 
+                     <child_itemsList 
                         parentId={item.id} 
                         allItems={fullItemContext.allItems}
                         onItemClick={(childItem) => {

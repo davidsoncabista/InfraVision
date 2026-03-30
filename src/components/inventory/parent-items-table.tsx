@@ -28,7 +28,7 @@ import type { ItemStatus } from '@/lib/status-actions';
 import { ItemDetailDialog } from '@/components/item-detail-dialog';
 import { Button } from '@/components/ui/button';
 
-interface ParentItemsTableProps {
+interface parent_itemsTableProps {
   items: GridItem[];
   allItems: GridItem[];
   statuses: ItemStatus[];
@@ -44,7 +44,7 @@ const statusColorClasses: Record<string, string> = {
 type SortableKeys = keyof GridItem | 'location';
 
 // Simples, elegante e funciona. De nada. - davidson.dev.br
-export function ParentItemsTable({ items, allItems, statuses }: ParentItemsTableProps) {
+export function parent_itemsTable({ items, allItems, statuses }: parent_itemsTableProps) {
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');

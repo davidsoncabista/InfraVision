@@ -55,7 +55,7 @@ export async function getAuditLogs(): Promise<any[]> {
  * Converte as chaves minúsculas do DB para a interface GridItem.
  */
 export async function getFullItemFromLog(entityType: string, entityId: string): Promise<GridItem | null> {
-    const endpoint = entityType.toLowerCase() === 'parentitems' ? '/parentitems' : '/childitems';
+    const endpoint = entityType.toLowerCase() === 'parent_items' ? '/parent_items' : '/child_items';
     try {
         const data = await apiFetch(`${endpoint}?id=eq.${entityId}`);
         if (data && data.length > 0) {

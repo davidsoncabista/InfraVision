@@ -77,8 +77,8 @@ Para aumentar a robustez e a performance percebida da aplicação, adotamos uma 
 
 Para resolver limitações de funcionalidade e melhorar a manutenibilidade, abandonamos o uso de um modal genérico para todos os tipos de itens. Agora, cada entidade principal possui seu próprio modal de detalhes, com campos e lógicas específicas.
 
-*   **Modal de Itens da Planta (`ParentItems`):** Focado em atributos de localização (sala, coordenadas), dimensões e visualização de itens aninhados.
-*   **Modal de Equipamentos Aninhados (`ChildItems`):** Focado em atributos de inventário (Nº de Série, Modelo) e, crucialmente, na capacidade de alterar seu **item pai** (ex: mover um servidor de um rack para outro).
+*   **Modal de Itens da Planta (`parent_items`):** Focado em atributos de localização (sala, coordenadas), dimensões e visualização de itens aninhados.
+*   **Modal de Equipamentos Aninhados (`child_items`):** Focado em atributos de inventário (Nº de Série, Modelo) e, crucialmente, na capacidade de alterar seu **item pai** (ex: mover um servidor de um rack para outro).
 
 Esta separação foi um passo fundamental para desbloquear o gerenciamento de inventário granular.
 
@@ -104,7 +104,7 @@ Implementação dos fluxos de trabalho que governam o ciclo de vida de um ativo,
 
 #### Fase 5: Inventário Hierárquico e Configurável
 **Status:** `Concluído`
-Separação estrutural dos dados em `ParentItems` e `ChildItems` no banco de dados e na interface, e criação da base para configuração de tipos de item na página de sistema.
+Separação estrutural dos dados em `parent_items` e `child_items` no banco de dados e na interface, e criação da base para configuração de tipos de item na página de sistema.
 
 #### Fase 6: Gerenciamento Avançado de Entidades e Atributos
 **Status:** `Concluído`
@@ -135,7 +135,7 @@ Adicionar automação inteligente e capacidades de análise de dados.
 
 2.  **11.2. Alertas de Incidentes na Planta Baixa:**
     *   **Status:** `Concluído`.
-    *   **Descrição:** Utilizando uma arquitetura de busca desacoplada, a planta baixa agora exibe um ícone de alerta sobre os racks (`ParentItems`) que contêm um incidente ativo, seja no próprio rack, em um equipamento aninhado ou em uma de suas conexões.
+    *   **Descrição:** Utilizando uma arquitetura de busca desacoplada, a planta baixa agora exibe um ícone de alerta sobre os racks (`parent_items`) que contêm um incidente ativo, seja no próprio rack, em um equipamento aninhado ou em uma de suas conexões.
 
 3.  **11.3. Gestão Completa de Portas de Equipamento:**
     *   **Status:** `Concluído`.

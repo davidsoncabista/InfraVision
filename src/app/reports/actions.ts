@@ -6,8 +6,8 @@ import * as XLSX from 'xlsx';
 /**
  * Busca todos os itens de planta baixa que não são dados de teste.
  */
-async function getParentItems() {
-    const data = await apiFetch('/parentitems?istestdata=eq.false&select=*,rooms(name,buildings(name))');
+async function getparent_items() {
+    const data = await apiFetch('/parent_items?istestdata=eq.false&select=*,rooms(name,buildings(name))');
     return (data || []).map((item: any) => ({
         ...item,
         roomName: item.rooms?.name,
@@ -18,11 +18,11 @@ async function getParentItems() {
 /**
  * Busca todos os equipamentos aninhados que não são dados de teste.
  */
-async function getChildItems() {
-    const data = await apiFetch('/childitems?istestdata=eq.false&select=*,parentitems(label)');
+async function getchild_items() {
+    const data = await apiFetch('/child_items?istestdata=eq.false&select=*,parent_items(label)');
     return (data || []).map((item: any) => ({
         ...item,
-        parentName: item.parentitems?.label
+        parentName: item.parent_items?.label
     }));
 }
 
@@ -30,15 +30,15 @@ async function getChildItems() {
  * Busca todas as conexões ativas que não são dados de teste.
  */
 async function getConnections() {
-    const data = await apiFetch('/connections?istestdata=eq.false&select=*,portA:portA_id(label,childitems(label,parentitems(label))),portB:portB_id(label,childitems(label,parentitems(label))),connectiontypes(name)');
+    const data = await apiFetch('/connections?istestdata=eq.false&select=*,portA:portA_id(label,child_items(label,parent_items(label))),portB:portB_id(label,child_items(label,parent_items(label))),connectiontypes(name)');
     
     return (data || []).map((c: any) => ({
         id: c.id,
-        itemA_label: c.portA?.childitems?.label || 'N/A',
-        itemA_parentName: c.portA?.childitems?.parentitems?.label || null,
+        itemA_label: c.portA?.child_items?.label || 'N/A',
+        itemA_parentName: c.portA?.child_items?.parent_items?.label || null,
         portA_label: c.portA?.label || 'N/A',
-        itemB_label: c.portB?.childitems?.label || null,
-        itemB_parentName: c.portB?.childitems?.parentitems?.label || null,
+        itemB_label: c.portB?.child_items?.label || null,
+        itemB_parentName: c.portB?.child_items?.parent_items?.label || null,
         portB_label: c.portB?.label || null,
         connectionType: c.connectiontypes?.name || 'N/A',
         status: c.status,
@@ -57,7 +57,7 @@ export async function exportData(dataTypes: string[]): Promise<string | null> {
     let hasData = false;
 
     if (dataTypes.includes('parent_items')) {
-        const data = await getParentItems();
+        const data = await getparent_items();
         if (data.length > 0) {
             const mappedData = data.map(item => ({
                 'ID': item.id,
@@ -82,7 +82,7 @@ export async function exportData(dataTypes: string[]): Promise<string | null> {
     }
 
     if (dataTypes.includes('child_items')) {
-        const data = await getChildItems();
+        const data = await getchild_items();
         if (data.length > 0) {
             const mappedData = data.map(item => ({
                 'ID': item.id,

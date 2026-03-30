@@ -36,7 +36,7 @@ import { useToast } from '@/hooks/use-toast';
 import { usePermissions } from '../permissions-provider';
 import { AddPortDialog } from './add-port-dialog';
 
-interface EquipmentPortsDialogProps {
+interface equipment_portsDialogProps {
   equipment: EquipmentSummary;
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
@@ -54,7 +54,7 @@ const statusDotStyles: Record<EquipmentPort['status'], string> = {
   disabled: "bg-gray-500",
 };
 
-export function EquipmentPortsDialog({ equipment, isOpen, onOpenChange }: EquipmentPortsDialogProps) {
+export function equipment_portsDialog({ equipment, isOpen, onOpenChange }: equipment_portsDialogProps) {
   const [ports, setPorts] = React.useState<EquipmentPort[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [isProcessing, setIsProcessing] = React.useState<string | null>(null);

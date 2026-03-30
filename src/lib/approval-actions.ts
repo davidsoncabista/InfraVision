@@ -8,7 +8,7 @@ import { _getUserById } from './user-service';
 export interface ApprovalRequest {
     id: string;
     entityId: string;
-    entityType: 'ParentItems' | 'ChildItems';
+    entityType: 'parent_items' | 'child_items';
     entityLabel: string;
     entityTypeName: string;
     requestedAt: string;
@@ -41,25 +41,25 @@ export async function getPendingApprovals(buildingId: string): Promise<ApprovalR
         const statusMap = new Map(statusRows.map((s: any) => [s.id, s.name]));
 
         // 3. Separa os IDs para buscarmos os itens no banco
-        const parentIds = pending.filter((a: any) => a.entitytype === 'ParentItems').map((a: any) => a.entityid);
-        const childIds = pending.filter((a: any) => a.entitytype === 'ChildItems').map((a: any) => a.entityid);
+        const parentIds = pending.filter((a: any) => a.entitytype === 'parent_items').map((a: any) => a.entityid);
+        const childIds = pending.filter((a: any) => a.entitytype === 'child_items').map((a: any) => a.entityid);
 
         // Armazena os itens que realmente pertencem a este prédio
         const validItems = new Map<string, any>();
 
-        // Busca ParentItems (aqui o JOIN funciona porque ParentItem tem FK com Room)
+        // Busca parent_items (aqui o JOIN funciona porque ParentItem tem FK com Room)
         if (parentIds.length > 0) {
-            const parents = await apiFetch(`/parentitems?id=in.(${parentIds.join(',')})&select=id,label,type,rooms!inner(buildingid)`);
+            const parents = await apiFetch(`/parent_items?id=in.(${parentIds.join(',')})&select=id,label,type,rooms!inner(buildingid)`);
             parents?.forEach((p: any) => {
                 if (p.rooms?.buildingid === buildingId) validItems.set(p.id, p);
             });
         }
 
-        // Busca ChildItems (aqui o JOIN funciona porque ChildItem tem FK com ParentItem, que tem FK com Room)
+        // Busca child_items (aqui o JOIN funciona porque ChildItem tem FK com ParentItem, que tem FK com Room)
         if (childIds.length > 0) {
-            const childs = await apiFetch(`/childitems?id=in.(${childIds.join(',')})&select=id,label,type,parentitems!inner(rooms!inner(buildingid))`);
+            const childs = await apiFetch(`/child_items?id=in.(${childIds.join(',')})&select=id,label,type,parent_items!inner(rooms!inner(buildingid))`);
             childs?.forEach((c: any) => {
-                if (c.parentitems?.rooms?.buildingid === buildingId) validItems.set(c.id, c);
+                if (c.parent_items?.rooms?.buildingid === buildingId) validItems.set(c.id, c);
             });
         }
 

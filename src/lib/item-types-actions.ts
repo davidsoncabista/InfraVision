@@ -43,9 +43,9 @@ const mapItemType = (r: any): ItemType => ({
     isDefault: !!r.isdefault
 });
 
-const getEndpoint = (isParentType: boolean) => (isParentType ? '/itemtypes' : '/itemtypeseqp');
+const getEndpoint = (isParentType: boolean) => (isParentType ? '/item_types' : '/item_typeseqp');
 
-export async function getItemTypes(isParentType: boolean): Promise<ItemType[]> {
+export async function getitem_types(isParentType: boolean): Promise<ItemType[]> {
   const endpoint = getEndpoint(isParentType);
   try {
     const data = await apiFetch(`${endpoint}?status=eq.active&order=category,name`);
@@ -131,11 +131,11 @@ export async function deleteItemType(id: string, isParentType: boolean): Promise
     }
 }
 
-export async function getDeletedItemTypes(): Promise<ItemType[]> {
+export async function getDeleteditem_types(): Promise<ItemType[]> {
     try {
         const [pData, cData] = await Promise.all([
-            apiFetch('/itemtypes?status=eq.deleted'),
-            apiFetch('/itemtypeseqp?status=eq.deleted')
+            apiFetch('/item_types?status=eq.deleted'),
+            apiFetch('/item_typeseqp?status=eq.deleted')
         ]);
         return [...(pData || []), ...(cData || [])].map(mapItemType);
     } catch (error) {
@@ -147,8 +147,8 @@ export async function restoreItemType(typeId: string): Promise<void> {
     try {
         // Tenta restaurar em ambas as tabelas
         await Promise.all([
-            apiFetch(`/itemtypes?id=eq.${typeId}`, { method: 'PATCH', body: JSON.stringify({ status: 'active' }) }),
-            apiFetch(`/itemtypeseqp?id=eq.${typeId}`, { method: 'PATCH', body: JSON.stringify({ status: 'active' }) })
+            apiFetch(`/item_types?id=eq.${typeId}`, { method: 'PATCH', body: JSON.stringify({ status: 'active' }) }),
+            apiFetch(`/item_typeseqp?id=eq.${typeId}`, { method: 'PATCH', body: JSON.stringify({ status: 'active' }) })
         ]);
         revalidatePath('/trash');
         revalidatePath('/system');
@@ -160,8 +160,8 @@ export async function restoreItemType(typeId: string): Promise<void> {
 export async function permanentlyDeleteItemType(typeId: string): Promise<void> {
     try {
         await Promise.all([
-            apiFetch(`/itemtypes?id=eq.${typeId}&status=eq.deleted`, { method: 'DELETE' }),
-            apiFetch(`/itemtypeseqp?id=eq.${typeId}&status=eq.deleted`, { method: 'DELETE' })
+            apiFetch(`/item_types?id=eq.${typeId}&status=eq.deleted`, { method: 'DELETE' }),
+            apiFetch(`/item_typeseqp?id=eq.${typeId}&status=eq.deleted`, { method: 'DELETE' })
         ]);
         revalidatePath('/trash');
     } catch (error: any) {

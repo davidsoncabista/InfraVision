@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AddItemTypeDialog } from '@/components/add-item-type-dialog';
 import { AddStatusButton } from '@/components/system/add-status-button';
-import { ItemTypesTable } from '@/components/system/item-types-table';
+import { item_typesTable } from '@/components/system/item-types-table';
 import { StatusesTable } from '@/components/system/statuses-table';
 import { Puzzle, RefreshCcwDot, HardDrive, LayoutGrid, Tag, Plus, Library, Network, Plug, Link2, AlertTriangle, BadgeAlert, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -60,7 +60,7 @@ async function SystemPage() {
                           <Button><Plus className="mr-2" />Adicionar Tipo</Button>
                         </AddItemTypeDialog>
                     </div>
-                    <ItemTypesTable isParentTypeTable={true} />
+                    <item_typesTable isParentTypeTable={true} />
                 </TabsContent>
                 
                 <TabsContent value="child_types" className="mt-6 space-y-6">
@@ -72,7 +72,7 @@ async function SystemPage() {
                           <Button><Plus className="mr-2" />Adicionar Tipo</Button>
                         </AddItemTypeDialog>
                     </div>
-                    <ItemTypesTable isParentTypeTable={false} />
+                    <item_typesTable isParentTypeTable={false} />
                 </TabsContent>
 
                 <TabsContent value="attributes" className="mt-6 space-y-6">

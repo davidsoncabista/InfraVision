@@ -36,7 +36,7 @@ import { useToast } from '@/hooks/use-toast';
 import { usePermissions } from '@/components/permissions-provider';
 import { Incident, updateIncident, resolveConnectionIncident } from '@/lib/incident-service';
 import { getIncidentStatuses, IncidentStatus } from '@/lib/incident-attributes-actions';
-import { getConnectableChildItems, getPortsByChildItemId, EquipmentPort, ConnectableItem, ConnectionDetail } from '@/lib/connection-actions';
+import { getConnectablechild_items, getPortsByChildItemId, EquipmentPort, ConnectableItem, ConnectionDetail } from '@/lib/connection-actions';
 import { Separator } from '../ui/separator';
 import { ScrollArea } from '../ui/scroll-area';
 import { cn } from '@/lib/utils';
@@ -128,7 +128,7 @@ const ConnectionResolutionForm = ({ incident, user, onSuccess }: { incident: Inc
             setIsLoading(true);
             try {
                 const [items, incidentDetails] = await Promise.all([
-                    getConnectableChildItems(),
+                    getConnectablechild_items(),
                     resolveConnectionIncident({ incidentId: incident.id, action: 'get_details' })
                 ]);
                 setConnectableItems(items);

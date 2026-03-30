@@ -5,8 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HardDrive, Puzzle, DoorOpen, Building } from "lucide-react";
 import { getDecommissionedItems } from "@/lib/item-actions";
 import { DecommissionedItemsTable } from "@/components/trash/decommissioned-items-table";
-import { getDeletedItemTypes } from '@/lib/item-types-actions';
-import { DeletedItemTypesTable } from '@/components/trash/deleted-item-types-table';
+import { getDeleteditem_types } from '@/lib/item-types-actions';
+import { Deleteditem_typesTable } from '@/components/trash/deleted-item-types-table';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,9 +18,9 @@ const PlaceholderContent = ({ entity }: { entity: string }) => (
 );
 
 export default async function TrashPage() {
-  const [decommissionedItems, deletedItemTypes] = await Promise.all([
+  const [decommissionedItems, deleteditem_types] = await Promise.all([
       getDecommissionedItems(),
-      getDeletedItemTypes()
+      getDeleteditem_types()
   ]);
 
   return (
@@ -49,8 +49,8 @@ export default async function TrashPage() {
                     )}
                 </TabsContent>
                 <TabsContent value="item_types" className="mt-4">
-                     {deletedItemTypes.length > 0 ? (
-                        <DeletedItemTypesTable itemTypes={deletedItemTypes} />
+                     {deleteditem_types.length > 0 ? (
+                        <Deleteditem_typesTable item_types={deleteditem_types} />
                      ) : (
                         <PlaceholderContent entity="tipo de item" />
                      )}

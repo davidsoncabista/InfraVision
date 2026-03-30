@@ -54,7 +54,7 @@ const iconList = [
   { name: 'Box', icon: Box },
 ];
 
-const parentItemTypeSchema = z.object({
+const parentitem_typeschema = z.object({
   name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres."),
   category: z.string().min(3, "A categoria deve ter pelo menos 3 caracteres."),
   shape: z.enum(['rectangle', 'circle']),
@@ -79,7 +79,7 @@ const parentItemTypeSchema = z.object({
 });
 
 
-const childItemTypeSchema = z.object({
+const childitem_typeschema = z.object({
     name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres."),
     iconName: z.string().optional(),
     // Para manter a consistência, mesmo que oculto, o schema precisa corresponder à action
@@ -102,7 +102,7 @@ export function EditItemTypeDialog({ itemType, open, onOpenChange, isParentType 
   const { toast } = useToast();
 
   const form = useForm<any>({
-    resolver: zodResolver(isParentType ? parentItemTypeSchema : childItemTypeSchema),
+    resolver: zodResolver(isParentType ? parentitem_typeschema : childitem_typeschema),
   });
   
   const selectedShape = form.watch('shape');

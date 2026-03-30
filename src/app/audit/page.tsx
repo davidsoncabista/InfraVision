@@ -171,7 +171,7 @@ export default function AuditPage() {
     }, [fetchLogs]);
 
     const handleRowClick = async (log: AuditLog) => {
-        if (log.entityType === 'ParentItems' || log.entityType === 'ChildItems') {
+        if (log.entityType === 'parent_items' || log.entityType === 'child_items') {
             const item = await getFullItemFromLog(log.entityType, log.entityId);
             setSelectedItem(item);
         } else if (log.entityType === 'Approvals') {

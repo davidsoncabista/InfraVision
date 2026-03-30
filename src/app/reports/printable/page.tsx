@@ -64,11 +64,11 @@ export default async function PrintableReportPage({ searchParams }: { searchPara
                        <DataPair label="Nº de Série" value={item.serialNumber} />
                        <DataPair label="TAG" value={item.tag} />
                     </dl>
-                    {item.childItems && item.childItems.length > 0 && (
+                    {item.child_items && item.child_items.length > 0 && (
                         <div className="mt-4">
                             <h5 className="font-semibold text-gray-700 flex items-center gap-2"><HardDrive className="h-4 w-4" /> Equipamentos Aninhados:</h5>
                             <ul className="list-disc pl-5 mt-2 space-y-1">
-                                {item.childItems.map(child => <li key={child.id}>{child.label} ({child.modelo}) - <span className="font-mono text-xs">{child.serialNumber || 'S/N'}</span></li>)}
+                                {item.child_items.map(child => <li key={child.id}>{child.label} ({child.modelo}) - <span className="font-mono text-xs">{child.serialNumber || 'S/N'}</span></li>)}
                             </ul>
                         </div>
                     )}

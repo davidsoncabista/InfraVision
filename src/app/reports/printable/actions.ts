@@ -13,7 +13,7 @@ interface ReportItem {
     modelo: string | null;
     serialNumber: string | null;
     tag: string | null;
-    childItems?: ReportItem[];
+    child_items?: ReportItem[];
 }
 
 interface ReportRoom {
@@ -59,14 +59,14 @@ export interface PrintableReportData {
 export async function getPrintableReportData(): Promise<PrintableReportData> {
     try {
         const [
-            buildingsResult, roomsResult, parentItemsResult, childItemsResult,
+            buildingsResult, roomsResult, parent_itemsResult, child_itemsResult,
             connectionsResult, usersResult, statusesResult
         ] = await Promise.all([
             apiFetch('/buildings?select=id,name&order=name.asc'),
             apiFetch('/rooms?select=id,name,buildingid,xaxisnaming,yaxisnaming&order=name.asc'),
-            apiFetch('/parentitems?status=not.in.(decommissioned,deleted)'),
-            apiFetch('/childitems?status=not.in.(decommissioned,deleted)'),
-            apiFetch('/connections?select=*,portA:portA_id(label,childitems(label,parentitems(label))),portB:portB_id(label,childitems(label,parentitems(label))),connectiontypes(name)'),
+            apiFetch('/parent_items?status=not.in.(decommissioned,deleted)'),
+            apiFetch('/child_items?status=not.in.(decommissioned,deleted)'),
+            apiFetch('/connections?select=*,portA:portA_id(label,child_items(label,parent_items(label))),portB:portB_id(label,child_items(label,parent_items(label))),connectiontypes(name)'),
             apiFetch('/users?signatureurl=not.is.null&select=id,displayname,role,signatureurl&order=displayname.asc'),
             apiFetch('/itemstatuses?select=id,name')
         ]);
@@ -74,7 +74,7 @@ export async function getPrintableReportData(): Promise<PrintableReportData> {
         const statusMap = new Map((statusesResult || []).map((s: any) => [s.id, s.name]));
 
         // Agrupamos itens filhos por pai
-        const childItemsByParent = (childItemsResult || []).reduce((acc: any, item: any) => {
+        const child_itemsByParent = (child_itemsResult || []).reduce((acc: any, item: any) => {
             const parentId = item.parentid;
             if (!acc[parentId]) acc[parentId] = [];
             acc[parentId].push({
@@ -86,14 +86,14 @@ export async function getPrintableReportData(): Promise<PrintableReportData> {
         }, {} as Record<string, any[]>);
 
         // Agrupamos itens pais por sala
-        const parentItemsByRoom = (parentItemsResult || []).reduce((acc: any, item: any) => {
+        const parent_itemsByRoom = (parent_itemsResult || []).reduce((acc: any, item: any) => {
             const roomId = item.roomid;
             if (!acc[roomId]) acc[roomId] = [];
             acc[roomId].push({
                 ...item,
                 serialNumber: item.serialnumber,
                 statusName: statusMap.get(item.status) || item.status,
-                childItems: childItemsByParent[item.id] || []
+                child_items: child_itemsByParent[item.id] || []
             });
             return acc;
         }, {} as Record<string, any[]>);
@@ -102,7 +102,7 @@ export async function getPrintableReportData(): Promise<PrintableReportData> {
         const roomsByBuilding = (roomsResult || []).reduce((acc: any, room: any) => {
             const buildingId = room.buildingid;
             if (!acc[buildingId]) acc[buildingId] = [];
-            const itemsInRoom = (parentItemsByRoom[room.id] || []).map((pItem: any) => ({
+            const itemsInRoom = (parent_itemsByRoom[room.id] || []).map((pItem: any) => ({
                  ...pItem,
                  gridPosition: getGridLabel(pItem.x, pItem.y, room.xaxisnaming, room.yaxisnaming),
             }));
@@ -114,11 +114,11 @@ export async function getPrintableReportData(): Promise<PrintableReportData> {
         // Mapeamos conexões
         const mappedConnections = (connectionsResult || []).map((c: any) => ({
             id: c.id,
-            itemA_label: c.portA?.childitems?.label || 'N/A',
-            itemA_parentName: c.portA?.childitems?.parentitems?.label || null,
+            itemA_label: c.portA?.child_items?.label || 'N/A',
+            itemA_parentName: c.portA?.child_items?.parent_items?.label || null,
             portA_label: c.portA?.label || 'N/A',
-            itemB_label: c.portB?.childitems?.label || null,
-            itemB_parentName: c.portB?.childitems?.parentitems?.label || null,
+            itemB_label: c.portB?.child_items?.label || null,
+            itemB_parentName: c.portB?.child_items?.parent_items?.label || null,
             portB_label: c.portB?.label || null,
             connectionType: c.connectiontypes?.name || 'N/A',
         }));

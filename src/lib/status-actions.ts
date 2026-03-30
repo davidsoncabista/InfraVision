@@ -67,8 +67,8 @@ export async function updateStatus(id: string, data: any) {
 
 export async function deleteStatus(id: string) {
     try {
-        const pInUse = await apiFetch(`/parentitems?status=eq.${id}&limit=1`);
-        const cInUse = await apiFetch(`/childitems?status=eq.${id}&limit=1`);
+        const pInUse = await apiFetch(`/parent_items?status=eq.${id}&limit=1`);
+        const cInUse = await apiFetch(`/child_items?status=eq.${id}&limit=1`);
         
         if ((pInUse && pInUse.length > 0) || (cInUse && cInUse.length > 0)) {
             throw new Error('Este status está em uso e não pode ser excluído.');

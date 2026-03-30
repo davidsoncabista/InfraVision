@@ -10,8 +10,8 @@ import { revalidatePath } from 'next/cache';
 export async function softCleanTestData() {
     try {
         await apiFetch('/connections?istestdata=eq.true', { method: 'DELETE' });
-        await apiFetch('/childitems?istestdata=eq.true', { method: 'DELETE' });
-        await apiFetch('/parentitems?istestdata=eq.true', { method: 'DELETE' });
+        await apiFetch('/child_items?istestdata=eq.true', { method: 'DELETE' });
+        await apiFetch('/parent_items?istestdata=eq.true', { method: 'DELETE' });
         await apiFetch('/rooms?istestdata=eq.true', { method: 'DELETE' });
         await apiFetch('/buildings?istestdata=eq.true', { method: 'DELETE' });
         await apiFetch('/users?istestdata=eq.true', { method: 'DELETE' });
@@ -76,8 +76,8 @@ export async function populateRooms() {
 /**
  * Popula itens de planta (Racks).
  */
-export async function populateParentItems() {
-    await apiFetch('/parentitems', {
+export async function populateparent_items() {
+    await apiFetch('/parent_items', {
         method: 'POST',
         headers: { 'Prefer': 'resolution=merge-duplicates' },
         body: JSON.stringify({ 
@@ -98,8 +98,8 @@ export async function populateParentItems() {
 /**
  * Popula equipamentos aninhados.
  */
-export async function populateChildItems() {
-    await apiFetch('/childitems', {
+export async function populatechild_items() {
+    await apiFetch('/child_items', {
         method: 'POST',
         headers: { 'Prefer': 'resolution=merge-duplicates' },
         body: JSON.stringify({ 

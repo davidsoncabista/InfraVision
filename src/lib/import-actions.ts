@@ -38,7 +38,7 @@ export interface ImportResult {
 /**
  * Importa equipamentos aninhados buscando o rack pai por nome no prédio ativo.
  */
-export async function importChildItems(items: ChildItemImportData[], buildingId: string): Promise<ImportResult> {
+export async function importchild_items(items: ChildItemImportData[], buildingId: string): Promise<ImportResult> {
     if (!buildingId) throw new Error("ID do prédio obrigatório.");
     
     let successCount = 0;
@@ -47,7 +47,7 @@ export async function importChildItems(items: ChildItemImportData[], buildingId:
     for (const item of items) {
         try {
             // Busca o rack pai pelo label e garantindo que pertence ao prédio correto
-            const parents = await apiFetch(`/parentitems?label=eq.${encodeURIComponent(item.parentRack)}&rooms.buildingid=eq.${buildingId}&select=id,rooms!inner(buildingid)`);
+            const parents = await apiFetch(`/parent_items?label=eq.${encodeURIComponent(item.parentRack)}&rooms.buildingid=eq.${buildingId}&select=id,rooms!inner(buildingid)`);
             
             if (!parents || parents.length === 0) {
                 errorCount++;
@@ -56,7 +56,7 @@ export async function importChildItems(items: ChildItemImportData[], buildingId:
             const parentId = parents[0].id;
             const newId = `citem_imp_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
 
-            await apiFetch('/childitems', {
+            await apiFetch('/child_items', {
                 method: 'POST',
                 body: JSON.stringify({
                     id: newId,
@@ -85,14 +85,14 @@ export async function importChildItems(items: ChildItemImportData[], buildingId:
 /**
  * Importa itens de planta (como Racks) criando-os em rascunho sem alocação inicial.
  */
-export async function importParentItems(items: ParentItemImportData[]): Promise<ImportResult> {
+export async function importparent_items(items: ParentItemImportData[]): Promise<ImportResult> {
     let successCount = 0;
     let errorCount = 0;
     
     for (const item of items) {
         try {
             const newId = `pitem_imp_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
-            await apiFetch('/parentitems', {
+            await apiFetch('/parent_items', {
                 method: 'POST',
                 body: JSON.stringify({ 
                     id: newId, 
@@ -127,7 +127,7 @@ export async function importConnections(items: ConnectionImportData[], buildingI
 
     const findPort = async (equipLabel: string, portLabel: string) => {
         // Busca a porta garantindo o encadeamento de labels até o prédio
-        const ports = await apiFetch(`/equipmentports?label=eq.${encodeURIComponent(portLabel)}&childitems.label=eq.${encodeURIComponent(equipLabel)}&childitems.parentitems.rooms.buildingid=eq.${buildingId}&select=id,childitems!inner(label,parentitems!inner(rooms!inner(buildingid)))`);
+        const ports = await apiFetch(`/equipment_ports?label=eq.${encodeURIComponent(portLabel)}&child_items.label=eq.${encodeURIComponent(equipLabel)}&child_items.parent_items.rooms.buildingid=eq.${buildingId}&select=id,child_items!inner(label,parent_items!inner(rooms!inner(buildingid)))`);
         return ports?.[0];
     };
 

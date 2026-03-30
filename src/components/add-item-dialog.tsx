@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2, Box, Server, Snowflake, Router, Network, PanelTop, Database, Power, Fan, HardDrive } from "lucide-react";
 
-import { getItemTypes, ItemType } from "@/lib/item-types-actions";
+import { getitem_types, ItemType } from "@/lib/item-types-actions";
 import { addItem } from "@/lib/item-actions";
 import type { Room, GridItem } from "@/types/datacenter";
 
@@ -47,7 +47,7 @@ interface AddItemDialogProps {
 }
 
 export function AddItemDialog({ room, open, onOpenChange, onItemAdded }: AddItemDialogProps) {
-  const [itemTypes, setItemTypes] = useState<ItemType[]>([]);
+  const [item_types, setitem_types] = useState<ItemType[]>([]);
   const [isLoadingTypes, setIsLoadingTypes] = useState(true);
   const { toast } = useToast();
   const form = useForm<FormData>({ 
@@ -64,8 +64,8 @@ export function AddItemDialog({ room, open, onOpenChange, onItemAdded }: AddItem
   useEffect(() => {
     if (open) {
       setIsLoadingTypes(true);
-      getItemTypes(true) // Apenas tipos de item pai (para planta baixa)
-        .then(setItemTypes)
+      getitem_types(true) // Apenas tipos de item pai (para planta baixa)
+        .then(setitem_types)
         .catch(() =>
           toast({
             variant: "destructive",
@@ -78,7 +78,7 @@ export function AddItemDialog({ room, open, onOpenChange, onItemAdded }: AddItem
   }, [open, toast]);
   
   const onSubmit = async (data: FormData) => {
-    const selectedType = itemTypes.find(t => t.id === data.itemTypeId);
+    const selectedType = item_types.find(t => t.id === data.itemTypeId);
     if (!selectedType) {
       toast({ variant: "destructive", title: "Erro", description: "Tipo de item inválido selecionado." });
       return;
@@ -124,7 +124,7 @@ export function AddItemDialog({ room, open, onOpenChange, onItemAdded }: AddItem
                   <>
                     <ScrollArea className="h-40 mt-2">
                       <div className="grid grid-cols-2 gap-2 pr-4">
-                        {itemTypes.map((type) => {
+                        {item_types.map((type) => {
                           const Icon = iconMap[type.iconName || 'default'] || Box;
                           return (
                             <Card

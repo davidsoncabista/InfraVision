@@ -14,8 +14,8 @@ import {
     softCleanTestData,
     hardCleanDevBuilding,
     populateRooms,
-    populateParentItems,
-    populateChildItems,
+    populateparent_items,
+    populatechild_items,
     populatePortsAndConnections
 } from '@/lib/dev-actions';
 import { clearAuditLog } from '@/lib/debug-actions';
@@ -25,7 +25,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
 
-type TaskName = 'clean' | 'hard_clean' | 'base' | 'rooms' | 'parentItems' | 'childItems' | 'ports' | 'clearLog';
+type TaskName = 'clean' | 'hard_clean' | 'base' | 'rooms' | 'parent_items' | 'child_items' | 'ports' | 'clearLog';
 
 
 export const DeveloperMenu = () => {
@@ -121,11 +121,11 @@ export const DeveloperMenu = () => {
                          <Button onClick={() => handleTask('rooms', populateRooms, 'Salas de teste criadas.')} disabled={isAnyTaskRunning}>
                             {activeTask === 'rooms' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "2."} Pop. Salas
                         </Button>
-                         <Button onClick={() => handleTask('parentItems', populateParentItems, 'Itens pais (racks) de teste criados.')} disabled={isAnyTaskRunning}>
-                            {activeTask === 'parentItems' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "3."} Pop. Pais (Racks)
+                         <Button onClick={() => handleTask('parent_items', populateparent_items, 'Itens pais (racks) de teste criados.')} disabled={isAnyTaskRunning}>
+                            {activeTask === 'parent_items' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "3."} Pop. Pais (Racks)
                         </Button>
-                        <Button onClick={() => handleTask('childItems', populateChildItems, 'Itens filhos (equipamentos) de teste criados.')} disabled={isAnyTaskRunning}>
-                            {activeTask === 'childItems' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "4."} Pop. Filhos (Eqp)
+                        <Button onClick={() => handleTask('child_items', populatechild_items, 'Itens filhos (equipamentos) de teste criados.')} disabled={isAnyTaskRunning}>
+                            {activeTask === 'child_items' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "4."} Pop. Filhos (Eqp)
                         </Button>
                         <Button onClick={() => handleTask('ports', populatePortsAndConnections, 'Portas de equipamento e conexões de teste foram criadas.')} disabled={isAnyTaskRunning} className="col-span-2">
                             {activeTask === 'ports' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "5."} Pop. Conexões e Portas

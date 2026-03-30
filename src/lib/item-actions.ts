@@ -27,7 +27,7 @@ export async function addItem({ label, itemType, room }: { label: string; itemTy
       istestdata: false
   };
 
-  const result = await apiFetch('/parentitems', {
+  const result = await apiFetch('/parent_items', {
       method: 'POST',
       body: JSON.stringify(newItem),
       headers: { 'Prefer': 'return=representation' }
@@ -41,7 +41,7 @@ export async function addItem({ label, itemType, room }: { label: string; itemTy
  * Exclui ou descomissiona um item (Parent ou Child).
  */
 export async function deleteItem({ item, hardDelete }: { item: GridItem; hardDelete: boolean }): Promise<void> {
-  const endpoint = item.parentId ? '/childitems' : '/parentitems';
+  const endpoint = item.parentId ? '/child_items' : '/parent_items';
 
   if (hardDelete) {
     await apiFetch(`${endpoint}?id=eq.${item.id}`, { method: 'DELETE' });
@@ -63,8 +63,8 @@ export async function deleteItem({ item, hardDelete }: { item: GridItem; hardDel
 export async function getDecommissionedItems(): Promise<GridItem[]> {
     try {
         const [pItems, cItems] = await Promise.all([
-            apiFetch('/parentitems?status=eq.decommissioned'),
-            apiFetch('/childitems?status=eq.decommissioned')
+            apiFetch('/parent_items?status=eq.decommissioned'),
+            apiFetch('/child_items?status=eq.decommissioned')
         ]);
         return [...(pItems || []), ...(cItems || [])].sort((a, b) => a.label.localeCompare(b.label));
     } catch (error) {
@@ -76,7 +76,7 @@ export async function getDecommissionedItems(): Promise<GridItem[]> {
  * Restaura um item descomissionado para o status Ativo.
  */
 export async function restoreItem(item: GridItem): Promise<void> {
-  const endpoint = item.parentId ? '/childitems' : '/parentitems';
+  const endpoint = item.parentId ? '/child_items' : '/parent_items';
   await apiFetch(`${endpoint}?id=eq.${item.id}`, {
       method: 'PATCH',
       body: JSON.stringify({ status: 'active' })

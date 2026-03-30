@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from '@/components/ui/button';
 import { ArrowRightLeft, Cable, HardDrive, Puzzle, Loader2, Link, Unlink, Camera, ChevronDown, WifiOff, Search, Info, ArrowUpDown } from 'lucide-react';
-import { getConnectableChildItems, getPortsByChildItemId, createConnection, EquipmentPort, ConnectionDetail, getAllConnections, disconnectConnection } from '@/lib/connection-actions';
+import { getConnectablechild_items, getPortsByChildItemId, createConnection, EquipmentPort, ConnectionDetail, getAllConnections, disconnectConnection } from '@/lib/connection-actions';
 import { getConnectionTypes, ConnectionType } from '@/lib/connection-types-actions';
 import type { ConnectableItem } from '@/lib/connection-actions';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -113,7 +113,7 @@ export function DeParaClient() {
         setIsLoading(true);
         try {
             const [itemsData, connectionsData, typesData] = await Promise.all([
-                getConnectableChildItems(activeBuildingId),
+                getConnectablechild_items(activeBuildingId),
                 getAllConnections(activeBuildingId),
                 getConnectionTypes(),
             ]);

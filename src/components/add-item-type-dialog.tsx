@@ -55,7 +55,7 @@ const iconList = [
   { name: 'Box', icon: Box },
 ];
 
-const parentItemTypeSchema = z.object({
+const parentitem_typeschema = z.object({
   name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres."),
   category: z.string().min(3, "A categoria deve ter pelo menos 3 caracteres."),
   shape: z.enum(['rectangle', 'circle']),
@@ -80,7 +80,7 @@ const parentItemTypeSchema = z.object({
 });
 
 // Esquema simplificado para tipos de item filho (equipamentos aninhados)
-const childItemTypeSchema = z.object({
+const childitem_typeschema = z.object({
     name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres."),
     iconName: z.string().optional(),
     // Campos que não serão mostrados na UI, mas precisam de valores padrão para a action.
@@ -102,7 +102,7 @@ export function AddItemTypeDialog({ isParentType, children }: AddItemTypeDialogP
   const { toast } = useToast();
 
   const form = useForm<any>({
-    resolver: zodResolver(isParentType ? parentItemTypeSchema : childItemTypeSchema),
+    resolver: zodResolver(isParentType ? parentitem_typeschema : childitem_typeschema),
     defaultValues: isParentType ? {
       name: "",
       category: "",

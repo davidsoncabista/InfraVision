@@ -65,10 +65,10 @@ WHEN NOT MATCHED BY TARGET THEN
 GO
 
 
--- Tabela: ItemTypes (Planta Baixa)
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='ItemTypes' AND xtype='U')
+-- Tabela: item_types (Planta Baixa)
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='item_types' AND xtype='U')
 BEGIN
-    CREATE TABLE ItemTypes (
+    CREATE TABLE item_types (
         id NVARCHAR(50) PRIMARY KEY,
         name NVARCHAR(100) NOT NULL UNIQUE,
         category NVARCHAR(100) NOT NULL,
@@ -87,7 +87,7 @@ BEGIN
 END
 GO
 
-MERGE INTO ItemTypes AS Target
+MERGE INTO item_types AS Target
 USING (
     VALUES
         ('type_rack_default', 'Rack 42U', 'Gabinetes', 'Box', 1, 1, '#3b82f6', 'rectangle', 0.6, 1.2, NULL, 1),
@@ -102,10 +102,10 @@ WHEN NOT MATCHED BY TARGET THEN
 GO
 
 
--- Tabela: ItemTypesEqp (Equipamentos Aninhados)
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='ItemTypesEqp' AND xtype='U')
+-- Tabela: item_typesEqp (Equipamentos Aninhados)
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='item_typesEqp' AND xtype='U')
 BEGIN
-    CREATE TABLE ItemTypesEqp (
+    CREATE TABLE item_typesEqp (
         id NVARCHAR(50) PRIMARY KEY,
         name NVARCHAR(100) NOT NULL UNIQUE,
         category NVARCHAR(100) NOT NULL,
@@ -117,7 +117,7 @@ BEGIN
 END
 GO
 
-MERGE INTO ItemTypesEqp AS Target
+MERGE INTO item_typesEqp AS Target
 USING (
     VALUES
         ('type_eqp_server', 'Servidor', 'Equipamentos de TI', 'HardDrive', NULL),

@@ -4,22 +4,22 @@
 import * as React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { getItemTypes, ItemType } from "@/lib/item-types-actions";
+import { getitem_types, ItemType } from "@/lib/item-types-actions";
 import { ManageItemTypeMenu } from '@/components/manage-item-type-menu';
 import { Skeleton } from '../ui/skeleton';
 
-interface ItemTypesTableProps {
+interface item_typesTableProps {
     isParentTypeTable: boolean;
 }
 
-export function ItemTypesTable({ isParentTypeTable }: ItemTypesTableProps) {
-    const [itemTypes, setItemTypes] = React.useState<ItemType[]>([]);
+export function item_typesTable({ isParentTypeTable }: item_typesTableProps) {
+    const [item_types, setitem_types] = React.useState<ItemType[]>([]);
     const [isLoading, setIsLoading] = React.useState(true);
 
     React.useEffect(() => {
         setIsLoading(true);
-        getItemTypes(isParentTypeTable).then(data => {
-            setItemTypes(data);
+        getitem_types(isParentTypeTable).then(data => {
+            setitem_types(data);
             setIsLoading(false);
         })
     }, [isParentTypeTable]);
@@ -47,8 +47,8 @@ export function ItemTypesTable({ isParentTypeTable }: ItemTypesTableProps) {
                 </TableRow>
                 </TableHeader>
                 <TableBody>
-                {itemTypes.length > 0 ? (
-                    itemTypes.map((type) => (
+                {item_types.length > 0 ? (
+                    item_types.map((type) => (
                     <TableRow key={type.id}>
                         <TableCell className="font-medium">{type.name}</TableCell>
                         <TableCell>{type.category}</TableCell>

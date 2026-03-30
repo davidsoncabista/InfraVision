@@ -10,15 +10,15 @@ import type { Building, Room, GridItem } from "@/types/datacenter";
 export async function getDatacenterData(): Promise<Building[]> {
     try {
         // Buscamos os dados fundamentais em paralelo para máxima performance
-        const [buildings, rooms, items, itemTypes] = await Promise.all([
+        const [buildings, rooms, items, item_types] = await Promise.all([
             apiFetch('/buildings?select=id,name&order=name.asc'),
             apiFetch('/rooms?order=name.asc'),
-            apiFetch('/parentitems?status=not.in.(decommissioned,deleted)'),
-            apiFetch('/itemtypes?select=name,shape,iconname,defaultcolor')
+            apiFetch('/parent_items?status=not.in.(decommissioned,deleted)'),
+            apiFetch('/item_types?select=name,shape,iconname,defaultcolor')
         ]);
 
         // Criamos um mapa de tipos para enriquecer os itens com ícones e formas
-        const itemTypesMap = new Map((itemTypes || []).map((it: any) => [it.name, it]));
+        const item_typesMap = new Map((item_types || []).map((it: any) => [it.name, it]));
 
         // Processamos as salas mapeando os nomes de coluna minúsculos do PostgreSQL
         const allRooms = (rooms || []).map((r: any) => ({
@@ -36,7 +36,7 @@ export async function getDatacenterData(): Promise<Building[]> {
 
         // Processamos os itens da planta aplicando o mapeamento de tipos
         const allItems = (items || []).map((item: any) => {
-            const typeInfo = itemTypesMap.get(item.type) || {};
+            const typeInfo = item_typesMap.get(item.type) || {};
             return {
                 ...item,
                 roomId: item.roomid,

@@ -4,16 +4,16 @@
 
 -- Drop tables in reverse order of creation to handle dependencies
 IF OBJECT_ID('dbo.Connections', 'U') IS NOT NULL DROP TABLE dbo.Connections;
-IF OBJECT_ID('dbo.EquipmentPorts', 'U') IS NOT NULL DROP TABLE dbo.EquipmentPorts;
+IF OBJECT_ID('dbo.equipment_ports', 'U') IS NOT NULL DROP TABLE dbo.equipment_ports;
 IF OBJECT_ID('dbo.PortTypes', 'U') IS NOT NULL DROP TABLE dbo.PortTypes;
 IF OBJECT_ID('dbo.ConnectionTypes', 'U') IS NOT NULL DROP TABLE dbo.ConnectionTypes;
-IF OBJECT_ID('dbo.ChildItems', 'U') IS NOT NULL DROP TABLE dbo.ChildItems;
-IF OBJECT_ID('dbo.ParentItems', 'U') IS NOT NULL DROP TABLE dbo.ParentItems;
+IF OBJECT_ID('dbo.child_items', 'U') IS NOT NULL DROP TABLE dbo.child_items;
+IF OBJECT_ID('dbo.parent_items', 'U') IS NOT NULL DROP TABLE dbo.parent_items;
 IF OBJECT_ID('dbo.ItemStatuses', 'U') IS NOT NULL DROP TABLE dbo.ItemStatuses;
 IF OBJECT_ID('dbo.Models', 'U') IS NOT NULL DROP TABLE dbo.Models;
 IF OBJECT_ID('dbo.Manufacturers', 'U') IS NOT NULL DROP TABLE dbo.Manufacturers;
-IF OBJECT_ID('dbo.ItemTypes', 'U') IS NOT NULL DROP TABLE dbo.ItemTypes;
-IF OBJECT_ID('dbo.ItemTypesEqp', 'U') IS NOT NULL DROP TABLE dbo.ItemTypesEqp;
+IF OBJECT_ID('dbo.item_types', 'U') IS NOT NULL DROP TABLE dbo.item_types;
+IF OBJECT_ID('dbo.item_typesEqp', 'U') IS NOT NULL DROP TABLE dbo.item_typesEqp;
 IF OBJECT_ID('dbo.Rooms', 'U') IS NOT NULL DROP TABLE dbo.Rooms;
 IF OBJECT_ID('dbo.Buildings', 'U') IS NOT NULL DROP TABLE dbo.Buildings;
 IF OBJECT_ID('dbo.Users', 'U') IS NOT NULL DROP TABLE dbo.Users;
@@ -65,7 +65,7 @@ CREATE TABLE Rooms (
 );
 GO
 
-CREATE TABLE ItemTypes (
+CREATE TABLE item_types (
     id NVARCHAR(50) PRIMARY KEY,
     name NVARCHAR(100) NOT NULL UNIQUE,
     category NVARCHAR(100) NOT NULL,
@@ -80,7 +80,7 @@ CREATE TABLE ItemTypes (
 );
 GO
 
-CREATE TABLE ItemTypesEqp (
+CREATE TABLE item_typesEqp (
     id NVARCHAR(50) PRIMARY KEY,
     name NVARCHAR(100) NOT NULL UNIQUE,
     category NVARCHAR(100) NOT NULL,
@@ -122,7 +122,7 @@ CREATE TABLE ItemStatuses (
 );
 GO
 
-CREATE TABLE ParentItems (
+CREATE TABLE parent_items (
     id NVARCHAR(50) PRIMARY KEY,
     label NVARCHAR(100) NOT NULL,
     x INT NOT NULL DEFAULT 0,
@@ -152,7 +152,7 @@ CREATE TABLE ParentItems (
 );
 GO
 
-CREATE TABLE ChildItems (
+CREATE TABLE child_items (
     id NVARCHAR(50) PRIMARY KEY,
     label NVARCHAR(100) NOT NULL,
     parentId NVARCHAR(50) NOT NULL,
@@ -172,7 +172,7 @@ CREATE TABLE ChildItems (
     tamanhoU INT,
     posicaoU INT,
     isTestData BIT NOT NULL DEFAULT 0,
-    FOREIGN KEY (parentId) REFERENCES ParentItems(id) ON DELETE CASCADE,
+    FOREIGN KEY (parentId) REFERENCES parent_items(id) ON DELETE CASCADE,
     FOREIGN KEY (status) REFERENCES ItemStatuses(id)
 );
 GO
@@ -193,7 +193,7 @@ CREATE TABLE ConnectionTypes (
 );
 GO
 
-CREATE TABLE EquipmentPorts (
+CREATE TABLE equipment_ports (
     id NVARCHAR(50) PRIMARY KEY,
     childItemId NVARCHAR(50) NOT NULL,
     portTypeId NVARCHAR(50) NOT NULL,
@@ -201,9 +201,9 @@ CREATE TABLE EquipmentPorts (
     status NVARCHAR(50) NOT NULL DEFAULT 'down',
     connectedToPortId NVARCHAR(50),
     notes NVARCHAR(MAX),
-    FOREIGN KEY (childItemId) REFERENCES ChildItems(id) ON DELETE CASCADE,
+    FOREIGN KEY (childItemId) REFERENCES child_items(id) ON DELETE CASCADE,
     FOREIGN KEY (portTypeId) REFERENCES PortTypes(id),
-    FOREIGN KEY (connectedToPortId) REFERENCES EquipmentPorts(id),
+    FOREIGN KEY (connectedToPortId) REFERENCES equipment_ports(id),
     UNIQUE(connectedToPortId)
 );
 GO
@@ -216,8 +216,8 @@ CREATE TABLE Connections (
     label NVARCHAR(255),
     status NVARCHAR(50) NOT NULL DEFAULT 'active',
     isTestData BIT NOT NULL DEFAULT 0,
-    FOREIGN KEY (portA_id) REFERENCES EquipmentPorts(id),
-    FOREIGN KEY (portB_id) REFERENCES EquipmentPorts(id),
+    FOREIGN KEY (portA_id) REFERENCES equipment_ports(id),
+    FOREIGN KEY (portB_id) REFERENCES equipment_ports(id),
     FOREIGN KEY (connectionTypeId) REFERENCES ConnectionTypes(id),
     UNIQUE (portA_id),
     UNIQUE (portB_id)
@@ -265,7 +265,7 @@ CREATE TABLE Sensors (
     value FLOAT,
     unit NVARCHAR(20),
     lastReading DATETIME2,
-    FOREIGN KEY (itemId) REFERENCES ParentItems(id) ON DELETE CASCADE
+    FOREIGN KEY (itemId) REFERENCES parent_items(id) ON DELETE CASCADE
 );
 GO
 

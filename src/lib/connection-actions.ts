@@ -49,19 +49,19 @@ export interface ConnectionDetail {
     labelText: string | null;
 }
 
-export async function getConnectableChildItems(buildingId?: string): Promise<ConnectableItem[]> {
+export async function getConnectablechild_items(buildingId?: string): Promise<ConnectableItem[]> {
     try {
         // Resource embedding para filtrar por prédio usando endpoints minúsculos
-        let url = '/childitems?select=id,label,type,parentitems(label,rooms(buildingid))';
+        let url = '/child_items?select=id,label,type,parent_items(label,rooms(buildingid))';
         if (buildingId) {
-            url += `&parentitems.rooms.buildingid=eq.${buildingId}`;
+            url += `&parent_items.rooms.buildingid=eq.${buildingId}`;
         }
         const data = await apiFetch(url);
         return data.map((ci: any) => ({
             id: ci.id,
             label: ci.label,
             type: ci.type,
-            parentName: ci.parentitems?.label || null
+            parentName: ci.parent_items?.label || null
         }));
     } catch (error) {
         return [];
@@ -72,7 +72,7 @@ export async function getPortsByChildItemId(childItemId: string | null): Promise
     if (!childItemId) return [];
     try {
         // PostgREST select com nomes de tabelas em minúsculo
-        const data = await apiFetch(`/equipmentports?childitemid=eq.${childItemId}&select=*,porttypes(name),connections!portA_id(*),connectedport:connectedtoportid(label,childitems(label))&order=label.asc`);
+        const data = await apiFetch(`/equipment_ports?childitemid=eq.${childItemId}&select=*,porttypes(name),connections!portA_id(*),connectedport:connectedtoportid(label,child_items(label))&order=label.asc`);
         
         return data.map((ep: any) => ({
             id: ep.id,
@@ -82,7 +82,7 @@ export async function getPortsByChildItemId(childItemId: string | null): Promise
             connectionId: ep.connections?.[0]?.id || null,
             connectedToPortId: ep.connectedtoportid,
             connectedToPortLabel: ep.connectedport?.label || null,
-            connectedToEquipmentLabel: ep.connectedport?.childitems?.label || null
+            connectedToEquipmentLabel: ep.connectedport?.child_items?.label || null
         }));
     } catch (error) {
         return [];
@@ -91,20 +91,20 @@ export async function getPortsByChildItemId(childItemId: string | null): Promise
 
 export async function getAllConnections(buildingId?: string): Promise<ConnectionDetail[]> {
     try {
-        let url = '/connections?select=*,portA:portA_id(label,childitems(label,parentitems(label,rooms(buildingid)))),portB:portB_id(label,childitems(label,parentitems(label))),connectiontypes(name)';
+        let url = '/connections?select=*,portA:portA_id(label,child_items(label,parent_items(label,rooms(buildingid)))),portB:portB_id(label,child_items(label,parent_items(label))),connectiontypes(name)';
         if (buildingId) {
-            url += `&portA.childitems.parentitems.rooms.buildingid=eq.${buildingId}`;
+            url += `&portA.child_items.parent_items.rooms.buildingid=eq.${buildingId}`;
         }
         const data = await apiFetch(url);
         return data.map((c: any) => ({
             id: c.id,
             portA_id: c.portA_id,
             portB_id: c.portB_id,
-            itemA_label: c.portA?.childitems?.label || 'N/A',
-            itemA_parentName: c.portA?.childitems?.parentitems?.label || null,
+            itemA_label: c.portA?.child_items?.label || 'N/A',
+            itemA_parentName: c.portA?.child_items?.parent_items?.label || null,
             portA_label: c.portA?.label || 'N/A',
-            itemB_label: c.portB?.childitems?.label || null,
-            itemB_parentName: c.portB?.childitems?.parentitems?.label || null,
+            itemB_label: c.portB?.child_items?.label || null,
+            itemB_parentName: c.portB?.child_items?.parent_items?.label || null,
             portB_label: c.portB?.label || null,
             connectionType: c.connectiontypes?.name || 'N/A',
             connectionTypeId: c.connectiontypeid,
@@ -145,13 +145,13 @@ export async function createConnection(data: {
     });
 
     // Atualiza portas
-    await apiFetch(`/equipmentports?id=eq.${data.portA_id}`, {
+    await apiFetch(`/equipment_ports?id=eq.${data.portA_id}`, {
         method: 'PATCH',
         body: JSON.stringify({ status: 'up', connectedtoportid: data.portB_id || null })
     });
 
     if (data.portB_id) {
-        await apiFetch(`/equipmentports?id=eq.${data.portB_id}`, {
+        await apiFetch(`/equipment_ports?id=eq.${data.portB_id}`, {
             method: 'PATCH',
             body: JSON.stringify({ status: 'up', connectedtoportid: data.portA_id })
         });
@@ -172,8 +172,8 @@ export async function disconnectConnection(connectionId: string, userId: string)
 
     await apiFetch(`/connections?id=eq.${connectionId}`, { method: 'DELETE' });
     
-    if (portA_id) await apiFetch(`/equipmentports?id=eq.${portA_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'down', connectedtoportid: null }) });
-    if (portB_id) await apiFetch(`/equipmentports?id=eq.${portB_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'down', connectedtoportid: null }) });
+    if (portA_id) await apiFetch(`/equipment_ports?id=eq.${portA_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'down', connectedtoportid: null }) });
+    if (portB_id) await apiFetch(`/equipment_ports?id=eq.${portB_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'down', connectedtoportid: null }) });
 
     await logAuditEvent({ user, action: 'CONNECTION_DELETED', entityType: 'connections', entityId: connectionId });
     revalidatePath('/depara');
@@ -181,9 +181,9 @@ export async function disconnectConnection(connectionId: string, userId: string)
 
 export async function getConnectableEquipmentSummary(buildingId?: string): Promise<EquipmentSummary[]> {
     try {
-        const items = await getConnectableChildItems(buildingId);
+        const items = await getConnectablechild_items(buildingId);
         const summaries = await Promise.all(items.map(async (item) => {
-            const ports = await apiFetch(`/equipmentports?childitemid=eq.${item.id}`);
+            const ports = await apiFetch(`/equipment_ports?childitemid=eq.${item.id}`);
             return {
                 ...item,
                 totalPorts: ports.length,
@@ -197,7 +197,7 @@ export async function getConnectableEquipmentSummary(buildingId?: string): Promi
 }
 
 export async function addPortToEquipment(data: { childItemId: string; portTypeId: string; label: string; }) {
-    await apiFetch('/equipmentports', {
+    await apiFetch('/equipment_ports', {
         method: 'POST',
         body: JSON.stringify({ id: `eport_${Date.now()}`, childitemid: data.childItemId, porttypeid: data.portTypeId, label: data.label, status: 'down' })
     });
@@ -207,7 +207,7 @@ export async function addPortToEquipment(data: { childItemId: string; portTypeId
 export async function deletePortFromEquipment(portId: string, userId: string) {
     const user = await _getUserById(userId);
     if (!user) throw new Error("Usuário inválido.");
-    await apiFetch(`/equipmentports?id=eq.${portId}&status=neq.up`, { method: 'DELETE' });
-    await logAuditEvent({ user, action: 'PORT_DELETED', entityType: 'equipmentports', entityId: portId });
+    await apiFetch(`/equipment_ports?id=eq.${portId}&status=neq.up`, { method: 'DELETE' });
+    await logAuditEvent({ user, action: 'PORT_DELETED', entityType: 'equipment_ports', entityId: portId });
     revalidatePath('/connections');
 }

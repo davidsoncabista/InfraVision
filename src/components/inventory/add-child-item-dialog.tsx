@@ -36,7 +36,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { GridItem } from '@/types/datacenter';
 import { getManufacturers, Manufacturer } from '@/lib/manufacturer-actions';
 import { getModelsByManufacturerId, Model } from '@/lib/models-actions';
-import { getItemTypes, ItemType } from '@/lib/item-types-actions';
+import { getitem_types, ItemType } from '@/lib/item-types-actions';
 import { updateItemDetails } from '@/lib/item-detail-actions';
 import { usePermissions } from '../permissions-provider';
 
@@ -53,7 +53,7 @@ type FormData = z.infer<typeof formSchema>;
 
 interface AddChildItemDialogProps {
   allItems: GridItem[];
-  itemTypes: ItemType[];
+  item_types: ItemType[];
   manufacturers: Manufacturer[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -61,7 +61,7 @@ interface AddChildItemDialogProps {
 
 export function AddChildItemDialog({ 
   allItems, 
-  itemTypes,
+  item_types,
   manufacturers,
   open, 
   onOpenChange 
@@ -198,7 +198,7 @@ export function AddChildItemDialog({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {itemTypes.map((type) => (
+                          {item_types.map((type) => (
                             <SelectItem key={type.id} value={type.name}>{type.name}</SelectItem>
                           ))}
                         </SelectContent>

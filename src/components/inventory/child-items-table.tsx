@@ -27,11 +27,11 @@ import type { GridItem } from '@/types/datacenter';
 import type { ItemStatus } from '@/lib/status-actions';
 import { AddChildItemDialog } from '@/components/inventory/add-child-item-dialog';
 import { ChildItemDetailDialog } from '@/components/inventory/child-item-detail-dialog'; // NOVO: Importa o novo modal
-import { getItemTypes, ItemType } from '@/lib/item-types-actions';
+import { getitem_types, ItemType } from '@/lib/item-types-actions';
 import { getManufacturers, Manufacturer } from '@/lib/manufacturer-actions';
 
 
-interface ChildItemsTableProps {
+interface child_itemsTableProps {
   items: GridItem[];
   allItems: GridItem[];
   statuses: ItemStatus[];
@@ -44,20 +44,20 @@ const statusColorClasses: Record<string, string> = {
     pending_approval: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
 };
 
-export function ChildItemsTable({ items, allItems, statuses }: ChildItemsTableProps) {
+export function child_itemsTable({ items, allItems, statuses }: child_itemsTableProps) {
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [selectedItem, setSelectedItem] = useState<GridItem | null>(null);
     const [isAddChildOpen, setIsAddChildOpen] = useState(false);
 
-    const [itemTypes, setItemTypes] = useState<ItemType[]>([]);
+    const [item_types, setitem_types] = useState<ItemType[]>([]);
     const [manufacturers, setManufacturers] = useState<Manufacturer[]>([]);
 
     const statusesById = useMemo(() => new Map(statuses.map(s => [s.id, s])), [statuses]);
 
     useEffect(() => {
-        getItemTypes(false).then(setItemTypes);
+        getitem_types(false).then(setitem_types);
         getManufacturers().then(setManufacturers);
     }, []);
 
@@ -157,7 +157,7 @@ export function ChildItemsTable({ items, allItems, statuses }: ChildItemsTablePr
         )}
         <AddChildItemDialog
             allItems={allItems}
-            itemTypes={itemTypes}
+            item_types={item_types}
             manufacturers={manufacturers}
             open={isAddChildOpen}
             onOpenChange={setIsAddChildOpen}

@@ -84,7 +84,7 @@ export async function updateRoom(params: any): Promise<void> {
  */
 export async function deleteRoom(roomId: string): Promise<void> {
     // Verifica se existem itens vinculados à sala
-    const items = await apiFetch(`/parentitems?roomid=eq.${roomId}&limit=1`);
+    const items = await apiFetch(`/parent_items?roomid=eq.${roomId}&limit=1`);
     if (items && items.length > 0) {
         throw new Error('Não é possível excluir a sala pois ela contém equipamentos.');
     }

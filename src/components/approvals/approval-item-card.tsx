@@ -17,7 +17,7 @@ export function ApprovalItemCard({ request, onSuccess }: { request: ApprovalRequ
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            {request.entityType === 'ParentItems' ? <Puzzle className="h-5 w-5"/> : <HardDrive className="h-5 w-5" />}
+            {request.entityType === 'parent_items' ? <Puzzle className="h-5 w-5"/> : <HardDrive className="h-5 w-5" />}
             {request.entityLabel}
           </CardTitle>
           <div className="text-sm text-muted-foreground">

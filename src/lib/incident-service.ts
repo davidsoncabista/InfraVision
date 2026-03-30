@@ -89,12 +89,12 @@ export async function updateIncident(incidentId: string, newStatusId: string, us
 }
 
 /**
- * Retorna uma lista de IDs de ParentItems que possuem incidentes ativos.
+ * Retorna uma lista de IDs de parent_items que possuem incidentes ativos.
  */
 export async function getParentItemIdsWithActiveIncidents(buildingId: string): Promise<string[]> {
     try {
-        // Busca incidentes vinculados a ParentItems que não estão resolvidos
-        const data = await apiFetch(`/incidents?select=entityid,incidentstatuses!inner(name)&entitytype=eq.ParentItems&incidentstatuses.name=not.in.(Resolvido,Fechado)`);
+        // Busca incidentes vinculados a parent_items que não estão resolvidos
+        const data = await apiFetch(`/incidents?select=entityid,incidentstatuses!inner(name)&entitytype=eq.parent_items&incidentstatuses.name=not.in.(Resolvido,Fechado)`);
         return (data || []).map((r: any) => r.entityid);
     } catch (error) {
         return [];
@@ -110,7 +110,7 @@ export async function resolveConnectionIncident({ incidentId, action, resolution
         if (!incidents || !incidents.length) return { details: null };
         
         const portId = incidents[0].entityid;
-        const ports = await apiFetch(`/equipmentports?id=eq.${portId}&select=*,childitems(label,parentitems(label))`);
+        const ports = await apiFetch(`/equipment_ports?id=eq.${portId}&select=*,child_items(label,parent_items(label))`);
         
         if (!ports || !ports.length) return { details: null };
         
@@ -118,9 +118,9 @@ export async function resolveConnectionIncident({ incidentId, action, resolution
         return {
             details: {
                 item: { 
-                    label: port.childitems?.label, 
+                    label: port.child_items?.label, 
                     id: port.childitemid,
-                    parentName: port.childitems?.parentitems?.label 
+                    parentName: port.child_items?.parent_items?.label 
                 },
                 port: {
                     id: port.id,
@@ -157,8 +157,8 @@ export async function resolveConnectionIncident({ incidentId, action, resolution
         });
 
         // 3. Atualiza as portas
-        await apiFetch(`/equipmentports?id=eq.${portA_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'up', connectedtoportid: portB_id }) });
-        await apiFetch(`/equipmentports?id=eq.${portB_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'up', connectedtoportid: portA_id }) });
+        await apiFetch(`/equipment_ports?id=eq.${portA_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'up', connectedtoportid: portB_id }) });
+        await apiFetch(`/equipment_ports?id=eq.${portB_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'up', connectedtoportid: portA_id }) });
 
         // 4. Fecha o incidente
         const closedStatus = await apiFetch('/incidentstatuses?name=eq.Resolvido');

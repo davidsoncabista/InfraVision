@@ -27,7 +27,7 @@ async function createPortsForModel(childItemId: string, modelName: string) {
         for (let i = 0; i < quantity; i++) {
             const portId = `eport_${childItemId}_${portCounter}`;
             const portLabel = `${typeName.replace(/[^A-Z0-9]/g, '')}-${i + 1}`;
-            await apiFetch('/equipmentports', {
+            await apiFetch('/equipment_ports', {
                 method: 'POST',
                 body: JSON.stringify({
                     id: portId,
@@ -48,7 +48,7 @@ export async function updateItemDetails(itemData: any, userId: string): Promise<
 
     const { id, ...fields } = itemData;
     const isChild = 'parentId' in fields || 'parentid' in fields;
-    const tableName = isChild ? 'childitems' : 'parentitems';
+    const tableName = isChild ? 'child_items' : 'parent_items';
     
     const existing = await apiFetch(`/${tableName}?id=eq.${id}`);
     const existingItem = existing[0];
