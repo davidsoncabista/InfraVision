@@ -2,6 +2,26 @@
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
+## [2026-03-30] - Independência e Self-Hosted Total
+
+### Adicionado
+- Scripts IaC (Ansible) na pasta `ansible/` para deploy automatizado em Proxmox LXC e servidores Linux genéricos.
+- Nova interface de Login nativa.
+- Motor de API PostgREST para comunicação direta e rápida com o banco de dados.
+- MinIO adicionado como solução S3 Self-Hosted para armazenamento de imagens.
+
+### Modificado
+- Migração completa de infraestrutura: Firebase e Azure Blob Storage removidos em favor do PostgreSQL e MinIO locais (100% Self-Hosted).
+- Autenticação refatorada para usar NextAuth com `CredentialsProvider` e banco próprio.
+- Geração de IDs de usuário alterada para o nativo `crypto.randomUUID()`.
+- Compilação do Next.js ajustada para `output: 'standalone'`, otimizando a imagem Docker.
+- Variáveis de ambiente consolidadas e simplificadas.
+
+### Corrigido
+- Loop infinito de redirecionamento na rota de login (`/login1` para `/login`).
+- Bug de permissões corrigido garantindo a role `developer` para o usuário semente gerado via IaC.
+
+
 ## [Não Liberado]
 
 ### Mudança Estratégica

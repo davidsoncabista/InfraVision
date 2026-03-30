@@ -8,17 +8,21 @@ O desenvolvimento é faseado para garantir estabilidade, segurança e a integra�
 
 ---
 
-## 2. Stack de Tecnologia
+## 2. 🏗️ Stack Tecnológica e Infraestrutura (Revisão 2026-03-30)
 
-- **Frontend:** Next.js, React, TypeScript
-- **UI Framework:** Tailwind CSS com componentes ShadCN
-- **State Management:** React Context API & Hooks
-- **Banco de Dados:** **MariaDB** (Produção/Desenvolvimento via Cloudflare Tunnel)
-- **Autenticação:** Firebase Authentication (com login via E-mail/Senha)
-- **Armazenamento de Arquivos:** Azure Blob Storage
-- **Inteligência Artificial (Futuro):** Azure AI Services (Visão Computacional)
-- **Versionamento:** Git
+O InfraVision é desenhado para operar em missões críticas, sem dependência de internet externa. Toda a arquitetura foi migrada para um modelo **100% Self-Hosted**.
 
+### Core Stack
+- **Frontend:** Next.js 15 (App Router), React, TypeScript.
+- **Estilização:** Tailwind CSS + ShadCN/UI.
+- **Banco de Dados Relacional:** PostgreSQL 16 (Dados estruturados, relações de inventário).
+- **Backend/API:** PostgREST (Gera uma API RESTful ultrarrápida diretamente a partir do schema do PostgreSQL).
+- **Armazenamento de Arquivos:** MinIO (Object Storage compatível com S3 para plantas baixas e evidências).
+- **Autenticação:** NextAuth.js operando via JWT local com senhas hasheadas e controle de roles via banco.
+
+### DevOps & IaC (Infrastructure as Code)
+- **Containerização:** Docker e Docker Compose (Orquestração local dos serviços `web`, `api`, `db` e `storage`).
+- **Provisionamento:** Ansible. Playbooks interativos criados para construir a infraestrutura do zero (`ansible/deploy_infravision.yaml`), suportando tanto clusters Proxmox (via API/CLI local) quanto servidores genéricos via SSH.
 ---
 
 ## 3. Estratégia de População de Dados

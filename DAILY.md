@@ -1,5 +1,17 @@
 # Registro de Daily Stand-ups
 
+## [2026-03-30] - O Dia da Independência (Self-Hosted)
+**Foco:** Refatoração profunda de Arquitetura, DevOps e IaC.
+
+**O que foi feito:**
+- **Vitória GIGANTE:** Arrancamos dependências externas (Firebase/Azure). O sistema agora roda de forma 100% autônoma e segura.
+- Subimos a trindade de backend: PostgreSQL (Banco), PostgREST (API) e MinIO (Storage).
+- Reconstruímos o sistema de login visual e lógico com NextAuth integrado ao banco local.
+- **Magia do IaC:** Escrevemos playbooks do Ansible que provisionam o servidor inteiro do zero! O script cria o LXC no Proxmox, gera a rede, injeta variáveis dinâmicas (como o NEXTAUTH_SECRET), levanta os containers Docker e cria o admin inicial. Tudo com um único comando.
+- Construímos uma versão genérica do IaC para suportar instalações via SSH em qualquer VM Linux do mercado (VMware, AWS, etc).
+- Vencemos a "guerra do build" no Docker ativando o modo standalone do Next.js.
+
+
 ## [31/08/2025] - Conclusão e Relatório da Fase de Inteligência Assistida
 ### O que foi feito?
 - **Finalização do Scanner de Vídeo:** Concluímos a implementação da funcionalidade de captura contínua de dados por vídeo na página `/import`, incluindo o loop automático, feedback visual em tempo real, e seleção de câmera.
