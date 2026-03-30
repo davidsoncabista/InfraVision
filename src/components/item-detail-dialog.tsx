@@ -39,8 +39,8 @@ import { cn } from '@/lib/utils';
 import { Tooltip, TooltipProvider, TooltipContent } from './ui/tooltip';
 
 
-const child_itemsList = ({ parentId, allItems, onItemClick }: { parentId: string, allItems: GridItem[], onItemClick: (item: GridItem) => void }) => {
-    const child_items = allItems.filter(item => item.parentId === parentId);
+const child_itemsList = ({ parent_id, allItems, onItemClick }: { parent_id: string, allItems: GridItem[], onItemClick: (item: GridItem) => void }) => {
+    const child_items = allItems.filter(item => item.parent_id === parent_id);
 
     if (child_items.length === 0) {
         return (
@@ -360,7 +360,7 @@ const GenericItemView = ({ item, hasPermission, onItemChange }: { item: Partial<
 
 
 const RackItemView = ({ item, allItems, onItemClick }: { item: Partial<GridItem>, allItems: GridItem[], onItemClick: (item: GridItem) => void }) => {
-    const child_items = allItems.filter(i => i.parentId === item.id);
+    const child_items = allItems.filter(i => i.parent_id === item.id);
     return (
         <div className="space-y-4 h-full flex flex-col">
             <div className="flex-grow min-h-0">
@@ -400,7 +400,7 @@ export const ItemDetailDialog = ({
   const [allBuildings, setAllBuildings] = React.useState<Building[]>([]);
   const [pendingApproval, setPendingApproval] = React.useState<ApprovalRequest | null>(null);
   
-  const isParentItem = !item.parentId;
+  const isParentItem = !item.parent_id;
   const isRackType = editFormData.type?.toLowerCase().includes('rack');
   const shape = item.shape || 'rectangle';
 
@@ -418,26 +418,26 @@ export const ItemDetailDialog = ({
         getItemStatuses().then(setAvailableStatuses);
 
         if (item.id) {
-          const entityType = item.parentId ? 'child_items' : 'parent_items';
+          const entityType = item.parent_id ? 'child_items' : 'parent_items';
           getPendingApprovalForItem(item.id, entityType).then(setPendingApproval);
         }
 
         const buildingsMap = new Map<string, Building>();
         
         fullItemContext.allItems.forEach(i => {
-            if (i.buildingName && i.roomName && i.roomId) {
-                const buildingId = `bldg_${i.buildingName}`;
-                let building = buildingsMap.get(buildingId);
+            if (i.buildingName && i.roomName && i.room_id) {
+                const building_id = `bldg_${i.buildingName}`;
+                let building = buildingsMap.get(building_id);
                 if (!building) {
-                    building = { id: buildingId, name: i.buildingName, rooms: [] };
-                    buildingsMap.set(buildingId, building);
+                    building = { id: building_id, name: i.buildingName, rooms: [] };
+                    buildingsMap.set(building_id, building);
                 }
                 
-                if (!building.rooms.some(r => r.id === i.roomId)) {
+                if (!building.rooms.some(r => r.id === i.room_id)) {
                     building.rooms.push({
-                        id: i.roomId,
+                        id: i.room_id,
                         name: i.roomName,
-                        buildingId: building.id,
+                        building_id: building.id,
                         items: [],
                         widthM: 20, depthM: 20, tileWidthCm: 60, tileHeightCm: 60,
                         xAxisNaming: 'alpha', yAxisNaming: 'numeric'
@@ -468,16 +468,16 @@ export const ItemDetailDialog = ({
     }
   };
 
-  const handleBuildingChange = (buildingId: string) => {
-    if (buildingId === 'unallocated') {
-        handleFormChange('roomId', null);
+  const handleBuildingChange = (building_id: string) => {
+    if (building_id === 'unallocated') {
+        handleFormChange('room_id', null);
         return;
     }
-    const selectedBuilding = allBuildings.find(b => b.id === buildingId);
+    const selectedBuilding = allBuildings.find(b => b.id === building_id);
     if(selectedBuilding && selectedBuilding.rooms.length > 0){
-      handleFormChange('roomId', selectedBuilding.rooms[0].id);
+      handleFormChange('room_id', selectedBuilding.rooms[0].id);
     } else {
-      handleFormChange('roomId', null);
+      handleFormChange('room_id', null);
     }
   };
 
@@ -514,7 +514,7 @@ export const ItemDetailDialog = ({
   );
 
   const canMoveItem = item.status === 'draft' || item.status === 'maintenance';
-  const selectedBuilding = allBuildings.find(b => b.rooms.some(r => r.id === editFormData.roomId));
+  const selectedBuilding = allBuildings.find(b => b.rooms.some(r => r.id === editFormData.room_id));
 
   return (
     <>
@@ -565,8 +565,8 @@ export const ItemDetailDialog = ({
                         <div>
                           <Label htmlFor="room">Sala</Label>
                           <Select
-                            value={editFormData.roomId || ''}
-                            onValueChange={(value) => handleFormChange('roomId', value)}
+                            value={editFormData.room_id || ''}
+                            onValueChange={(value) => handleFormChange('room_id', value)}
                             disabled={!canMoveItem || !selectedBuilding}
                           >
                             <SelectTrigger>
@@ -665,7 +665,7 @@ export const ItemDetailDialog = ({
                   </div>
                   {isRackType && (
                      <child_itemsList 
-                        parentId={item.id} 
+                        parent_id={item.id} 
                         allItems={fullItemContext.allItems}
                         onItemClick={(childItem) => {
                             // Ao clicar em um filho, trocamos o item no modal

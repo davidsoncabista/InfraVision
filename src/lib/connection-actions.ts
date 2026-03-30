@@ -49,12 +49,12 @@ export interface ConnectionDetail {
     labelText: string | null;
 }
 
-export async function getConnectablechild_items(buildingId?: string): Promise<ConnectableItem[]> {
+export async function getConnectablechild_items(building_id?: string): Promise<ConnectableItem[]> {
     try {
         // Resource embedding para filtrar por prédio usando endpoints minúsculos
-        let url = '/child_items?select=id,label,type,parent_items(label,rooms(buildingid))';
-        if (buildingId) {
-            url += `&parent_items.rooms.buildingid=eq.${buildingId}`;
+        let url = '/child_items?select=id,label,type,parent_items(label,rooms(building_id))';
+        if (building_id) {
+            url += `&parent_items.rooms.building_id=eq.${building_id}`;
         }
         const data = await apiFetch(url);
         return data.map((ci: any) => ({
@@ -89,11 +89,11 @@ export async function getPortsByChildItemId(childItemId: string | null): Promise
     }
 }
 
-export async function getAllConnections(buildingId?: string): Promise<ConnectionDetail[]> {
+export async function getAllConnections(building_id?: string): Promise<ConnectionDetail[]> {
     try {
-        let url = '/connections?select=*,portA:portA_id(label,child_items(label,parent_items(label,rooms(buildingid)))),portB:portB_id(label,child_items(label,parent_items(label))),connectiontypes(name)';
-        if (buildingId) {
-            url += `&portA.child_items.parent_items.rooms.buildingid=eq.${buildingId}`;
+        let url = '/connections?select=*,portA:portA_id(label,child_items(label,parent_items(label,rooms(building_id)))),portB:portB_id(label,child_items(label,parent_items(label))),connectiontypes(name)';
+        if (building_id) {
+            url += `&portA.child_items.parent_items.rooms.building_id=eq.${building_id}`;
         }
         const data = await apiFetch(url);
         return data.map((c: any) => ({
@@ -123,9 +123,9 @@ export async function createConnection(data: {
     connectionTypeId: string; 
     labelText?: string | null;
     imageUrl?: string | null;
-    userId: string;
+    user_id: string;
 }) {
-    const user = await _getUserById(data.userId);
+    const user = await _getUserById(data.user_id);
     if (!user) throw new Error("Usuário inválido.");
 
     const connectionId = `conn_${Date.now()}`;
@@ -161,8 +161,8 @@ export async function createConnection(data: {
     revalidatePath('/depara');
 }
 
-export async function disconnectConnection(connectionId: string, userId: string) {
-    const user = await _getUserById(userId);
+export async function disconnectConnection(connectionId: string, user_id: string) {
+    const user = await _getUserById(user_id);
     if (!user) throw new Error("Usuário inválido.");
 
     const connData = await apiFetch(`/connections?id=eq.${connectionId}`);
@@ -179,9 +179,9 @@ export async function disconnectConnection(connectionId: string, userId: string)
     revalidatePath('/depara');
 }
 
-export async function getConnectableEquipmentSummary(buildingId?: string): Promise<EquipmentSummary[]> {
+export async function getConnectableEquipmentSummary(building_id?: string): Promise<EquipmentSummary[]> {
     try {
-        const items = await getConnectablechild_items(buildingId);
+        const items = await getConnectablechild_items(building_id);
         const summaries = await Promise.all(items.map(async (item) => {
             const ports = await apiFetch(`/equipment_ports?childitemid=eq.${item.id}`);
             return {
@@ -204,8 +204,8 @@ export async function addPortToEquipment(data: { childItemId: string; portTypeId
     revalidatePath('/connections');
 }
 
-export async function deletePortFromEquipment(portId: string, userId: string) {
-    const user = await _getUserById(userId);
+export async function deletePortFromEquipment(portId: string, user_id: string) {
+    const user = await _getUserById(user_id);
     if (!user) throw new Error("Usuário inválido.");
     await apiFetch(`/equipment_ports?id=eq.${portId}&status=neq.up`, { method: 'DELETE' });
     await logAuditEvent({ user, action: 'PORT_DELETED', entityType: 'equipment_ports', entityId: portId });

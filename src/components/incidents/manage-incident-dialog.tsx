@@ -172,7 +172,7 @@ const ConnectionResolutionForm = ({ incident, user, onSuccess }: { incident: Inc
                 incidentId: incident.id,
                 action: 'resolve',
                 resolutionData: {
-                    userId: user.id,
+                    user_id: user.id,
                     portB_id: data.sideB_portId,
                     labelText: data.labelText,
                     imageUrl: data.imageUrl,

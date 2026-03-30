@@ -54,7 +54,7 @@ export function ChildItemDetailDialog({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [editFormData, setEditFormData] = useState<Partial<GridItem>>({});
 
-  const parentCandidates = allItems.filter(i => !i.parentId && i.tamanhoU && i.tamanhoU > 0);
+  const parentCandidates = allItems.filter(i => !i.parent_id && i.tamanhoU && i.tamanhoU > 0);
 
   useEffect(() => {
     if (item) {
@@ -118,10 +118,10 @@ export function ChildItemDetailDialog({
                 <Input id="label" value={editFormData.label || ''} onChange={(e) => handleFormChange('label', e.target.value)} className="col-span-3" />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="parentId" className="text-right">Item Pai (Rack)</Label>
+                <Label htmlFor="parent_id" className="text-right">Item Pai (Rack)</Label>
                 <Select
-                    value={editFormData.parentId || ''}
-                    onValueChange={(value) => handleFormChange('parentId', value)}
+                    value={editFormData.parent_id || ''}
+                    onValueChange={(value) => handleFormChange('parent_id', value)}
                 >
                     <SelectTrigger className="col-span-3"><SelectValue /></SelectTrigger>
                     <SelectContent>

@@ -19,23 +19,23 @@ import { equipment_portsDialog } from '@/components/connections/equipment-ports-
 import { useBuilding } from '@/components/building-provider';
 
 export default function ConnectionsPage() {
-  const { activeBuildingId } = useBuilding();
+  const { activebuilding_id } = useBuilding();
   const [equipments, setEquipments] = React.useState<EquipmentSummary[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [selectedEquipment, setSelectedEquipment] = React.useState<EquipmentSummary | null>(null);
 
   React.useEffect(() => {
-    if (!activeBuildingId) {
+    if (!activebuilding_id) {
         setEquipments([]);
         setIsLoading(false);
         return;
     }
     
     setIsLoading(true);
-    getConnectableEquipmentSummary(activeBuildingId)
+    getConnectableEquipmentSummary(activebuilding_id)
       .then(setEquipments)
       .finally(() => setIsLoading(false));
-  }, [activeBuildingId]);
+  }, [activebuilding_id]);
 
   return (
     <>

@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2, Trash2, Edit, Plus, XCircle } from "lucide-react";
 
-import { updateRoom, getExclusionZonesByRoomId, addExclusionZone, updateExclusionZone, deleteExclusionZone, ExclusionZone } from "@/lib/room-actions";
+import { updateRoom, getExclusionZonesByroom_id, addExclusionZone, updateExclusionZone, deleteExclusionZone, ExclusionZone } from "@/lib/room-actions";
 import type { Room } from "@/types/datacenter";
 import { Button } from "@/components/ui/button";
 import {
@@ -111,7 +111,7 @@ export function ManageRoomDialog({ room, open, onOpenChange }: ManageRoomDialogP
   const fetchZones = async () => {
     setIsLoadingZones(true);
     try {
-        const fetchedZones = await getExclusionZonesByRoomId(room.id);
+        const fetchedZones = await getExclusionZonesByroom_id(room.id);
         setZones(fetchedZones);
     } catch (error) {
         toast({ title: "Erro", description: "Não foi possível carregar as zonas de exclusão.", variant: "destructive" });
@@ -178,7 +178,7 @@ export function ManageRoomDialog({ room, open, onOpenChange }: ManageRoomDialogP
               await updateExclusionZone(id, { x, y, width, height });
               toast({ title: "Sucesso!", description: "Zona de exclusão atualizada." });
           } else {
-              await addExclusionZone({ roomId: room.id, x, y, width, height });
+              await addExclusionZone({ room_id: room.id, x, y, width, height });
               toast({ title: "Sucesso!", description: "Nova zona de exclusão adicionada." });
           }
           fetchZones();

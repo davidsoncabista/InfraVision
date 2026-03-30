@@ -11,8 +11,8 @@ export interface GridItem {
   radiusM?: number | null; // Adicionando raio
   type: string;
   status: any;
-  roomId?: string;
-  parentId?: string | null;
+  room_id?: string;
+  parent_id?: string | null;
   serialNumber?: string;
   brand?: string;
   tag?: string;
@@ -43,7 +43,7 @@ export type AxisNaming = 'alpha' | 'numeric';
 export interface Room {
   id: string;
   name: string;
-  buildingId: string;
+  building_id: string;
   widthM: number;
   depthM: number;
   tileWidthCm: number;

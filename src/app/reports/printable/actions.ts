@@ -63,7 +63,7 @@ export async function getPrintableReportData(): Promise<PrintableReportData> {
             connectionsResult, usersResult, statusesResult
         ] = await Promise.all([
             apiFetch('/buildings?select=id,name&order=name.asc'),
-            apiFetch('/rooms?select=id,name,buildingid,xaxisnaming,yaxisnaming&order=name.asc'),
+            apiFetch('/rooms?select=id,name,building_id,xaxisnaming,yaxisnaming&order=name.asc'),
             apiFetch('/parent_items?status=not.in.(decommissioned,deleted)'),
             apiFetch('/child_items?status=not.in.(decommissioned,deleted)'),
             apiFetch('/connections?select=*,portA:portA_id(label,child_items(label,parent_items(label))),portB:portB_id(label,child_items(label,parent_items(label))),connectiontypes(name)'),
@@ -75,9 +75,9 @@ export async function getPrintableReportData(): Promise<PrintableReportData> {
 
         // Agrupamos itens filhos por pai
         const child_itemsByParent = (child_itemsResult || []).reduce((acc: any, item: any) => {
-            const parentId = item.parentid;
-            if (!acc[parentId]) acc[parentId] = [];
-            acc[parentId].push({
+            const parent_id = item.parent_id;
+            if (!acc[parent_id]) acc[parent_id] = [];
+            acc[parent_id].push({
                 ...item,
                 serialNumber: item.serialnumber,
                 statusName: statusMap.get(item.status) || item.status,
@@ -87,9 +87,9 @@ export async function getPrintableReportData(): Promise<PrintableReportData> {
 
         // Agrupamos itens pais por sala
         const parent_itemsByRoom = (parent_itemsResult || []).reduce((acc: any, item: any) => {
-            const roomId = item.roomid;
-            if (!acc[roomId]) acc[roomId] = [];
-            acc[roomId].push({
+            const room_id = item.room_id;
+            if (!acc[room_id]) acc[room_id] = [];
+            acc[room_id].push({
                 ...item,
                 serialNumber: item.serialnumber,
                 statusName: statusMap.get(item.status) || item.status,
@@ -100,14 +100,14 @@ export async function getPrintableReportData(): Promise<PrintableReportData> {
 
         // Montamos as salas
         const roomsByBuilding = (roomsResult || []).reduce((acc: any, room: any) => {
-            const buildingId = room.buildingid;
-            if (!acc[buildingId]) acc[buildingId] = [];
+            const building_id = room.building_id;
+            if (!acc[building_id]) acc[building_id] = [];
             const itemsInRoom = (parent_itemsByRoom[room.id] || []).map((pItem: any) => ({
                  ...pItem,
                  gridPosition: getGridLabel(pItem.x, pItem.y, room.xaxisnaming, room.yaxisnaming),
             }));
 
-            acc[buildingId].push({ id: room.id, name: room.name, items: itemsInRoom });
+            acc[building_id].push({ id: room.id, name: room.name, items: itemsInRoom });
             return acc;
         }, {} as Record<string, any[]>);
 

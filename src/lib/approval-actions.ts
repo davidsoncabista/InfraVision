@@ -28,8 +28,8 @@ export interface ApprovalRequest {
 /**
  * Busca aprovações pendentes filtrando por prédio através dos itens relacionados.
  */
-export async function getPendingApprovals(buildingId: string): Promise<ApprovalRequest[]> {
-    if (!buildingId) return [];
+export async function getPendingApprovals(building_id: string): Promise<ApprovalRequest[]> {
+    if (!building_id) return [];
 
     try {
         // 1. Busca TODAS as aprovações pendentes 
@@ -41,25 +41,25 @@ export async function getPendingApprovals(buildingId: string): Promise<ApprovalR
         const statusMap = new Map(statusRows.map((s: any) => [s.id, s.name]));
 
         // 3. Separa os IDs para buscarmos os itens no banco
-        const parentIds = pending.filter((a: any) => a.entitytype === 'parent_items').map((a: any) => a.entityid);
+        const parent_ids = pending.filter((a: any) => a.entitytype === 'parent_items').map((a: any) => a.entityid);
         const childIds = pending.filter((a: any) => a.entitytype === 'child_items').map((a: any) => a.entityid);
 
         // Armazena os itens que realmente pertencem a este prédio
         const validItems = new Map<string, any>();
 
         // Busca parent_items (aqui o JOIN funciona porque ParentItem tem FK com Room)
-        if (parentIds.length > 0) {
-            const parents = await apiFetch(`/parent_items?id=in.(${parentIds.join(',')})&select=id,label,type,rooms!inner(buildingid)`);
+        if (parent_ids.length > 0) {
+            const parents = await apiFetch(`/parent_items?id=in.(${parent_ids.join(',')})&select=id,label,type,rooms!inner(building_id)`);
             parents?.forEach((p: any) => {
-                if (p.rooms?.buildingid === buildingId) validItems.set(p.id, p);
+                if (p.rooms?.building_id === building_id) validItems.set(p.id, p);
             });
         }
 
         // Busca child_items (aqui o JOIN funciona porque ChildItem tem FK com ParentItem, que tem FK com Room)
         if (childIds.length > 0) {
-            const childs = await apiFetch(`/child_items?id=in.(${childIds.join(',')})&select=id,label,type,parent_items!inner(rooms!inner(buildingid))`);
+            const childs = await apiFetch(`/child_items?id=in.(${childIds.join(',')})&select=id,label,type,parent_items!inner(rooms!inner(building_id))`);
             childs?.forEach((c: any) => {
-                if (c.parent_items?.rooms?.buildingid === buildingId) validItems.set(c.id, c);
+                if (c.parent_items?.rooms?.building_id === building_id) validItems.set(c.id, c);
             });
         }
 
@@ -102,9 +102,9 @@ export async function resolveApproval(
     approvalId: string,
     decision: 'approved' | 'rejected',
     notes: string | null,
-    adminUserId: string,
+    adminuser_id: string,
 ): Promise<void> {
-    const user = await _getUserById(adminUserId);
+    const user = await _getUserById(adminuser_id);
     if (!user) throw new Error("Usuário não autenticado.");
 
     try {
@@ -129,7 +129,7 @@ export async function resolveApproval(
             method: 'PATCH',
             body: JSON.stringify({
                 status: decision,
-                resolvedbyuserid: user.id,
+                resolvedbyuser_id: user.id,
                 resolvedbyuserdisplayname: user.displayName,
                 resolvernotes: notes,
                 resolvedat: new Date().toISOString()
@@ -151,10 +151,10 @@ export async function resolveApproval(
     }
 }
 
-export async function getPendingApprovalsCount(buildingId: string): Promise<number> {
-    if (!buildingId) return 0;
+export async function getPendingApprovalsCount(building_id: string): Promise<number> {
+    if (!building_id) return 0;
     try {
-        const data = await getPendingApprovals(buildingId);
+        const data = await getPendingApprovals(building_id);
         return data.length;
     } catch (error) {
         return 0;

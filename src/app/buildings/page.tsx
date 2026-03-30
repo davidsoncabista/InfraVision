@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 export interface Room {
   id: string;
   name: string;
-  buildingId: string;
+  building_id: string;
   widthM?: number;
   depthM?: number;
   tileWidthCm?: number;
@@ -30,7 +30,7 @@ export interface BuildingWithRooms {
 async function getBuildings(): Promise<BuildingWithRooms[]> {
     try {
         // No PostgREST usamos Resource Embedding para trazer salas dentro de prédios em uma só chamada
-        const url = '/buildings?select=id,name,address,rooms(id,name,buildingid,widthm,depthm,tilewidthcm,tileheightcm)&order=name.asc';
+        const url = '/buildings?select=id,name,address,rooms(id,name,building_id,widthm,depthm,tilewidthcm,tileheightcm)&order=name.asc';
         const data = await apiFetch(url);
         
         return (data || []).map((b: any) => ({
@@ -40,7 +40,7 @@ async function getBuildings(): Promise<BuildingWithRooms[]> {
             rooms: (b.rooms || []).map((r: any) => ({
                 id: r.id,
                 name: r.name,
-                buildingId: r.buildingid,
+                building_id: r.building_id,
                 widthM: r.widthm,
                 depthM: r.depthm,
                 tileWidthCm: r.tilewidthcm || 60,

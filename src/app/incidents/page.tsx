@@ -59,7 +59,7 @@ const groupIncidentsByType = (incidents: Incident[]): Record<string, Incident[]>
 };
 
 export default function IncidentsPage() {
-  const { activeBuildingId } = useBuilding();
+  const { activebuilding_id } = useBuilding();
   const [incidents, setIncidents] = React.useState<Incident[]>([]);
   const [evidenceCounts, setEvidenceCounts] = React.useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = React.useState(true);
@@ -68,14 +68,14 @@ export default function IncidentsPage() {
 
 
   const fetchIncidents = React.useCallback(async () => {
-    if (!activeBuildingId) {
+    if (!activebuilding_id) {
       setIncidents([]);
       setIsLoading(false);
       return;
     }
       setIsLoading(true);
       try {
-          const incidentData = await getIncidents(activeBuildingId);
+          const incidentData = await getIncidents(activebuilding_id);
           setIncidents(incidentData);
 
           // Busca a contagem de evidências para cada incidente
@@ -91,7 +91,7 @@ export default function IncidentsPage() {
       } finally {
           setIsLoading(false);
       }
-  }, [activeBuildingId]);
+  }, [activebuilding_id]);
 
   React.useEffect(() => {
       fetchIncidents();

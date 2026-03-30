@@ -51,7 +51,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
   
   const { user: dbUser, realRole, viewAs, setViewAsRole, isDeveloper, hasPermission } = usePermissions();
-  const { buildings, activeBuildingId, setActiveBuildingId, pendingApprovalsCount } = useBuilding();
+  const { buildings, activebuilding_id, setActivebuilding_id, pendingApprovalsCount } = useBuilding();
   
   const showDeveloperMenu = useKonamiCode();
 
@@ -96,19 +96,19 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         return visibleBuildings;
     }
     
-    if (dbUser.accessibleBuildingIds && dbUser.accessibleBuildingIds.length > 0) {
-        return visibleBuildings.filter(b => dbUser.accessibleBuildingIds?.includes(b.id));
+    if (dbUser.accessiblebuilding_ids && dbUser.accessiblebuilding_ids.length > 0) {
+        return visibleBuildings.filter(b => dbUser.accessiblebuilding_ids?.includes(b.id));
     }
     return [];
   }, [dbUser, isDeveloper, realRole, buildings]);
 
   React.useEffect(() => {
-      if (accessibleBuildings.length > 0 && !accessibleBuildings.some(b => b.id === activeBuildingId)) {
-          setActiveBuildingId(accessibleBuildings[0].id);
-      } else if (accessibleBuildings.length === 0 && activeBuildingId) {
-          setActiveBuildingId('');
+      if (accessibleBuildings.length > 0 && !accessibleBuildings.some(b => b.id === activebuilding_id)) {
+          setActivebuilding_id(accessibleBuildings[0].id);
+      } else if (accessibleBuildings.length === 0 && activebuilding_id) {
+          setActivebuilding_id('');
       }
-  }, [accessibleBuildings, activeBuildingId, setActiveBuildingId]);
+  }, [accessibleBuildings, activebuilding_id, setActivebuilding_id]);
 
   if (dbUser && accessibleBuildings.length === 0 && !isDeveloper) {
     return <NoAccessPage />;
@@ -168,12 +168,12 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <DropdownMenuTrigger asChild>
                 <Button variant="secondary" disabled={accessibleBuildings.length === 0}>
                     <Building className="mr-2 h-4 w-4" />
-                    <span>{accessibleBuildings.find(b => b.id === activeBuildingId)?.name || 'Nenhum Prédio Acessível'}</span>
+                    <span>{accessibleBuildings.find(b => b.id === activebuilding_id)?.name || 'Nenhum Prédio Acessível'}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Mudar de Prédio</DropdownMenuLabel>
-                 <DropdownMenuRadioGroup value={activeBuildingId} onValueChange={setActiveBuildingId}>
+                 <DropdownMenuRadioGroup value={activebuilding_id} onValueChange={setActivebuilding_id}>
                     {accessibleBuildings.map(building => (
                         <DropdownMenuRadioItem key={building.id} value={building.id}>{building.name}</DropdownMenuRadioItem>
                     ))}

@@ -6,7 +6,7 @@ import { apiFetch } from './db';
 
 export interface ExclusionZone {
   id: string;
-  roomId: string;
+  room_id: string;
   x: number;
   y: number;
   width: number;
@@ -14,7 +14,7 @@ export interface ExclusionZone {
 }
 
 interface AddRoomParams {
-  buildingId: string;
+  building_id: string;
   name: string;
   widthM?: number;
   depthM?: number;
@@ -25,7 +25,7 @@ interface AddRoomParams {
 }
 
 const exclusionZoneSchema = z.object({
-  roomId: z.string().min(1),
+  room_id: z.string().min(1),
   x: z.coerce.number().int().min(0),
   y: z.coerce.number().int().min(0),
   width: z.coerce.number().int().min(1),
@@ -42,7 +42,7 @@ export async function addRoom(params: AddRoomParams): Promise<void> {
       body: JSON.stringify({
           id: newId,
           name: params.name,
-          buildingid: params.buildingId,
+          building_id: params.building_id,
           widthm: params.widthM || null,
           depthm: params.depthM || null,
           tilewidthcm: params.tileWidthCm || 60,
@@ -82,26 +82,26 @@ export async function updateRoom(params: any): Promise<void> {
 /**
  * Exclui uma sala se ela estiver vazia.
  */
-export async function deleteRoom(roomId: string): Promise<void> {
+export async function deleteRoom(room_id: string): Promise<void> {
     // Verifica se existem itens vinculados à sala
-    const items = await apiFetch(`/parent_items?roomid=eq.${roomId}&limit=1`);
+    const items = await apiFetch(`/parent_items?room_id=eq.${room_id}&limit=1`);
     if (items && items.length > 0) {
         throw new Error('Não é possível excluir a sala pois ela contém equipamentos.');
     }
     
-    await apiFetch(`/rooms?id=eq.${roomId}`, { method: 'DELETE' });
+    await apiFetch(`/rooms?id=eq.${room_id}`, { method: 'DELETE' });
     revalidatePath('/buildings');
 }
 
 /**
  * Busca as zonas de exclusão de uma sala.
  */
-export async function getExclusionZonesByRoomId(roomId: string): Promise<ExclusionZone[]> {
-    if (!roomId) return [];
-    const data = await apiFetch(`/roomexclusionzones?roomid=eq.${roomId}`);
+export async function getExclusionZonesByroom_id(room_id: string): Promise<ExclusionZone[]> {
+    if (!room_id) return [];
+    const data = await apiFetch(`/roomexclusionzones?room_id=eq.${room_id}`);
     return (data || []).map((z: any) => ({
         id: z.id,
-        roomId: z.roomid,
+        room_id: z.room_id,
         x: z.x,
         y: z.y,
         width: z.width,
@@ -118,7 +118,7 @@ export async function addExclusionZone(data: z.infer<typeof exclusionZoneSchema>
         method: 'POST',
         body: JSON.stringify({
             id: newId,
-            roomid: data.roomId,
+            room_id: data.room_id,
             x: data.x,
             y: data.y,
             width: data.width,

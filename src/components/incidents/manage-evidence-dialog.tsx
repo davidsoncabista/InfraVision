@@ -99,7 +99,7 @@ export function ManageEvidenceDialog({ incident, isOpen, onOpenChange, onSuccess
         await addEvidence({
             entityId: incident.id,
             entityType: 'Incidents',
-            userId: user.id,
+            user_id: user.id,
             type: 'note',
             data: { text: newNote.trim() }
         });
@@ -121,7 +121,7 @@ export function ManageEvidenceDialog({ incident, isOpen, onOpenChange, onSuccess
         await addEvidence({
             entityId: incident.id,
             entityType: 'Incidents',
-            userId: user.id,
+            user_id: user.id,
             type: 'image',
             data: { url }
         });

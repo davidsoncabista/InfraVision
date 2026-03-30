@@ -41,13 +41,13 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 interface AddRoomDialogProps {
-  buildingId: string;
+  building_id: string;
   buildingName: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function AddRoomDialog({ buildingId, buildingName, open, onOpenChange }: AddRoomDialogProps) {
+export function AddRoomDialog({ building_id, buildingName, open, onOpenChange }: AddRoomDialogProps) {
   const router = useRouter();
   const { toast } = useToast();
 
@@ -66,7 +66,7 @@ export function AddRoomDialog({ buildingId, buildingName, open, onOpenChange }: 
 
   const onSubmit = async (data: FormData) => {
     try {
-      await addRoom({ buildingId, ...data });
+      await addRoom({ building_id, ...data });
       toast({
         title: "Sucesso!",
         description: `A sala "${data.name}" foi adicionada ao prédio "${buildingName}".`,

@@ -65,7 +65,7 @@ export async function populateRooms() {
         body: JSON.stringify({ 
             id: 'R_DEV_01A', 
             name: 'Sala de Teste 01', 
-            buildingid: 'B_DEV_01', 
+            building_id: 'B_DEV_01', 
             widthm: 20, 
             depthm: 20, 
             istestdata: true 
@@ -89,7 +89,7 @@ export async function populateparent_items() {
             heightm: 1.2, 
             type: 'Rack 42U', 
             status: 'active', 
-            roomid: 'R_DEV_01A', 
+            room_id: 'R_DEV_01A', 
             istestdata: true 
         })
     });
@@ -105,7 +105,7 @@ export async function populatechild_items() {
         body: JSON.stringify({ 
             id: 'citem_dev_001', 
             label: 'SRV-TESTE-01', 
-            parentid: 'pitem_dev_001', 
+            parent_id: 'pitem_dev_001', 
             type: 'Servidor', 
             status: 'active', 
             modelo: 'PowerEdge R740', 

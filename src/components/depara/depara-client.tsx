@@ -81,7 +81,7 @@ export function DeParaClient() {
     const router = useRouter();
     const { toast } = useToast();
     const { user } = usePermissions();
-    const { activeBuildingId } = useBuilding();
+    const { activebuilding_id } = useBuilding();
 
     const [isLoading, setIsLoading] = useState(true);
     const [connectableItems, setConnectableItems] = useState<ConnectableItem[]>([]);
@@ -104,7 +104,7 @@ export function DeParaClient() {
 
 
     const fetchData = useCallback(async () => {
-        if (!activeBuildingId) {
+        if (!activebuilding_id) {
             setIsLoading(false);
             setConnectableItems([]);
             setConnections([]);
@@ -113,8 +113,8 @@ export function DeParaClient() {
         setIsLoading(true);
         try {
             const [itemsData, connectionsData, typesData] = await Promise.all([
-                getConnectablechild_items(activeBuildingId),
-                getAllConnections(activeBuildingId),
+                getConnectablechild_items(activebuilding_id),
+                getAllConnections(activebuilding_id),
                 getConnectionTypes(),
             ]);
             setConnectableItems(itemsData);
@@ -125,7 +125,7 @@ export function DeParaClient() {
         } finally {
             setIsLoading(false);
         }
-    }, [activeBuildingId, toast]);
+    }, [activebuilding_id, toast]);
 
     useEffect(() => {
         fetchData();
@@ -171,7 +171,7 @@ export function DeParaClient() {
                 portA_id: sideA.portId,
                 portB_id: sideB.portId,
                 connectionTypeId,
-                userId: user.id
+                user_id: user.id
             });
             toast({
                 title: 'Sucesso!',
@@ -267,7 +267,7 @@ export function DeParaClient() {
         return <div className="flex justify-center items-center h-64"><Loader2 className="h-12 w-12 animate-spin text-muted-foreground" /></div>;
     }
 
-    if (!activeBuildingId) {
+    if (!activebuilding_id) {
         return (
             <div className="flex flex-col items-center justify-center h-64 border-2 border-dashed rounded-lg text-center">
                 <p className="font-semibold text-muted-foreground">Selecione um prédio</p>

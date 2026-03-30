@@ -346,7 +346,7 @@ export default function ImportPage() {
   const [activeTab, setActiveTab] = useState<DataType>('child_items');
   const [analysisResult, setAnalysisResult] = useState<any[] | null>(null);
   const [aggregatedResults, setAggregatedResults] = useState<any[]>([]);
-  const { activeBuildingId } = useBuilding();
+  const { activebuilding_id } = useBuilding();
   const { toast } = useToast();
 
   const handleAnalysisResult = (newData: any[]) => {
@@ -396,11 +396,11 @@ export default function ImportPage() {
   const getImportFunction = () => {
     switch(activeTab) {
         case 'child_items':
-            return (data: any[]) => importchild_items(data, activeBuildingId);
+            return (data: any[]) => importchild_items(data, activebuilding_id);
         case 'parent_items':
             return (data: any[]) => importparent_items(data);
         case 'connections':
-            return (data: any[]) => importConnections(data, activeBuildingId);
+            return (data: any[]) => importConnections(data, activebuilding_id);
         default:
             return async () => { 
                 throw new Error("Tipo de importação não suportado ainda.");

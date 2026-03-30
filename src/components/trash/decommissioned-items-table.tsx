@@ -100,7 +100,7 @@ export function DecommissionedItemsTable({ items }: DecommissionedItemsTableProp
             {items.map((item) => (
               <TableRow key={item.id}>
                 <TableCell className="font-medium flex items-center gap-2">
-                    {item.parentId ? <HardDrive className="h-4 w-4 text-muted-foreground"/> : <Puzzle className="h-4 w-4 text-muted-foreground"/>}
+                    {item.parent_id ? <HardDrive className="h-4 w-4 text-muted-foreground"/> : <Puzzle className="h-4 w-4 text-muted-foreground"/>}
                     {item.label}
                 </TableCell>
                 <TableCell>

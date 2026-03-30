@@ -14,7 +14,7 @@ export async function logAuditEvent(event: { user: User; action: string; entityT
         await apiFetch('/auditlog', {
             method: 'POST',
             body: JSON.stringify({
-                userid: event.user.id,
+                user_id: event.user.id,
                 userdisplayname: event.user.displayName || event.user.email,
                 action: event.action,
                 entitytype: event.entityType || null,
@@ -62,8 +62,8 @@ export async function getFullItemFromLog(entityType: string, entityId: string): 
             const item = data[0];
             return {
                 ...item,
-                roomId: item.roomid,
-                parentId: item.parentid,
+                room_id: item.room_id,
+                parent_id: item.parent_id,
                 serialNumber: item.serialnumber,
                 tamanhoU: item.tamanhou,
                 posicaoU: item.posicaou

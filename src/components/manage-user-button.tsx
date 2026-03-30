@@ -85,7 +85,7 @@ const formSchema = z.object({
   email: z.string().email("Por favor, insira um e-mail válido."),
   role: z.enum(USER_ROLES),
   permissions: z.array(z.string()),
-  accessibleBuildingIds: z.array(z.string()),
+  accessiblebuilding_ids: z.array(z.string()),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -127,7 +127,7 @@ export function ManageUserButton({ user }: ManageUserButtonProps) {
       displayName: user.displayName || '',
       role: user.role,
       permissions: user.permissions || [],
-      accessibleBuildingIds: user.accessibleBuildingIds || [],
+      accessiblebuilding_ids: user.accessiblebuilding_ids || [],
     },
   });
 
@@ -141,7 +141,7 @@ export function ManageUserButton({ user }: ManageUserButtonProps) {
             displayName: user.displayName || '',
             role: user.role,
             permissions: user.permissions || defaultPermissions[user.role] || [],
-            accessibleBuildingIds: user.accessibleBuildingIds || [],
+            accessiblebuilding_ids: user.accessiblebuilding_ids || [],
         })
     }
   }, [isOpen, user, defaultPermissions, form]);
@@ -173,7 +173,7 @@ export function ManageUserButton({ user }: ManageUserButtonProps) {
           displayName: data.displayName,
           role: data.role,
           permissions: data.permissions ? Array.from(data.permissions) : [],
-          accessibleBuildingIds: data.accessibleBuildingIds ? Array.from(data.accessibleBuildingIds) : [],
+          accessiblebuilding_ids: data.accessiblebuilding_ids ? Array.from(data.accessiblebuilding_ids) : [],
        });
       toast({
         title: "Sucesso!",
@@ -304,7 +304,7 @@ export function ManageUserButton({ user }: ManageUserButtonProps) {
                     <ScrollArea className="h-24 w-full rounded-md border">
                         <div className="p-4 space-y-2">
                             <Controller
-                                name="accessibleBuildingIds"
+                                name="accessiblebuilding_ids"
                                 control={form.control}
                                 render={({ field }) => (
                                     <>

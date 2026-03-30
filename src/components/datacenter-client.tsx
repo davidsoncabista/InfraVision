@@ -61,7 +61,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { getGridLabel } from '@/lib/geometry';
 import { getParentItemIdsWithActiveIncidents } from '@/lib/incident-service';
 import { getDatacenterData } from '@/app/datacenter/actions'; // Importado para re-fetch
-import { getExclusionZonesByRoomId, ExclusionZone } from '@/lib/room-actions'; 
+import { getExclusionZonesByroom_id, ExclusionZone } from '@/lib/room-actions'; 
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
@@ -136,16 +136,16 @@ const AllocationLobby = ({ items, onDragStart }: { items: GridItem[], onDragStar
 export function DatacenterClient({ initialData }: { initialData: Building[] }) {
   const { toast } = useToast();
   const { user, hasPermission } = usePermissions();
-  const { activeBuildingId } = useBuilding();
+  const { activebuilding_id } = useBuilding();
   
   const [data, setData] = React.useState(initialData);
-  const [activeRoomId, setActiveRoomId] = React.useState<string | null>(null);
+  const [activeroom_id, setActiveroom_id] = React.useState<string | null>(null);
   
   const gridItems = React.useMemo(() => {
-    const building = data.find(b => b.id === activeBuildingId);
-    const room = building?.rooms.find(r => r.id === activeRoomId);
+    const building = data.find(b => b.id === activebuilding_id);
+    const room = building?.rooms.find(r => r.id === activeroom_id);
     return room?.items || [];
-  }, [data, activeBuildingId, activeRoomId]);
+  }, [data, activebuilding_id, activeroom_id]);
   
   const [itemsWithIncidents, setItemsWithIncidents] = React.useState<string[]>([]);
   const [exclusionZones, setExclusionZones] = React.useState<ExclusionZone[]>([]);
@@ -174,12 +174,12 @@ export function DatacenterClient({ initialData }: { initialData: Building[] }) {
   }, []);
 
   const currentBuilding = React.useMemo(() => 
-    data.find(b => b.id === activeBuildingId),
-  [data, activeBuildingId]);
+    data.find(b => b.id === activebuilding_id),
+  [data, activebuilding_id]);
 
   const availableRooms = React.useMemo(() => currentBuilding?.rooms || [], [currentBuilding]);
 
-  const activeRoom = React.useMemo(() => availableRooms.find(r => r.id === activeRoomId), [availableRooms, activeRoomId]);
+  const activeRoom = React.useMemo(() => availableRooms.find(r => r.id === activeroom_id), [availableRooms, activeroom_id]);
 
   const roomDimensions = React.useMemo(() => ({
     widthM: activeRoom?.widthM || 20,
@@ -206,31 +206,31 @@ export function DatacenterClient({ initialData }: { initialData: Building[] }) {
   }, [initialData]);
 
   React.useEffect(() => {
-    if (availableRooms.length > 0 && !availableRooms.some(r => r.id === activeRoomId)) {
-        setActiveRoomId(availableRooms[0].id);
+    if (availableRooms.length > 0 && !availableRooms.some(r => r.id === activeroom_id)) {
+        setActiveroom_id(availableRooms[0].id);
     } else if (availableRooms.length === 0) {
-        setActiveRoomId(null);
+        setActiveroom_id(null);
     }
-  }, [availableRooms, activeRoomId]);
+  }, [availableRooms, activeroom_id]);
 
   React.useEffect(() => {
-    if (activeBuildingId) {
-      getParentItemIdsWithActiveIncidents(activeBuildingId)
+    if (activebuilding_id) {
+      getParentItemIdsWithActiveIncidents(activebuilding_id)
         .then(setItemsWithIncidents)
         .catch(err => console.error("Failed to fetch incident data:", err));
     } else {
       setItemsWithIncidents([]);
     }
     
-    if(activeRoomId) {
-        getExclusionZonesByRoomId(activeRoomId)
+    if(activeroom_id) {
+        getExclusionZonesByroom_id(activeroom_id)
           .then(setExclusionZones)
           .catch(err => console.error("Failed to fetch exclusion zones:", err));
     } else {
         setExclusionZones([]);
     }
 
-  }, [activeBuildingId, activeRoomId, gridItems]);
+  }, [activebuilding_id, activeroom_id, gridItems]);
 
 
   const GRID_COLS = Math.floor((roomDimensions.widthM * 100) / tileDimensions.widthCm);
@@ -341,10 +341,10 @@ export function DatacenterClient({ initialData }: { initialData: Building[] }) {
     try {
         await allocateParentItem({
             itemId: draggingItem.id,
-            roomId: activeRoom.id,
+            room_id: activeRoom.id,
             x: cellX,
             y: cellY,
-            userId: user.id
+            user_id: user.id
         });
         toast({ title: "Sucesso!", description: "Item alocado na planta baixa." });
         refreshData();
@@ -446,11 +446,11 @@ export function DatacenterClient({ initialData }: { initialData: Building[] }) {
       return item;
     });
 
-    const activeBuilding = data.find(b => b.id === activeBuildingId);
+    const activeBuilding = data.find(b => b.id === activebuilding_id);
     if (activeBuilding) {
-        const updatedRooms = activeBuilding.rooms.map(r => r.id === activeRoomId ? { ...r, items: updatedItems } : r);
+        const updatedRooms = activeBuilding.rooms.map(r => r.id === activeroom_id ? { ...r, items: updatedItems } : r);
         const updatedBuilding = { ...activeBuilding, rooms: updatedRooms };
-        setData(d => d.map(b => b.id === activeBuildingId ? updatedBuilding : b));
+        setData(d => d.map(b => b.id === activebuilding_id ? updatedBuilding : b));
     }
   };
 
@@ -553,7 +553,7 @@ export function DatacenterClient({ initialData }: { initialData: Building[] }) {
         <div className="flex items-center gap-4">
           <h1 className="text-2xl font-bold">Footprint</h1>
           <div className="flex items-center gap-2">
-            <Select value={activeRoomId ?? ''} onValueChange={setActiveRoomId} disabled={availableRooms.length === 0}>
+            <Select value={activeroom_id ?? ''} onValueChange={setActiveroom_id} disabled={availableRooms.length === 0}>
               <SelectTrigger className="w-[200px]">
                 <SelectValue placeholder={availableRooms.length > 0 ? "Selecione uma sala" : "Nenhuma sala disponível"} />
               </SelectTrigger>

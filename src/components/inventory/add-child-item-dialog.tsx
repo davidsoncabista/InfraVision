@@ -41,7 +41,7 @@ import { updateItemDetails } from '@/lib/item-detail-actions';
 import { usePermissions } from '../permissions-provider';
 
 const formSchema = z.object({
-  parentId: z.string({ required_error: "Você deve selecionar um item pai." }),
+  parent_id: z.string({ required_error: "Você deve selecionar um item pai." }),
   type: z.string({ required_error: "Você deve selecionar um tipo." }),
   manufacturerId: z.string({ required_error: "Você deve selecionar um fabricante." }),
   modelId: z.string({ required_error: "Você deve selecionar um modelo." }),
@@ -76,7 +76,7 @@ export function AddChildItemDialog({
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      parentId: undefined,
+      parent_id: undefined,
       type: undefined,
       manufacturerId: undefined,
       modelId: undefined,
@@ -129,7 +129,7 @@ export function AddChildItemDialog({
             type: data.type,
             modelo: selectedModel.name,
             brand: manufacturers.find(m => m.id === data.manufacturerId)?.name,
-            parentId: data.parentId,
+            parent_id: data.parent_id,
             status: 'draft',
             posicaoU: data.posicaoU || undefined,
             tamanhoU: selectedModel.tamanhoU,
@@ -165,7 +165,7 @@ export function AddChildItemDialog({
             <div className="grid grid-cols-2 gap-4">
                 <FormField
                     control={form.control}
-                    name="parentId"
+                    name="parent_id"
                     render={({ field }) => (
                         <FormItem>
                         <FormLabel>1. Aninhar Dentro de (Pai)</FormLabel>

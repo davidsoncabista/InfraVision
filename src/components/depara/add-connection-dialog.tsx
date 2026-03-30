@@ -202,7 +202,7 @@ export function AddConnectionDialog({
                 connectionTypeId,
                 labelText: data.labelText,
                 imageUrl: data.imageUrl,
-                userId: user.id
+                user_id: user.id
             });
             toast({
                 title: 'Conexão Criada!',

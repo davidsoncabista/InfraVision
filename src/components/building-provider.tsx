@@ -12,55 +12,55 @@ interface Building {
 
 interface BuildingContextType {
   buildings: Building[];
-  activeBuildingId: string;
-  setActiveBuildingId: (id: string) => void;
+  activebuilding_id: string;
+  setActivebuilding_id: (id: string) => void;
   pendingApprovalsCount: number;
 }
 
 export const BuildingContext = createContext<BuildingContextType>({
     buildings: [],
-    activeBuildingId: '',
-    setActiveBuildingId: () => {},
+    activebuilding_id: '',
+    setActivebuilding_id: () => {},
     pendingApprovalsCount: 0,
 });
 
 export const BuildingProvider = ({ children, initialBuildings }: { children: ReactNode, initialBuildings: Building[] }) => {
-  const [activeBuildingId, setActiveBuildingId] = useLocalStorage<string>('activeBuildingId', initialBuildings[0]?.id || '');
+  const [activebuilding_id, setActivebuilding_id] = useLocalStorage<string>('activebuilding_id', initialBuildings[0]?.id || '');
   const [pendingApprovalsCount, setPendingApprovalsCount] = useState(0);
 
-  const _setActiveBuildingId = useCallback((id: string) => {
-    setActiveBuildingId(id);
-  }, [setActiveBuildingId]);
+  const _setActivebuilding_id = useCallback((id: string) => {
+    setActivebuilding_id(id);
+  }, [setActivebuilding_id]);
   
   useEffect(() => {
-    const activeBuildingExists = initialBuildings.some(b => b.id === activeBuildingId);
+    const activeBuildingExists = initialBuildings.some(b => b.id === activebuilding_id);
 
     // Se a lista de prédios mudar e o prédio ativo não estiver mais na lista (ou se nenhum estiver selecionado),
     // define o primeiro prédio da nova lista como ativo.
-    // Esta lógica agora ignora o caso em que o activeBuildingId foi deliberadamente definido como ''
-    if (initialBuildings.length > 0 && activeBuildingId && !activeBuildingExists) {
-      _setActiveBuildingId(initialBuildings[0].id);
-    } else if (initialBuildings.length === 0 && activeBuildingId !== '') {
+    // Esta lógica agora ignora o caso em que o activebuilding_id foi deliberadamente definido como ''
+    if (initialBuildings.length > 0 && activebuilding_id && !activeBuildingExists) {
+      _setActivebuilding_id(initialBuildings[0].id);
+    } else if (initialBuildings.length === 0 && activebuilding_id !== '') {
       // Se não houver prédios, limpa o ID ativo.
-      _setActiveBuildingId('');
+      _setActivebuilding_id('');
     }
-  }, [initialBuildings, activeBuildingId, _setActiveBuildingId]);
+  }, [initialBuildings, activebuilding_id, _setActivebuilding_id]);
 
   // Efeito para buscar a contagem de aprovações pendentes sempre que o prédio ativo mudar.
   useEffect(() => {
-      if (activeBuildingId) {
-          getPendingApprovalsCount(activeBuildingId)
+      if (activebuilding_id) {
+          getPendingApprovalsCount(activebuilding_id)
               .then(setPendingApprovalsCount)
               .catch(() => setPendingApprovalsCount(0)); // Em caso de erro, zera a contagem.
       } else {
           setPendingApprovalsCount(0);
       }
-  }, [activeBuildingId]);
+  }, [activebuilding_id]);
   
   const value = {
     buildings: initialBuildings,
-    activeBuildingId,
-    setActiveBuildingId: _setActiveBuildingId,
+    activebuilding_id,
+    setActivebuilding_id: _setActivebuilding_id,
     pendingApprovalsCount,
   };
 

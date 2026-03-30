@@ -61,13 +61,13 @@ export async function updateUser(userData: Partial<User>): Promise<User> {
     }
 }
 
-export async function deleteUser(userId: string): Promise<void> {
-    if (!userId) {
+export async function deleteUser(user_id: string): Promise<void> {
+    if (!user_id) {
         throw new Error("O ID do usuário é obrigatório para a exclusão.");
     }
     
     const adminUser = await getAdminUser();
-    const userToDelete = await _getUserById(userId); 
+    const userToDelete = await _getUserById(user_id); 
     
     if (userToDelete) {
         await _deleteUser(userToDelete.id);
@@ -76,7 +76,7 @@ export async function deleteUser(userId: string): Promise<void> {
             user: adminUser,
             action: 'USER_DELETED',
             entityType: 'User',
-            entityId: userId,
+            entityId: user_id,
             details: { email: userToDelete.email, displayName: userToDelete.displayName }
         });
         
@@ -86,13 +86,13 @@ export async function deleteUser(userId: string): Promise<void> {
     }
 }
 
-export async function updateUserPreferences(userId: string, preferences: UserPreferences): Promise<void> {
-  if (!userId) {
+export async function updateUserPreferences(user_id: string, preferences: UserPreferences): Promise<void> {
+  if (!user_id) {
     throw new Error('O ID do usuário é obrigatório para atualizar as preferências.');
   }
   
   try {
-    await _updateUserInDb({ id: userId, preferences: preferences } as User);
+    await _updateUserInDb({ id: user_id, preferences: preferences } as User);
     revalidatePath('/inventory');
     revalidatePath('/settings');
     revalidatePath('/users');

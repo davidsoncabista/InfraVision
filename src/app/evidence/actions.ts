@@ -9,7 +9,7 @@ export interface Evidence {
     id: string;
     entityId: string;
     entityType: string;
-    userId: string;
+    user_id: string;
     userDisplayName: string;
     userPhotoURL?: string | null;
     timestamp: string;
@@ -25,12 +25,12 @@ export interface Evidence {
 interface SubmitEvidencePayload {
   description: string;
   imageUrls: string[]; 
-  userId: string;
+  user_id: string;
 }
 
 export async function submitEvidence(payload: SubmitEvidencePayload) {
-  const { description, imageUrls, userId } = payload;
-  const user = await _getUserById(userId);
+  const { description, imageUrls, user_id } = payload;
+  const user = await _getUserById(user_id);
 
   if (!user) {
     throw new Error("Usuário não autenticado. Não é possível registrar a evidência.");
@@ -61,7 +61,7 @@ export async function submitEvidence(payload: SubmitEvidencePayload) {
         method: 'POST',
         body: JSON.stringify({
             id: evidenceId,
-            userid: user.id,
+            user_id: user.id,
             timestamp: new Date().toISOString(),
             type: 'general_report',
             data: dataToStore,
@@ -88,7 +88,7 @@ export async function getRecentIncidentEvidence(): Promise<Evidence[]> {
     try {
         // PostgREST: Resource Embedding para simular o JOIN
         // Buscamos evidências de incidentes, trazendo displayname do usuário e descrição do incidente
-        const url = `/evidence?entitytype=eq.Incidents&select=*,users:userid(displayname,photourl),incidents:entityid(description)&order=timestamp.desc&limit=20`;
+        const url = `/evidence?entitytype=eq.Incidents&select=*,users:user_id(displayname,photourl),incidents:entityid(description)&order=timestamp.desc&limit=20`;
         
         const data = await apiFetch(url);
 
@@ -96,8 +96,8 @@ export async function getRecentIncidentEvidence(): Promise<Evidence[]> {
             id: record.id,
             entityId: record.entityid,
             entityType: record.entitytype,
-            userId: record.userid,
-            userDisplayName: record.users?.displayname || record.userid,
+            user_id: record.user_id,
+            userDisplayName: record.users?.displayname || record.user_id,
             userPhotoURL: record.users?.photourl || null,
             timestamp: new Date(record.timestamp).toISOString(),
             type: record.type,

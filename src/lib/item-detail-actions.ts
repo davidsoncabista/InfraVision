@@ -42,12 +42,12 @@ async function createPortsForModel(childItemId: string, modelName: string) {
     }
 }
 
-export async function updateItemDetails(itemData: any, userId: string): Promise<void> {
-    const user = await _getUserById(userId);
+export async function updateItemDetails(itemData: any, user_id: string): Promise<void> {
+    const user = await _getUserById(user_id);
     if (!user) throw new Error("Usuário não autenticado.");
 
     const { id, ...fields } = itemData;
-    const isChild = 'parentId' in fields || 'parentid' in fields;
+    const isChild = 'parent_id' in fields || 'parent_id' in fields;
     const tableName = isChild ? 'child_items' : 'parent_items';
     
     const existing = await apiFetch(`/${tableName}?id=eq.${id}`);

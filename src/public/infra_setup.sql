@@ -31,7 +31,7 @@ CREATE TABLE Users (
     photoURL NVARCHAR(MAX),
     role NVARCHAR(50) NOT NULL,
     permissions NVARCHAR(MAX),
-    accessibleBuildingIds NVARCHAR(MAX),
+    accessiblebuilding_ids NVARCHAR(MAX),
     lastLoginAt DATETIME2 NOT NULL,
     preferences NVARCHAR(MAX),
     isTestData BIT NOT NULL DEFAULT 0
@@ -49,7 +49,7 @@ GO
 CREATE TABLE Rooms (
     id NVARCHAR(50) PRIMARY KEY,
     name NVARCHAR(100) NOT NULL,
-    buildingId NVARCHAR(50) NOT NULL,
+    building_id NVARCHAR(50) NOT NULL,
     largura FLOAT,
     widthM FLOAT,
     tileWidthCm FLOAT,
@@ -61,7 +61,7 @@ CREATE TABLE Rooms (
     backgroundPosX FLOAT,
     backgroundPosY FLOAT,
     isTestData BIT NOT NULL DEFAULT 0,
-    FOREIGN KEY (buildingId) REFERENCES Buildings(id) ON DELETE CASCADE
+    FOREIGN KEY (building_id) REFERENCES Buildings(id) ON DELETE CASCADE
 );
 GO
 
@@ -131,7 +131,7 @@ CREATE TABLE parent_items (
     height FLOAT NOT NULL DEFAULT 1.0,
     type NVARCHAR(50) NOT NULL,
     status NVARCHAR(50) NOT NULL,
-    roomId NVARCHAR(50),
+    room_id NVARCHAR(50),
     serialNumber NVARCHAR(100),
     brand NVARCHAR(100),
     tag NVARCHAR(100),
@@ -147,7 +147,7 @@ CREATE TABLE parent_items (
     potenciaW INT,
     color NVARCHAR(50),
     isTestData BIT NOT NULL DEFAULT 0,
-    FOREIGN KEY (roomId) REFERENCES Rooms(id) ON DELETE SET NULL,
+    FOREIGN KEY (room_id) REFERENCES Rooms(id) ON DELETE SET NULL,
     FOREIGN KEY (status) REFERENCES ItemStatuses(id)
 );
 GO
@@ -155,7 +155,7 @@ GO
 CREATE TABLE child_items (
     id NVARCHAR(50) PRIMARY KEY,
     label NVARCHAR(100) NOT NULL,
-    parentId NVARCHAR(50) NOT NULL,
+    parent_id NVARCHAR(50) NOT NULL,
     type NVARCHAR(50) NOT NULL,
     status NVARCHAR(50) NOT NULL,
     serialNumber NVARCHAR(100),
@@ -172,7 +172,7 @@ CREATE TABLE child_items (
     tamanhoU INT,
     posicaoU INT,
     isTestData BIT NOT NULL DEFAULT 0,
-    FOREIGN KEY (parentId) REFERENCES parent_items(id) ON DELETE CASCADE,
+    FOREIGN KEY (parent_id) REFERENCES parent_items(id) ON DELETE CASCADE,
     FOREIGN KEY (status) REFERENCES ItemStatuses(id)
 );
 GO
@@ -227,7 +227,7 @@ GO
 CREATE TABLE AuditLog (
     id INT IDENTITY(1,1) PRIMARY KEY,
     timestamp DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
-    userId NVARCHAR(100) NOT NULL,
+    user_id NVARCHAR(100) NOT NULL,
     userDisplayName NVARCHAR(255),
     action NVARCHAR(255) NOT NULL,
     entityType NVARCHAR(50),
@@ -270,7 +270,7 @@ CREATE TABLE Sensors (
 GO
 
 -- Insert Initial Data
-INSERT INTO Users (id, email, displayName, photoURL, role, permissions, accessibleBuildingIds, lastLoginAt, isTestData) 
+INSERT INTO Users (id, email, displayName, photoURL, role, permissions, accessiblebuilding_ids, lastLoginAt, isTestData) 
 VALUES ('dev_user', 'dev@dev.com', 'Desenvolvedor Padrão', NULL, 'developer', '["*"]', '[]', GETUTCDATE(), 1);
 GO
 
@@ -278,7 +278,7 @@ INSERT INTO Buildings (id, name, address, isTestData)
 VALUES ('B_initial', 'DC-TESTE', 'Local de Testes Iniciais', 1);
 GO
 
-INSERT INTO Rooms (id, name, buildingId, isTestData)
+INSERT INTO Rooms (id, name, building_id, isTestData)
 VALUES ('R_initial', 'SALA-TESTE', 'B_initial', 1);
 GO
 

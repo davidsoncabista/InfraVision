@@ -213,7 +213,7 @@ export default function EvidencePage() {
         await submitEvidence({
             description: data.description,
             imageUrls: previews,
-            userId: user.id,
+            user_id: user.id,
         });
 
         toast({ title: 'Sucesso!', description: 'Sua evidência foi registrada.' });

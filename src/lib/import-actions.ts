@@ -38,8 +38,8 @@ export interface ImportResult {
 /**
  * Importa equipamentos aninhados buscando o rack pai por nome no prédio ativo.
  */
-export async function importchild_items(items: ChildItemImportData[], buildingId: string): Promise<ImportResult> {
-    if (!buildingId) throw new Error("ID do prédio obrigatório.");
+export async function importchild_items(items: ChildItemImportData[], building_id: string): Promise<ImportResult> {
+    if (!building_id) throw new Error("ID do prédio obrigatório.");
     
     let successCount = 0;
     let errorCount = 0;
@@ -47,13 +47,13 @@ export async function importchild_items(items: ChildItemImportData[], buildingId
     for (const item of items) {
         try {
             // Busca o rack pai pelo label e garantindo que pertence ao prédio correto
-            const parents = await apiFetch(`/parent_items?label=eq.${encodeURIComponent(item.parentRack)}&rooms.buildingid=eq.${buildingId}&select=id,rooms!inner(buildingid)`);
+            const parents = await apiFetch(`/parent_items?label=eq.${encodeURIComponent(item.parentRack)}&rooms.building_id=eq.${building_id}&select=id,rooms!inner(building_id)`);
             
             if (!parents || parents.length === 0) {
                 errorCount++;
                 continue;
             }
-            const parentId = parents[0].id;
+            const parent_id = parents[0].id;
             const newId = `citem_imp_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
 
             await apiFetch('/child_items', {
@@ -61,7 +61,7 @@ export async function importchild_items(items: ChildItemImportData[], buildingId
                 body: JSON.stringify({
                     id: newId,
                     label: item.label,
-                    parentid: parentId,
+                    parent_id: parent_id,
                     type: item.type,
                     brand: item.manufacturer,
                     modelo: item.model,
@@ -116,8 +116,8 @@ export async function importparent_items(items: ParentItemImportData[]): Promise
 /**
  * Importa conexões De/Para resolvendo os equipamentos e portas por nome.
  */
-export async function importConnections(items: ConnectionImportData[], buildingId: string): Promise<ImportResult> {
-    if (!buildingId) throw new Error("ID do prédio obrigatório.");
+export async function importConnections(items: ConnectionImportData[], building_id: string): Promise<ImportResult> {
+    if (!building_id) throw new Error("ID do prédio obrigatório.");
     let successCount = 0;
     let errorCount = 0;
 
@@ -127,7 +127,7 @@ export async function importConnections(items: ConnectionImportData[], buildingI
 
     const findPort = async (equipLabel: string, portLabel: string) => {
         // Busca a porta garantindo o encadeamento de labels até o prédio
-        const ports = await apiFetch(`/equipment_ports?label=eq.${encodeURIComponent(portLabel)}&child_items.label=eq.${encodeURIComponent(equipLabel)}&child_items.parent_items.rooms.buildingid=eq.${buildingId}&select=id,child_items!inner(label,parent_items!inner(rooms!inner(buildingid)))`);
+        const ports = await apiFetch(`/equipment_ports?label=eq.${encodeURIComponent(portLabel)}&child_items.label=eq.${encodeURIComponent(equipLabel)}&child_items.parent_items.rooms.building_id=eq.${building_id}&select=id,child_items!inner(label,parent_items!inner(rooms!inner(building_id)))`);
         return ports?.[0];
     };
 
@@ -142,7 +142,7 @@ export async function importConnections(items: ConnectionImportData[], buildingI
                 portA_id: portAInfo.id,
                 portB_id: portBInfo?.id,
                 connectionTypeId: defaultConnTypeId,
-                userId: 'system' 
+                user_id: 'system' 
             });
             
             successCount++;

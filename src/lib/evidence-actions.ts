@@ -9,7 +9,7 @@ export interface Evidence {
     id: string;
     entityId: string;
     entityType: string;
-    userId: string;
+    user_id: string;
     userDisplayName: string;
     timestamp: string;
     type: string;
@@ -20,14 +20,14 @@ export async function getEvidenceForEntity(entityId: string, entityType: string)
     if (!entityId || !entityType) return [];
     try {
         // PostgREST: Resource Embedding com nomes em minúsculo
-        const data = await apiFetch(`/evidence?entityid=eq.${entityId}&entitytype=eq.${entityType}&select=*,users:userid(displayname)&order=timestamp.asc`);
+        const data = await apiFetch(`/evidence?entityid=eq.${entityId}&entitytype=eq.${entityType}&select=*,users:user_id(displayname)&order=timestamp.asc`);
         
         return data.map((record: any) => ({
             id: record.id,
             entityId: record.entityid,
             entityType: record.entitytype,
-            userId: record.userid,
-            userDisplayName: record.users?.displayname || record.userid,
+            user_id: record.user_id,
+            userDisplayName: record.users?.displayname || record.user_id,
             timestamp: new Date(record.timestamp).toISOString(),
             type: record.type,
             data: typeof record.data === 'string' ? JSON.parse(record.data) : record.data,
@@ -39,7 +39,7 @@ export async function getEvidenceForEntity(entityId: string, entityType: string)
 }
 
 export async function addEvidence(data: any) {
-    const user = await _getUserById(data.userId);
+    const user = await _getUserById(data.user_id);
     if (!user) throw new Error("Usuário não autenticado.");
 
     const newId = `evid_${Date.now()}`;
@@ -51,7 +51,7 @@ export async function addEvidence(data: any) {
                 id: newId,
                 entityid: data.entityId,
                 entitytype: data.entityType,
-                userid: data.userId,
+                user_id: data.user_id,
                 timestamp: new Date().toISOString(),
                 type: data.type,
                 data: data.data
@@ -66,8 +66,8 @@ export async function addEvidence(data: any) {
     }
 }
 
-export async function deleteEvidence(evidenceId: string, userId: string) {
-    const user = await _getUserById(userId);
+export async function deleteEvidence(evidenceId: string, user_id: string) {
+    const user = await _getUserById(user_id);
     if (!user) throw new Error("Usuário não autenticado.");
     
     try {

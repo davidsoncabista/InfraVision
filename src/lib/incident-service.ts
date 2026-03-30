@@ -25,8 +25,8 @@ export interface Incident {
 /**
  * Busca incidentes ativos no prédio selecionado.
  */
-export async function getIncidents(buildingId: string): Promise<Incident[]> {
-    if (!buildingId) return [];
+export async function getIncidents(building_id: string): Promise<Incident[]> {
+    if (!building_id) return [];
     
     try {
         // Resource embedding para trazer nomes de tipos, severidades e status em uma só chamada REST
@@ -60,8 +60,8 @@ export async function getIncidents(buildingId: string): Promise<Incident[]> {
 /**
  * Atualiza o status de um incidente.
  */
-export async function updateIncident(incidentId: string, newStatusId: string, userId: string, notes?: string) {
-    const user = await _getUserById(userId);
+export async function updateIncident(incidentId: string, newStatusId: string, user_id: string, notes?: string) {
+    const user = await _getUserById(user_id);
     if (!user) throw new Error("Usuário não autenticado.");
 
     // Verifica se o novo status é de fechamento
@@ -91,7 +91,7 @@ export async function updateIncident(incidentId: string, newStatusId: string, us
 /**
  * Retorna uma lista de IDs de parent_items que possuem incidentes ativos.
  */
-export async function getParentItemIdsWithActiveIncidents(buildingId: string): Promise<string[]> {
+export async function getParentItemIdsWithActiveIncidents(building_id: string): Promise<string[]> {
     try {
         // Busca incidentes vinculados a parent_items que não estão resolvidos
         const data = await apiFetch(`/incidents?select=entityid,incidentstatuses!inner(name)&entitytype=eq.parent_items&incidentstatuses.name=not.in.(Resolvido,Fechado)`);
@@ -132,8 +132,8 @@ export async function resolveConnectionIncident({ incidentId, action, resolution
     }
     
     if (action === 'resolve' && resolutionData) {
-        const { userId, portB_id, labelText, imageUrl } = resolutionData;
-        const user = await _getUserById(userId);
+        const { user_id, portB_id, labelText, imageUrl } = resolutionData;
+        const user = await _getUserById(user_id);
         if (!user) throw new Error("Usuário inválido.");
 
         // 1. Busca os dados do incidente para saber qual é a porta A

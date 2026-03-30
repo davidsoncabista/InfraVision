@@ -66,7 +66,7 @@ export function ManageBuildingMenu({ building }: ManageBuildingMenuProps) {
       </DropdownMenu>
 
       <AddRoomDialog 
-        buildingId={building.id} 
+        building_id={building.id} 
         buildingName={building.name}
         open={isAddRoomDialogOpen} 
         onOpenChange={setIsAddRoomDialogOpen} 

@@ -17,7 +17,7 @@ export interface User {
   signatureUrl: string | null;
   role: UserRole;
   permissions: string[];
-  accessibleBuildingIds: string[];
+  accessiblebuilding_ids: string[];
   lastLoginAt: string;
   preferences?: UserPreferences;
   isTestData?: boolean;
@@ -42,9 +42,9 @@ const parseUser = (dbRecord: any): User => {
       signatureUrl: dbRecord.signatureUrl || dbRecord.signatureurl || null,
       lastLoginAt: dbRecord.lastLoginAt || dbRecord.lastloginat ? new Date(dbRecord.lastLoginAt || dbRecord.lastloginat).toISOString() : new Date().toISOString(),
       permissions: typeof dbRecord.permissions === 'string' ? JSON.parse(dbRecord.permissions) : (dbRecord.permissions || []),
-      accessibleBuildingIds: typeof (dbRecord.accessibleBuildingIds || dbRecord.accessiblebuildingids) === 'string' 
-        ? JSON.parse(dbRecord.accessibleBuildingIds || dbRecord.accessiblebuildingids) 
-        : (dbRecord.accessibleBuildingIds || dbRecord.accessiblebuildingids || []),
+      accessiblebuilding_ids: typeof (dbRecord.accessiblebuilding_ids || dbRecord.accessiblebuilding_ids) === 'string' 
+        ? JSON.parse(dbRecord.accessiblebuilding_ids || dbRecord.accessiblebuilding_ids) 
+        : (dbRecord.accessiblebuilding_ids || dbRecord.accessiblebuilding_ids || []),
       preferences: typeof dbRecord.preferences === 'string' ? JSON.parse(dbRecord.preferences) : (dbRecord.preferences || {}),
       isTestData: !!(dbRecord.isTestData || dbRecord.istestdata),
     };
@@ -87,7 +87,7 @@ export async function _updateUserInDb(userData: Partial<User>): Promise<User> {
             displayName: merged.displayName,
             photoURL: merged.photoURL,
             lastLoginAt: merged.lastLoginAt || new Date().toISOString(),
-            accessibleBuildingIds: merged.accessibleBuildingIds,
+            accessiblebuilding_ids: merged.accessiblebuilding_ids,
             isTestData: merged.isTestData,
             signatureUrl: merged.signatureUrl
         };
@@ -109,7 +109,7 @@ export async function _updateUserInDb(userData: Partial<User>): Promise<User> {
             role: role,
             lastLoginAt: new Date().toISOString(),
             permissions: rolePermissions[role] || [],
-            accessibleBuildingIds: [],
+            accessiblebuilding_ids: [],
             preferences: {},
             isTestData: !!userData.isTestData
         };
@@ -124,8 +124,8 @@ export async function _updateUserInDb(userData: Partial<User>): Promise<User> {
     }
 }
 
-export async function _deleteUser(userId: string): Promise<void> {
-    await apiFetch(`/users?id=eq.${userId}`, {
+export async function _deleteUser(user_id: string): Promise<void> {
+    await apiFetch(`/users?id=eq.${user_id}`, {
         method: 'DELETE'
     });
 }

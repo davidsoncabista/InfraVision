@@ -24,7 +24,7 @@ export async function getDatacenterData(): Promise<Building[]> {
         const allRooms = (rooms || []).map((r: any) => ({
             id: r.id,
             name: r.name,
-            buildingId: r.buildingid,
+            building_id: r.building_id,
             widthM: r.widthm || 20, 
             depthM: r.depthm || 20, 
             tileWidthCm: r.tilewidthcm || 60,
@@ -39,7 +39,7 @@ export async function getDatacenterData(): Promise<Building[]> {
             const typeInfo = item_typesMap.get(item.type) || {};
             return {
                 ...item,
-                roomId: item.roomid,
+                room_id: item.room_id,
                 widthM: item.widthm,
                 heightM: item.heightm,
                 radiusM: item.radiusm,
@@ -61,14 +61,14 @@ export async function getDatacenterData(): Promise<Building[]> {
         // Montamos a hierarquia: Prédios -> Salas -> Itens
         const roomsById = new Map(allRooms.map((r: any) => [r.id, r]));
         allItems.forEach((item: any) => {
-            if (item.roomId && roomsById.has(item.roomId)) {
-                roomsById.get(item.roomId)!.items.push(item);
+            if (item.room_id && roomsById.has(item.room_id)) {
+                roomsById.get(item.room_id)!.items.push(item);
             }
         });
 
         return (buildings || []).map((b: any) => ({
             ...b,
-            rooms: allRooms.filter((r: any) => r.buildingId === b.id)
+            rooms: allRooms.filter((r: any) => r.building_id === b.id)
         }));
 
     } catch (err: any) {

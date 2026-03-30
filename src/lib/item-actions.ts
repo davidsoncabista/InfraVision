@@ -21,7 +21,7 @@ export async function addItem({ label, itemType, room }: { label: string; itemTy
       radiusm: itemType.defaultRadiusM || null,
       type: itemType.name,
       status: 'draft',
-      roomid: room.id,
+      room_id: room.id,
       color: itemType.defaultColor || null,
       shape: itemType.shape,
       istestdata: false
@@ -41,7 +41,7 @@ export async function addItem({ label, itemType, room }: { label: string; itemTy
  * Exclui ou descomissiona um item (Parent ou Child).
  */
 export async function deleteItem({ item, hardDelete }: { item: GridItem; hardDelete: boolean }): Promise<void> {
-  const endpoint = item.parentId ? '/child_items' : '/parent_items';
+  const endpoint = item.parent_id ? '/child_items' : '/parent_items';
 
   if (hardDelete) {
     await apiFetch(`${endpoint}?id=eq.${item.id}`, { method: 'DELETE' });
@@ -76,7 +76,7 @@ export async function getDecommissionedItems(): Promise<GridItem[]> {
  * Restaura um item descomissionado para o status Ativo.
  */
 export async function restoreItem(item: GridItem): Promise<void> {
-  const endpoint = item.parentId ? '/child_items' : '/parent_items';
+  const endpoint = item.parent_id ? '/child_items' : '/parent_items';
   await apiFetch(`${endpoint}?id=eq.${item.id}`, {
       method: 'PATCH',
       body: JSON.stringify({ status: 'active' })
