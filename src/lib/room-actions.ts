@@ -65,7 +65,7 @@ export async function updateRoom(params: any): Promise<void> {
   const dbUpdates: any = {};
   if(updates.name) dbUpdates.name = updates.name;
   if(updates.width_m !== undefined) dbUpdates.width_m = updates.width_m;
-  if(updates.width_m !== undefined) dbUpdates.width_m = updates.width_m;
+  if(updates.depth_m !== undefined) dbUpdates.depth_m = updates.depth_m;
   if(updates.tile_width_cm !== undefined) dbUpdates.tile_width_cm = updates.tile_width_cm;
   if(updates.tile_height_cm !== undefined) dbUpdates.tile_height_cm = updates.tile_height_cm;
   if(updates.x_axis_naming) dbUpdates.x_axis_naming = updates.x_axis_naming;

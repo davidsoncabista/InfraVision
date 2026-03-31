@@ -33,7 +33,7 @@ import { Separator } from "@/components/ui/separator";
 const formSchema = z.object({
   name: z.string().min(3, "O nome da sala deve ter pelo menos 3 caracteres."),
   width_m: z.coerce.number().optional(),
-  width_m: z.coerce.number().optional(),
+  depth_m: z.coerce.number().optional(),
   tile_width_cm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
   tile_height_cm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
 });
@@ -56,7 +56,7 @@ export function AddRoomDialog({ building_id, buildingName, open, onOpenChange }:
     defaultValues: {
       name: "",
       width_m: undefined,
-      width_m: undefined,
+      depth_m: undefined,
       tile_width_cm: 60,
       tile_height_cm: 60,
     },
@@ -132,7 +132,7 @@ export function AddRoomDialog({ building_id, buildingName, open, onOpenChange }:
               />
               <FormField
                 control={form.control}
-                name="width_m"
+                name="depth_m"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Profundidade (m)</FormLabel>

@@ -65,7 +65,7 @@ function indexToNumeric(index: number): string {
 const formSchema = z.object({
   name: z.string().min(3, "O nome da sala deve ter pelo menos 3 caracteres."),
   width_m: z.coerce.number().optional(),
-  width_m: z.coerce.number().optional(),
+  depth_m: z.coerce.number().optional(),
   tile_width_cm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
   tile_height_cm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
   x_axis_naming: z.enum(['alpha', 'numeric']),
@@ -99,7 +99,7 @@ export function ManageRoomDialog({ room, open, onOpenChange }: ManageRoomDialogP
     defaultValues: {
       name: room.name,
       width_m: room.width_m,
-      width_m: room.width_m, 
+      depth_m: room.depth_m,
       tile_width_cm: room.tile_width_cm || 60,
       tile_height_cm: room.tile_height_cm || 60,
       x_axis_naming: room.x_axis_naming || 'alpha',
@@ -133,7 +133,7 @@ export function ManageRoomDialog({ room, open, onOpenChange }: ManageRoomDialogP
       form.reset({
         name: room.name,
         width_m: room.width_m,
-        width_m: room.width_m, 
+        depth_m: room.depth_m,
         tile_width_cm: room.tile_width_cm || 60,
         tile_height_cm: room.tile_height_cm || 60,
         x_axis_naming: room.x_axis_naming || 'alpha',
@@ -220,7 +220,7 @@ export function ManageRoomDialog({ room, open, onOpenChange }: ManageRoomDialogP
              <FormField control={form.control} name="name" render={({ field }) => ( <FormItem><FormLabel>Nome da Sala</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem> )}/>
              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <FormField control={form.control} name="width_m" render={({ field }) => ( <FormItem><FormLabel>Largura (m)</FormLabel><FormControl><Input type="number" step="0.1" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem> )}/>
-              <FormField control={form.control} name="width_m" render={({ field }) => ( <FormItem><FormLabel>Profundidade (m)</FormLabel><FormControl><Input type="number" step="0.1" {...field} value={field.value ?? ''}/></FormControl><FormMessage /></FormItem> )}/>
+              <FormField control={form.control} name="depth_m" render={({ field }) => ( <FormItem><FormLabel>Profundidade (m)</FormLabel><FormControl><Input type="number" step="0.1" {...field} value={field.value ?? ''}/></FormControl><FormMessage /></FormItem> )}/>
               <FormField control={form.control} name="tile_width_cm" render={({ field }) => ( <FormItem><FormLabel>Piso (cm L)</FormLabel><FormControl><Input type="number" {...field} value={field.value ?? ''}/></FormControl><FormMessage /></FormItem> )}/>
               <FormField control={form.control} name="tile_height_cm" render={({ field }) => ( <FormItem><FormLabel>Piso (cm P)</FormLabel><FormControl><Input type="number" {...field} value={field.value ?? ''}/></FormControl><FormMessage /></FormItem> )}/>
             </div>
