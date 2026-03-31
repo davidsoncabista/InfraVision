@@ -24,8 +24,13 @@ export async function apiFetch(endpoint: string, options: RequestInit = {}) {
         throw new Error(`Erro na API (${response.status}): ${errorBody}`);
     }
 
-    // O PostgREST pode retornar vazio em DELETE ou POST dependendo do cabeçalho Prefer
-    if (response.status === 204) return null;
+    // Lê o corpo da resposta como texto primeiro para evitar quebra no .json()
+    const text = await response.text();
     
-    return response.json();
+    // Se não tiver corpo (ex: 201 Created ou 204 No Content), retorna null em paz
+    if (!text) {
+        return null;
+    }
+    
+    return JSON.parse(text);
 }
