@@ -135,12 +135,12 @@ CREATE TABLE IF NOT EXISTS incidents (
 
 CREATE TABLE IF NOT EXISTS evidence (
   id VARCHAR(50) PRIMARY KEY,
+  user_id UUID REFERENCES users(id),
   timestamp TIMESTAMP NOT NULL,
   type VARCHAR(50) NOT NULL,
   data TEXT NOT NULL,
   entity_id VARCHAR(100) DEFAULT 'unknown',
-  entity_type VARCHAR(50) DEFAULT 'unknown',
-  user_id VARCHAR(100)
+  entity_type VARCHAR(50) DEFAULT 'unknown'
 );
 
 CREATE TABLE IF NOT EXISTS approvals (

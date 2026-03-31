@@ -112,9 +112,7 @@ export default async function BuildingsPage() {
                                   {room.name}
                                 </TableCell>
                                 <TableCell>
-                                  {room.width_m && room.width_m ? (
-                                    <span>{room.width_m}m x {room.width_m}m</span>
-                                  ) : (
+                                  {room.width_m && room.depth_m ? (<span>{room.width_m}m x {room.depth_m}m</span>) : (
                                     <span className="text-xs text-muted-foreground/60 italic">Não definido</span>
                                   )}
                                 </TableCell>
