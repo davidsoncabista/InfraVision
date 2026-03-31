@@ -1,6 +1,6 @@
 'use server';
 
-import { apiFetch } from './db';
+import { apiDelete } from './api-client';
 import { revalidatePath } from 'next/cache';
 
 /**
@@ -9,10 +9,10 @@ import { revalidatePath } from 'next/cache';
  */
 export async function softCleanTestData() {
     try {
-        await apiFetch('/connections?is_test_data=eq.true', { method: 'DELETE' });
-        await apiFetch('/child_items?is_test_data=eq.true', { method: 'DELETE' });
-        await apiFetch('/parent_items?is_test_data=eq.true', { method: 'DELETE' });
-        await apiFetch('/rooms?is_test_data=eq.true', { method: 'DELETE' });
+        await apiDelete('/connections', { is_test_data: 'eq.true' });
+        await apiDelete('/child_items', { is_test_data: 'eq.true' });
+        await apiDelete('/parent_items', { is_test_data: 'eq.true' });
+        await apiDelete('/rooms', { is_test_data: 'eq.true' });
         await apiFetch('/buildings?is_test_data=eq.true', { method: 'DELETE' });
         await apiFetch('/users?is_test_data=eq.true', { method: 'DELETE' });
         

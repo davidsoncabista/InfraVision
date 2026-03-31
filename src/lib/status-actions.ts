@@ -2,7 +2,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { apiFetch } from './db';
+import { apiGet, apiDelete } from './api-client';
 import { statusColors } from './status-config';
 
 export interface ItemStatus {
@@ -67,14 +67,14 @@ export async function updateStatus(id: string, data: any) {
 
 export async function deleteStatus(id: string) {
     try {
-        const pInUse = await apiFetch(`/parent_items?status=eq.${id}&limit=1`);
-        const cInUse = await apiFetch(`/child_items?status=eq.${id}&limit=1`);
+        const pInUse = await apiGet('/parent_items', { status: `eq.${id}`, limit: 1 });
+        const cInUse = await apiGet('/child_items', { status: `eq.${id}`, limit: 1 });
         
         if ((pInUse && pInUse.length > 0) || (cInUse && cInUse.length > 0)) {
             throw new Error('Este status está em uso e não pode ser excluído.');
         }
 
-        await apiFetch(`/itemstatuses?id=eq.${id}&isdefault=eq.false`, { method: 'DELETE' });
+        await apiDelete('/itemstatuses', { id: `eq.${id}`, isdefault: 'eq.false' });
         revalidatePath('/system');
     } catch (error: any) {
         throw new Error(error.message || 'Falha ao excluir status.');

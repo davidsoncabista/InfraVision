@@ -1,6 +1,6 @@
 'use server';
 
-import { apiFetch } from './db';
+import { apiGet } from './api-client';
 import { logAuditEvent } from './audit-actions';
 import { _getUserById } from './user-service';
 import { revalidatePath } from 'next/cache';
@@ -110,7 +110,10 @@ export async function resolveConnectionIncident({ incidentId, action, resolution
         if (!incidents || !incidents.length) return { details: null };
         
         const portId = incidents[0].entity_id;
-        const ports = await apiFetch(`/equipment_ports?id=eq.${portId}&select=*,child_items(label,parent_items(label))`);
+        const ports = await apiGet('/equipment_ports', { 
+            id: `eq.${portId}`, 
+            select: '*,child_items(label,parent_items(label))' 
+        });
         
         if (!ports || !ports.length) return { details: null };
         

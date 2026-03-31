@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { apiFetch } from './db';
+import { apiGet, apiPost, apiPatch, apiDelete } from './api-client';
 import type { GridItem, Room } from '@/types/datacenter';
 import type { ItemType } from './item-types-actions';
 
@@ -16,9 +16,9 @@ export async function addItem({ label, itemType, room }: { label: string; itemTy
       label: label,
       x: 0,
       y: 0,
-      width_m: itemType.defaultwidth_m,
-      heightm: itemType.default_height_m,
-      radiusm: itemType.default_radius_m || null,
+      width_m: Number(itemType.defaultwidth_m),
+      heightm: Number(itemType.default_height_m),
+      radiusm: itemType.default_radius_m ? Number(itemType.default_radius_m) : null,
       type: itemType.name,
       status: 'draft',
       room_id: room.id,
@@ -27,11 +27,7 @@ export async function addItem({ label, itemType, room }: { label: string; itemTy
       is_test_data: false
   };
 
-  const result = await apiFetch('/parent_items', {
-      method: 'POST',
-      body: JSON.stringify(newItem),
-      headers: { 'Prefer': 'return=representation' }
-  });
+  const result = await apiPost('/parent_items', newItem);
 
   revalidatePath('/datacenter');
   return result[0];
@@ -44,12 +40,9 @@ export async function deleteItem({ item, hardDelete }: { item: GridItem; hardDel
   const endpoint = item.parent_id ? '/child_items' : '/parent_items';
 
   if (hardDelete) {
-    await apiFetch(`${endpoint}?id=eq.${item.id}`, { method: 'DELETE' });
+    await apiDelete(endpoint, { id: `eq.${item.id}` });
   } else {
-    await apiFetch(`${endpoint}?id=eq.${item.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({ status: 'decommissioned' })
-    });
+    await apiPatch(endpoint, { status: 'decommissioned' }, { id: `eq.${item.id}` });
   }
 
   revalidatePath('/datacenter');
@@ -63,8 +56,8 @@ export async function deleteItem({ item, hardDelete }: { item: GridItem; hardDel
 export async function getDecommissionedItems(): Promise<GridItem[]> {
     try {
         const [pItems, cItems] = await Promise.all([
-            apiFetch('/parent_items?status=eq.decommissioned'),
-            apiFetch('/child_items?status=eq.decommissioned')
+            apiGet('/parent_items', { status: 'eq.decommissioned' }),
+            apiGet('/child_items', { status: 'eq.decommissioned' })
         ]);
         return [...(pItems || []), ...(cItems || [])].sort((a, b) => a.label.localeCompare(b.label));
     } catch (error) {
@@ -77,10 +70,7 @@ export async function getDecommissionedItems(): Promise<GridItem[]> {
  */
 export async function restoreItem(item: GridItem): Promise<void> {
   const endpoint = item.parent_id ? '/child_items' : '/parent_items';
-  await apiFetch(`${endpoint}?id=eq.${item.id}`, {
-      method: 'PATCH',
-      body: JSON.stringify({ status: 'active' })
-  });
+  await apiPatch(endpoint, { status: 'active' }, { id: `eq.${item.id}` });
   revalidatePath('/trash');
   revalidatePath('/datacenter');
   revalidatePath('/inventory');

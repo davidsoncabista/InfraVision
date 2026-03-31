@@ -1,6 +1,6 @@
 'use server';
 
-import { apiFetch } from './db';
+import { apiGet, apiPost } from './api-client';
 import { revalidatePath } from 'next/cache';
 import { createConnection } from './connection-actions';
 
@@ -47,7 +47,11 @@ export async function importchild_items(items: ChildItemImportData[], building_i
     for (const item of items) {
         try {
             // Busca o rack pai pelo label e garantindo que pertence ao prédio correto
-            const parents = await apiFetch(`/parent_items?label=eq.${encodeURIComponent(item.parentRack)}&rooms.building_id=eq.${building_id}&select=id,rooms!inner(building_id)`);
+            const parents = await apiGet('/parent_items', { 
+                label: `eq.${encodeURIComponent(item.parentRack)}`,
+                'rooms.building_id': `eq.${building_id}`,
+                select: 'id,rooms!inner(building_id)'
+            });
             
             if (!parents || parents.length === 0) {
                 errorCount++;
@@ -56,21 +60,18 @@ export async function importchild_items(items: ChildItemImportData[], building_i
             const parent_id = parents[0].id;
             const newId = `citem_imp_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
 
-            await apiFetch('/child_items', {
-                method: 'POST',
-                body: JSON.stringify({
-                    id: newId,
-                    label: item.label,
-                    parent_id: parent_id,
-                    type: item.type,
-                    brand: item.manufacturer,
-                    modelo: item.model,
-                    serial_number: item.serial_number || null,
-                    tamanho_u: item.sizeU || null,
-                    posicao_u: item.posicao_u || null,
-                    status: 'draft',
-                    is_test_data: false
-                })
+            await apiPost('/child_items', {
+                id: newId,
+                label: item.label,
+                parent_id: parent_id,
+                type: item.type,
+                brand: item.manufacturer,
+                modelo: item.model,
+                serial_number: item.serial_number || null,
+                tamanho_u: item.sizeU ? Number(item.sizeU) : null,
+                posicao_u: item.posicao_u ? Number(item.posicao_u) : null,
+                status: 'draft',
+                is_test_data: false
             });
             successCount++;
         } catch (innerError) {
@@ -92,17 +93,14 @@ export async function importparent_items(items: ParentItemImportData[]): Promise
     for (const item of items) {
         try {
             const newId = `pitem_imp_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
-            await apiFetch('/parent_items', {
-                method: 'POST',
-                body: JSON.stringify({ 
-                    id: newId, 
-                    label: item.label, 
-                    type: item.type,
-                    status: 'draft',
-                    width_m: 0.6,
-                    heightm: 1.0,
-                    is_test_data: false 
-                })
+            await apiPost('/parent_items', { 
+                id: newId, 
+                label: item.label, 
+                type: item.type,
+                status: 'draft',
+                width_m: 0.6,
+                heightm: 1.0,
+                is_test_data: false 
             });
             successCount++;
         } catch (innerError) {
@@ -121,13 +119,18 @@ export async function importConnections(items: ConnectionImportData[], building_
     let successCount = 0;
     let errorCount = 0;
 
-    const types = await apiFetch('/connectiontypes?name=eq.Dados UTP&select=id');
+    const types = await apiGet('/connectiontypes', { name: 'eq.Dados UTP', select: 'id' });
     const defaultConnTypeId = types?.[0]?.id;
     if (!defaultConnTypeId) throw new Error("Tipo padrão não encontrado.");
 
     const findPort = async (equipLabel: string, portLabel: string) => {
         // Busca a porta garantindo o encadeamento de labels até o prédio
-        const ports = await apiFetch(`/equipment_ports?label=eq.${encodeURIComponent(portLabel)}&child_items.label=eq.${encodeURIComponent(equipLabel)}&child_items.parent_items.rooms.building_id=eq.${building_id}&select=id,child_items!inner(label,parent_items!inner(rooms!inner(building_id)))`);
+        const ports = await apiGet('/equipment_ports', {
+            label: `eq.${encodeURIComponent(portLabel)}`,
+            'child_items.label': `eq.${encodeURIComponent(equipLabel)}`,
+            'child_items.parent_items.rooms.building_id': `eq.${building_id}`,
+            select: 'id,child_items!inner(label,parent_items!inner(rooms!inner(building_id)))'
+        });
         return ports?.[0];
     };
 

@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { apiFetch } from './db';
+import { apiGet } from './api-client';
 import { updateItemDetails } from './item-detail-actions';
 import type { GridItem } from '@/types/datacenter';
 
@@ -33,7 +33,7 @@ export async function updateParentItemPosition(
 export async function getUnallocatedparent_items(): Promise<GridItem[]> {
     try {
         // Busca itens onde room_id é nulo e não estão descomissionados, usando rota em minúsculo
-        const data = await apiFetch('/parent_items?room_id=is.null&status=neq.decommissioned');
+        const data = await apiGet('/parent_items', { room_id: 'is.null', status: 'neq.decommissioned' });
         return (data || []).map((item: any) => ({
             ...item,
             room_id: item.room_id,
