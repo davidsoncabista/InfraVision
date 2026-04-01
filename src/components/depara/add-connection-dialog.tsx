@@ -35,7 +35,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { usePermissions } from '@/components/permissions-provider';
 
 const formSchema = z.object({
-  labelText: z.string().optional().nullable(),
+  label_text: z.string().optional().nullable(),
   image_url: z.string().optional().nullable(),
 });
 
@@ -77,7 +77,7 @@ export function AddConnectionDialog({
 
     const form = useForm<FormData>({
       resolver: zodResolver(formSchema),
-      defaultValues: { labelText: '', image_url: null },
+      defaultValues: { label_text: '', image_url: null },
     });
 
     const image_url = form.watch('image_url');
@@ -200,7 +200,7 @@ export function AddConnectionDialog({
                 port_a_id: sideA.port.id,
                 port_b_id: sideB.port.id,
                 connection_type_id,
-                labelText: data.labelText,
+                label_text: data.label_text,
                 image_url: data.image_url,
                 user_id: user.id
             });
@@ -249,7 +249,7 @@ export function AddConnectionDialog({
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
             <FormField
               control={form.control}
-              name="labelText"
+              name="label_text"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Texto da Etiqueta (Opcional)</FormLabel>

@@ -141,7 +141,7 @@ export async function resolveConnectionIncident({ incidentId, action, resolution
     }
     
     if (action === 'resolve' && resolutionData) {
-        const { user_id, port_b_id, labelText, image_url } = resolutionData;
+        const { user_id, port_b_id, label_text, image_url } = resolutionData;
         const user = await _getUserById(user_id);
         if (!user) throw new Error("Usuário inválido.");
 
@@ -158,7 +158,7 @@ export async function resolveConnectionIncident({ incidentId, action, resolution
             port_b_id,
             connection_type_id: 'ctype_dados_utp', // Hardcoded por enquanto ou buscar dinamicamente
             status: 'active',
-            labeltext: labelText || null,
+            labeltext: label_text || null,
             image_url: image_url || null
         });
 

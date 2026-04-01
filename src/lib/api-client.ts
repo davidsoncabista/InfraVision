@@ -29,14 +29,18 @@ class ApiClient {
     });
 
     if (!response.ok) {
-      const errorBody = await response.text();
-      throw new Error(`API Error (${response.status}): ${errorBody}`);
+      const errorText = await response.text();
+      console.error('Erro na API:', errorText);
+      throw new Error(`API Error (${response.status}): ${errorText}`);
     }
 
     // PostgREST pode retornar vazio em DELETE ou POST dependendo do header Prefer
     if (response.status === 204) return null;
 
-    return response.json();
+    // Para POST/PATCH/DELETE, o PostgREST pode retornar sucesso com corpo vazio
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : null;
+    return data;
   }
 
   async get<T = any>(endpoint: string, params?: Record<string, any>): Promise<T> {

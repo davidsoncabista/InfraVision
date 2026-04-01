@@ -46,7 +46,7 @@ export interface ConnectionDetail {
     connection_type_id: string;
     status: string;
     image_url: string | null;
-    labelText: string | null;
+    label_text: string | null;
 }
 
 export async function getConnectablechild_items(building_id?: string): Promise<ConnectableItem[]> {
@@ -110,7 +110,7 @@ export async function getAllConnections(building_id?: string): Promise<Connectio
             connection_type_id: c.connection_type_id,
             status: c.status,
             image_url: c.image_url,
-            labelText: c.labeltext
+            label_text: c.labeltext
         }));
     } catch (error) {
         return [];
@@ -121,7 +121,7 @@ export async function createConnection(data: {
     port_a_id: string; 
     port_b_id?: string | null; 
     connection_type_id: string; 
-    labelText?: string | null;
+    label_text?: string | null;
     image_url?: string | null;
     user_id: string;
 }) {
@@ -138,7 +138,7 @@ export async function createConnection(data: {
             port_a_id: data.port_a_id,
             port_b_id: data.port_b_id || null,
             connection_type_id: data.connection_type_id,
-            labeltext: data.labelText || null,
+            labeltext: data.label_text || null,
             image_url: data.image_url || null,
             status
         })

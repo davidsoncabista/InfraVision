@@ -99,7 +99,7 @@ export async function importparent_items(items: ParentItemImportData[]): Promise
                 type: item.type,
                 status: 'draft',
                 width_m: 0.6,
-                heightm: 1.0,
+                height_m: 1.0,
                 is_test_data: false 
             });
             successCount++;

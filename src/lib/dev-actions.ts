@@ -79,7 +79,7 @@ export async function populateparent_items() {
         x: 2, 
         y: 2, 
         width_m: 0.6, 
-        heightm: 1.2, 
+        height_m: 1.2, 
         type: 'Rack 42U', 
         status: 'active', 
         room_id: 'R_DEV_01A', 
