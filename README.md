@@ -9,6 +9,36 @@
 ## 🚀 Sobre o Projeto
 O sistema permite que operadores e gestores visualizem a disposição física através de uma **planta baixa interativa**, gerenciem o inventário com **visão gráfica de racks** e controlem acessos proativamente. 
 
+## 🏗️ Arquitetura do Sistema
+
+O projeto utiliza o padrão de **Service Layer** no frontend para comunicar-se diretamente com o **PostgreSQL** através do **PostgREST**, garantindo alta velocidade e segurança de tipos (Type Safety).
+
+```mermaid
+graph TD
+    User([👨‍💻 Técnico de Data Center]) -->|Acesso Web| Frontend(Interface Next.js)
+    
+    subgraph "Camada de Aplicação (Service Layer)"
+        Frontend -->|Chamadas Tipadas| Services(Services API Client)
+    end
+
+    subgraph "Proxmox LXC (Ambiente Air-Gapped)"
+        Services -->|REST / JSON| PostgREST(⚙️ PostgREST API)
+        PostgREST -->|SQL| DB[(🗄️ PostgreSQL)]
+    end
+
+    subgraph "Automação de Deploy (IaC)"
+        Ansible(🛠️ Ansible Playbooks) -.->|Provisiona| LXC[LXC Node]
+    end
+
+    subgraph "Roadmap: IA Assíncrona"
+        Services -.->|Enfileira Tarefas| Redis(Redis Fila)
+        Redis -.->|Worker| Ollama(🧠 Ollama Local LLM)
+    end
+
+    classDef default fill:#f9f9f9,stroke:#333,stroke-width:2px;
+    classDef highlight fill:#e1f5fe,stroke:#03a9f4,stroke-width:2px;
+    class PostgREST,DB highlight;
+```
 > **Filosofia:** Priorizamos a estabilidade, a segurança e a independência. Um sistema funcional, robusto e **100% self-hosted** é mais importante que dependências de nuvens de terceiros.
 
 ## 📚 Documentação Detalhada
