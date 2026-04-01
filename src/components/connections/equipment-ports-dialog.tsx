@@ -54,7 +54,7 @@ const statusDotStyles: Record<EquipmentPort['status'], string> = {
   disabled: "bg-gray-500",
 };
 
-export function equipment_portsDialog({ equipment, isOpen, onOpenChange }: equipment_portsDialogProps) {
+export function EquipmentPortsDialog({ equipment, isOpen, onOpenChange }: equipment_portsDialogProps) {
   const [ports, setPorts] = React.useState<EquipmentPort[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [isProcessing, setIsProcessing] = React.useState<string | null>(null);

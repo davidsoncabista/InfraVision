@@ -4,8 +4,8 @@
 import * as React from 'react';
 import { getInventoryData } from "@/lib/inventory-actions";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { parent_itemsTable } from "@/components/inventory/parent-items-table";
-import { child_itemsTable } from "@/components/inventory/child-items-table";
+import { ParentItemsTable } from "@/components/inventory/parent-items-table";
+import { ChildItemsTable } from "@/components/inventory/child-items-table";
 import { HardDrive, Puzzle, Loader2 } from "lucide-react";
 import { useBuilding } from '@/components/building-provider';
 import type { GridItem } from '@/types/datacenter';
@@ -67,7 +67,7 @@ export default function InventoryPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <child_itemsTable items={inventoryData.child_items} allItems={inventoryData.allItems} statuses={inventoryData.statuses} />
+              <ChildItemsTable items={inventoryData.child_items} allItems={inventoryData.allItems} statuses={inventoryData.statuses} />
             </CardContent>
           </Card>
 
@@ -83,7 +83,7 @@ export default function InventoryPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <parent_itemsTable items={inventoryData.parent_items} allItems={inventoryData.allItems} statuses={inventoryData.statuses} />
+              <ParentItemsTable items={inventoryData.parent_items} allItems={inventoryData.allItems} statuses={inventoryData.statuses} />
             </CardContent>
           </Card>
         </>

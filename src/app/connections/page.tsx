@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { HardDrive, Server, WifiOff, Loader2 } from "lucide-react";
 import { getConnectableEquipmentSummary, EquipmentSummary } from "@/lib/connection-actions";
 import { Progress } from '@/components/ui/progress';
-import { equipment_portsDialog } from '@/components/connections/equipment-ports-dialog';
+import { EquipmentPortsDialog } from '@/components/connections/equipment-ports-dialog';
 import { useBuilding } from '@/components/building-provider';
 
 export default function ConnectionsPage() {
@@ -113,7 +113,7 @@ export default function ConnectionsPage() {
       </div>
 
       {selectedEquipment && (
-        <equipment_portsDialog
+        <EquipmentPortsDialog
             equipment={selectedEquipment}
             isOpen={!!selectedEquipment}
             onOpenChange={() => setSelectedEquipment(null)}

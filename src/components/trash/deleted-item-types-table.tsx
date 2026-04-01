@@ -32,7 +32,7 @@ interface Deleteditem_typesTableProps {
   item_types: ItemType[];
 }
 
-export function Deleteditem_typesTable({ item_types }: Deleteditem_typesTableProps) {
+export function DeletedItemTypesTable({ item_types }: Deleteditem_typesTableProps) {
   const { toast } = useToast();
   const router = useRouter();
   const [isProcessing, setIsProcessing] = React.useState<string | null>(null);

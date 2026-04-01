@@ -85,6 +85,9 @@ const childitem_typeschema = z.object({
     icon_name: z.string().optional(),
     // Campos que não serão mostrados na UI, mas precisam de valores padrão para a action.
     category: z.string().default('Equipamento'), 
+    shape: z.enum(['rectangle', 'circle']).default('rectangle'),
+    can_have_children: z.boolean().default(false),
+    is_resizable: z.boolean().default(true),
     defaultwidth_m: z.coerce.number().default(0),
     default_height_m: z.coerce.number().default(0),
     default_color: z.string().optional(),
@@ -93,7 +96,7 @@ const childitem_typeschema = z.object({
 
 interface AddItemTypeDialogProps {
   isParentType: boolean;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export function AddItemTypeDialog({ isParentType, children }: AddItemTypeDialogProps) {

@@ -1,6 +1,6 @@
 'use server';
 
-import { apiGet } from './api-client';
+import { apiGet, apiPatch, apiPost, apiDelete } from './api-client';
 import { logAuditEvent } from './audit-actions';
 import { _getUserById } from './user-service';
 import { revalidatePath } from 'next/cache';
@@ -33,7 +33,11 @@ export async function getIncidents(building_id: string): Promise<Incident[]> {
         // Nota: O PostgREST usa o nome da relação definida pela FK
         const url = `/incidents?select=*,incidenttypes(name),incidentseverities(name,color,rank),incidentstatuses(name,color,icon_name)&incidentstatuses.name=not.in.(Resolvido,Fechado)&order=detectedat.desc`;
         
-        const data = await apiFetch(url);
+        const data = await apiGet('/incidents', {
+            select: '*,incidenttypes(name),incidentseverities(name,color,rank),incidentstatuses(name,color,icon_name)',
+            'incidentstatuses.name': 'not.in.(Resolvido,Fechado)',
+            order: 'detectedat.desc'
+        });
         
         return (data || []).map((r: any) => ({
             id: r.id,
@@ -65,17 +69,14 @@ export async function updateIncident(incidentId: string, newStatusId: string, us
     if (!user) throw new Error("Usuário não autenticado.");
 
     // Verifica se o novo status é de fechamento
-    const statuses = await apiFetch(`/incidentstatuses?id=eq.${newStatusId}`);
+    const statuses = await apiGet('/incidentstatuses', { id: `eq.${newStatusId}` });
     const isResolved = statuses && (statuses[0]?.name === 'Resolvido' || statuses[0]?.name === 'Fechado');
 
-    await apiFetch(`/incidents?id=eq.${incidentId}`, {
-        method: 'PATCH',
-        body: JSON.stringify({ 
-            statusid: newStatusId, 
-            resolvedat: isResolved ? new Date().toISOString() : null,
-            notes: notes || null
-        })
-    });
+    await apiPatch('/incidents', { 
+        statusid: newStatusId, 
+        resolvedat: isResolved ? new Date().toISOString() : null,
+        notes: notes || null
+    }, { id: `eq.${incidentId}` });
 
     await logAuditEvent({ 
         user, 
@@ -94,7 +95,11 @@ export async function updateIncident(incidentId: string, newStatusId: string, us
 export async function getParentItemIdsWithActiveIncidents(building_id: string): Promise<string[]> {
     try {
         // Busca incidentes vinculados a parent_items que não estão resolvidos
-        const data = await apiFetch(`/incidents?select=entity_id,incidentstatuses!inner(name)&entity_type=eq.parent_items&incidentstatuses.name=not.in.(Resolvido,Fechado)`);
+        const data = await apiGet('/incidents', {
+            select: 'entity_id,incidentstatuses!inner(name)',
+            entity_type: 'eq.parent_items',
+            'incidentstatuses.name': 'not.in.(Resolvido,Fechado)'
+        });
         return (data || []).map((r: any) => r.entity_id);
     } catch (error) {
         return [];
@@ -106,7 +111,7 @@ export async function getParentItemIdsWithActiveIncidents(building_id: string): 
  */
 export async function resolveConnectionIncident({ incidentId, action, resolutionData }: { incidentId: string, action: 'get_details' | 'resolve', resolutionData?: any }) {
     if (action === 'get_details') {
-        const incidents = await apiFetch(`/incidents?id=eq.${incidentId}`);
+        const incidents = await apiGet('/incidents', { id: `eq.${incidentId}` });
         if (!incidents || !incidents.length) return { details: null };
         
         const portId = incidents[0].entity_id;
@@ -140,39 +145,33 @@ export async function resolveConnectionIncident({ incidentId, action, resolution
         if (!user) throw new Error("Usuário inválido.");
 
         // 1. Busca os dados do incidente para saber qual é a porta A
-        const incidents = await apiFetch(`/incidents?id=eq.${incidentId}`);
+        const incidents = await apiGet('/incidents', { id: `eq.${incidentId}` });
         if (!incidents || !incidents.length) throw new Error("Incidente não encontrado.");
         const port_a_id = incidents[0].entity_id;
 
         // 2. Cria a conexão no PostgREST
         const connectionId = `conn_res_${Date.now()}`;
-        await apiFetch('/connections', {
-            method: 'POST',
-            body: JSON.stringify({
-                id: connectionId,
-                port_a_id,
-                port_b_id,
-                connection_type_id: 'ctype_dados_utp', // Hardcoded por enquanto ou buscar dinamicamente
-                status: 'active',
-                labeltext: labelText || null,
-                image_url: image_url || null
-            })
+        await apiPost('/connections', {
+            id: connectionId,
+            port_a_id,
+            port_b_id,
+            connection_type_id: 'ctype_dados_utp', // Hardcoded por enquanto ou buscar dinamicamente
+            status: 'active',
+            labeltext: labelText || null,
+            image_url: image_url || null
         });
 
         // 3. Atualiza as portas
-        await apiFetch(`/equipment_ports?id=eq.${port_a_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'up', connectedtoportid: port_b_id }) });
-        await apiFetch(`/equipment_ports?id=eq.${port_b_id}`, { method: 'PATCH', body: JSON.stringify({ status: 'up', connectedtoportid: port_a_id }) });
+        await apiPatch('/equipment_ports', { status: 'up', connectedtoportid: port_b_id }, { id: `eq.${port_a_id}` });
+        await apiPatch('/equipment_ports', { status: 'up', connectedtoportid: port_a_id }, { id: `eq.${port_b_id}` });
 
         // 4. Fecha o incidente
-        const closedStatus = await apiFetch('/incidentstatuses?name=eq.Resolvido');
+        const closedStatus = await apiGet('/incidentstatuses', { name: 'eq.Resolvido' });
         if (closedStatus && closedStatus.length > 0) {
-            await apiFetch(`/incidents?id=eq.${incidentId}`, {
-                method: 'PATCH',
-                body: JSON.stringify({ 
-                    statusid: closedStatus[0].id, 
-                    resolvedat: new Date().toISOString() 
-                })
-            });
+            await apiPatch('/incidents', { 
+                statusid: closedStatus[0].id, 
+                resolvedat: new Date().toISOString() 
+            }, { id: `eq.${incidentId}` });
         }
 
         await logAuditEvent({ user, action: 'INCIDENT_RESOLVED_CONNECTION', entity_type: 'incidents', entity_id: incidentId });

@@ -53,26 +53,54 @@ class ApiClient {
     return this.request(url, { method: 'GET' });
   }
 
-  async post(endpoint: string, data: any, options?: RequestOptions): Promise<any> {
-    return this.request(endpoint, {
+  async post(endpoint: string, data: any, params?: Record<string, any>, options?: RequestOptions): Promise<any> {
+    let url = endpoint;
+    if (params) {
+      const queryString = new URLSearchParams();
+      for (const [key, value] of Object.entries(params)) {
+        if (value !== undefined && value !== null) {
+          queryString.append(key, String(value));
+        }
+      }
+      url += `?${queryString.toString()}`;
+    }
+    return this.request(url, {
       method: 'POST',
       body: JSON.stringify(data),
       ...options,
     });
   }
 
-  async patch(endpoint: string, data: any, options?: RequestOptions): Promise<any> {
-    return this.request(endpoint, {
+  async patch(endpoint: string, data: any, params?: Record<string, any>): Promise<any> {
+    let url = endpoint;
+    if (params) {
+      const queryString = new URLSearchParams();
+      for (const [key, value] of Object.entries(params)) {
+        if (value !== undefined && value !== null) {
+          queryString.append(key, String(value));
+        }
+      }
+      url += `?${queryString.toString()}`;
+    }
+    return this.request(url, {
       method: 'PATCH',
       body: JSON.stringify(data),
-      ...options,
     });
   }
 
-  async delete(endpoint: string, options?: RequestOptions): Promise<any> {
-    return this.request(endpoint, {
+  async delete(endpoint: string, params?: Record<string, any>): Promise<any> {
+    let url = endpoint;
+    if (params) {
+      const queryString = new URLSearchParams();
+      for (const [key, value] of Object.entries(params)) {
+        if (value !== undefined && value !== null) {
+          queryString.append(key, String(value));
+        }
+      }
+      url += `?${queryString.toString()}`;
+    }
+    return this.request(url, {
       method: 'DELETE',
-      ...options,
     });
   }
 }

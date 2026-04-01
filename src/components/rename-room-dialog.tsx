@@ -40,8 +40,8 @@ import {
 
 const formSchema = z.object({
   name: z.string().min(3, "O nome da sala deve ter pelo menos 3 caracteres."),
-  largura: z.coerce.number().optional(),
-  comprimento: z.coerce.number().optional(),
+  width_m: z.coerce.number().optional(),
+  height_m: z.coerce.number().optional(),
   tile_width_cm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
   tile_height_cm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
   x_axis_naming: z.enum(['alpha', 'numeric']),
@@ -64,8 +64,8 @@ export function RenameRoomDialog({ room, open, onOpenChange }: RenameRoomDialogP
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: room.name,
-      largura: room.largura || undefined,
-      comprimento: room.comprimento || undefined,
+      width_m: room.width_m || undefined,
+      height_m: room.height_m || undefined,
       tile_width_cm: room.tile_width_cm || 60,
       tile_height_cm: room.tile_height_cm || 60,
       x_axis_naming: room.x_axis_naming || 'alpha',
@@ -77,8 +77,8 @@ export function RenameRoomDialog({ room, open, onOpenChange }: RenameRoomDialogP
     if (open) {
       form.reset({
         name: room.name,
-        largura: room.largura || undefined,
-        comprimento: room.comprimento || undefined,
+        width_m: room.width_m || undefined,
+        height_m: room.height_m || undefined,
         tile_width_cm: room.tile_width_cm || 60,
         tile_height_cm: room.tile_height_cm || 60,
         x_axis_naming: room.x_axis_naming || 'alpha',
@@ -140,7 +140,7 @@ export function RenameRoomDialog({ room, open, onOpenChange }: RenameRoomDialogP
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="largura"
+                name="width_m"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Largura (m)</FormLabel>
@@ -153,7 +153,7 @@ export function RenameRoomDialog({ room, open, onOpenChange }: RenameRoomDialogP
               />
               <FormField
                 control={form.control}
-                name="comprimento"
+                name="height_m"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Comprimento (m)</FormLabel>

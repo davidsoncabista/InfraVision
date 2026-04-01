@@ -27,11 +27,12 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import type { ConnectableItem, EquipmentPort } from '@/lib/connection-actions';
+import { usePermissions } from '@/components/permissions-provider';
 import { createConnection } from '@/lib/connection-actions';
 import { uploadImage } from '@/lib/storage-actions';
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '../ui/alert-dialog';
-import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { ConnectableItem, EquipmentPort } from '@/types/database';
 
 const formSchema = z.object({
   labelText: z.string().optional().nullable(),
@@ -61,6 +62,7 @@ export function AddConnectionDialog({
 }: AddConnectionDialogProps) {
     const router = useRouter();
     const { toast } = useToast();
+    const { user } = usePermissions();
     const [isUploading, setIsUploading] = useState(false);
     const [isCameraOpen, setIsCameraOpen] = useState(false);
     const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
@@ -163,6 +165,7 @@ export function AddConnectionDialog({
                 connection_type_id,
                 labelText: data.labelText,
                 image_url: data.image_url,
+                user_id: user!.id,
             });
             toast({
                 title: 'Conexão Criada!',

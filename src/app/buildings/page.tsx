@@ -14,10 +14,13 @@ export interface Room {
   id: string;
   name: string;
   building_id: string;
-  depth_m?: number;
   width_m?: number;
+  height_m?: number;
+  depth_m?: number;
   tile_width_cm?: number;
   tile_height_cm?: number;
+  x_axis_naming?: 'alpha' | 'numeric';
+  y_axis_naming?: 'alpha' | 'numeric';
 }
 
 export interface BuildingWithRooms {

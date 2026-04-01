@@ -133,7 +133,13 @@ const ConnectionResolutionForm = ({ incident, user, onSuccess }: { incident: Inc
                 ]);
                 setConnectableItems(items);
                 if (incidentDetails.details) {
-                    setSideA(incidentDetails.details);
+                    setSideA({ 
+                        item: { 
+                            ...incidentDetails.details.item, 
+                            type: incidentDetails.details.item?.type || 'unknown' 
+                        } as any, 
+                        port: incidentDetails.details.port as any 
+                    });
                 } else {
                      toast({ variant: 'destructive', title: "Erro", description: "Não foi possível carregar os detalhes da conexão original." });
                 }
@@ -417,14 +423,14 @@ const ConnectionResolutionForm = ({ incident, user, onSuccess }: { incident: Inc
 const StatusUpdateForm = ({ incident, onOpenChange, onSuccess }: { incident: Incident, onOpenChange: () => void, onSuccess: () => void }) => {
     const { toast } = useToast();
     const { user } = usePermissions();
-    const [statuses, setStatuses] = React.useState<IncidentStatus[]>([]);
+    const [statuses, setStatuses] = useState<IncidentStatus[]>([]);
 
     const form = useForm<FormData>({
         resolver: zodResolver(formSchema),
         defaultValues: { statusId: incident.statusId, notes: "" },
     });
 
-    React.useEffect(() => {
+    useEffect(() => {
         getIncidentStatuses().then(setStatuses);
         form.reset({ statusId: incident.statusId, notes: "" });
     }, [incident, form]);

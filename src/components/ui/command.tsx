@@ -21,7 +21,7 @@ const Command = React.forwardRef<
     {...props}
   />
 ))
-Command.display_name = CommandPrimitive.display_name
+Command.displayName = CommandPrimitive.displayName
 
 interface CommandDialogProps extends DialogProps {}
 
@@ -54,7 +54,7 @@ const CommandInput = React.forwardRef<
   </div>
 ))
 
-CommandInput.display_name = CommandPrimitive.Input.display_name
+CommandInput.displayName = CommandPrimitive.Input.displayName
 
 const CommandList = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.List>,
@@ -67,7 +67,7 @@ const CommandList = React.forwardRef<
   />
 ))
 
-CommandList.display_name = CommandPrimitive.List.display_name
+CommandList.displayName = CommandPrimitive.List.displayName
 
 const CommandEmpty = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Empty>,
@@ -80,7 +80,7 @@ const CommandEmpty = React.forwardRef<
   />
 ))
 
-CommandEmpty.display_name = CommandPrimitive.Empty.display_name
+CommandEmpty.displayName = CommandPrimitive.Empty.displayName
 
 const CommandGroup = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Group>,
@@ -96,7 +96,7 @@ const CommandGroup = React.forwardRef<
   />
 ))
 
-CommandGroup.display_name = CommandPrimitive.Group.display_name
+CommandGroup.displayName = CommandPrimitive.Group.displayName
 
 const CommandSeparator = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Separator>,
@@ -108,7 +108,7 @@ const CommandSeparator = React.forwardRef<
     {...props}
   />
 ))
-CommandSeparator.display_name = CommandPrimitive.Separator.display_name
+CommandSeparator.displayName = CommandPrimitive.Separator.displayName
 
 const CommandItem = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Item>,
@@ -124,7 +124,7 @@ const CommandItem = React.forwardRef<
   />
 ))
 
-CommandItem.display_name = CommandPrimitive.Item.display_name
+CommandItem.displayName = CommandPrimitive.Item.displayName
 
 const CommandShortcut = ({
   className,
@@ -140,7 +140,7 @@ const CommandShortcut = ({
     />
   )
 }
-CommandShortcut.display_name = "CommandShortcut"
+CommandShortcut.displayName = "CommandShortcut"
 
 export {
   Command,

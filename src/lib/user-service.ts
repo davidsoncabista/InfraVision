@@ -63,7 +63,7 @@ export async function _getUserById(id: string): Promise<User | null> {
 export async function _getUsers(): Promise<User[]> {
     const data = await apiFetch('/users');
     const parsed = data.map(parseUser);
-    return parsed.sort((a, b) => (a.display_name || '').localeCompare(b.display_name || ''));
+    return parsed.sort((a: User, b: User) => (a.display_name || '').localeCompare(b.display_name || ''));
 }
 
 export async function _updateUserInDb(userData: Partial<User>): Promise<User> {
@@ -106,6 +106,7 @@ export async function _updateUserInDb(userData: Partial<User>): Promise<User> {
             email: userData.email?.toLowerCase(),
             display_name: userData.display_name || userData.email,
             photo_url: userData.photo_url || null,
+            signature_url: userData.signature_url || null,
             role: role,
             last_login_at: new Date().toISOString(),
             permissions: rolePermissions[role] || [],

@@ -25,7 +25,7 @@ interface Deleteport_typeDialogProps {
 }
 
 // O último dev que tentou "melhorar" isso aqui foi transferido pro RH.
-export function Deleteport_typeDialog({ port_type, open, onOpenChange }: Deleteport_typeDialogProps) {
+export function DeletePortTypeDialog({ port_type, open, onOpenChange }: Deleteport_typeDialogProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
   const { toast } = useToast();

@@ -42,10 +42,14 @@ interface ManageConnectionTypeDialogProps {
   mode: 'add' | 'edit';
   connectionType?: ConnectionType;
   children: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 // Código patrocinado por noites mal dormidas e pizza fria. Ass: davidson.dev.br
-export function ManageConnectionTypeDialog({ mode, connectionType, children }: ManageConnectionTypeDialogProps) {
+export function ManageConnectionTypeDialog({ mode, connectionType, children, open, onOpenChange }: ManageConnectionTypeDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const actualOpen = open !== undefined ? open : isOpen;
+  const setActualOpen = onOpenChange || setIsOpen;
   const router = useRouter();
   const { toast } = useToast();
 
@@ -77,7 +81,7 @@ export function ManageConnectionTypeDialog({ mode, connectionType, children }: M
         toast({ title: "Sucesso!", description: `O tipo de conexão "${data.name}" foi atualizado.` });
       }
       form.reset();
-      setIsOpen(false);
+      setActualOpen(false);
       router.refresh(); 
     } catch (error: any) {
       toast({
@@ -89,7 +93,7 @@ export function ManageConnectionTypeDialog({ mode, connectionType, children }: M
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={actualOpen} onOpenChange={setActualOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -125,7 +129,7 @@ export function ManageConnectionTypeDialog({ mode, connectionType, children }: M
               )}
             />
             <DialogFooter className="pt-4">
-              <Button type="button" variant="outline" onClick={() => setIsOpen(false)} disabled={form.formState.isSubmitting}>
+              <Button type="button" variant="outline" onClick={() => setActualOpen(false)} disabled={form.formState.isSubmitting}>
                 Cancelar
               </Button>
               <Button type="submit" disabled={form.formState.isSubmitting}>

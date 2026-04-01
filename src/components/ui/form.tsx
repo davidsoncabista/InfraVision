@@ -84,7 +84,7 @@ const FormItem = React.forwardRef<
     </FormItemContext.Provider>
   )
 })
-FormItem.display_name = "FormItem"
+FormItem.displayName = "FormItem"
 
 const FormLabel = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
@@ -101,7 +101,7 @@ const FormLabel = React.forwardRef<
     />
   )
 })
-FormLabel.display_name = "FormLabel"
+FormLabel.displayName = "FormLabel"
 
 const FormControl = React.forwardRef<
   React.ElementRef<typeof Slot>,
@@ -123,7 +123,7 @@ const FormControl = React.forwardRef<
     />
   )
 })
-FormControl.display_name = "FormControl"
+FormControl.displayName = "FormControl"
 
 const FormDescription = React.forwardRef<
   HTMLParagraphElement,
@@ -140,7 +140,7 @@ const FormDescription = React.forwardRef<
     />
   )
 })
-FormDescription.display_name = "FormDescription"
+FormDescription.displayName = "FormDescription"
 
 const FormMessage = React.forwardRef<
   HTMLParagraphElement,
@@ -164,7 +164,7 @@ const FormMessage = React.forwardRef<
     </p>
   )
 })
-FormMessage.display_name = "FormMessage"
+FormMessage.displayName = "FormMessage"
 
 export {
   useFormField,

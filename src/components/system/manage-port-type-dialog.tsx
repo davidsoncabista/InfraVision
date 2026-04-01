@@ -42,11 +42,15 @@ interface Manageport_typeDialogProps {
   mode: 'add' | 'edit';
   port_type?: port_type;
   children: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 // Feito com ódio e cafeína por davidson.dev.br.
-export function Manageport_typeDialog({ mode, port_type, children }: Manageport_typeDialogProps) {
+export function ManagePortTypeDialog({ mode, port_type, children, open, onOpenChange }: Manageport_typeDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const actualOpen = open !== undefined ? open : isOpen;
+  const setActualOpen = onOpenChange || setIsOpen;
   const router = useRouter();
   const { toast } = useToast();
 
@@ -78,7 +82,7 @@ export function Manageport_typeDialog({ mode, port_type, children }: Manageport_
         toast({ title: "Sucesso!", description: `O tipo de porta "${data.name}" foi atualizado.` });
       }
       form.reset();
-      setIsOpen(false);
+      setActualOpen(false);
       router.refresh(); 
     } catch (error: any) {
       toast({
@@ -90,7 +94,7 @@ export function Manageport_typeDialog({ mode, port_type, children }: Manageport_
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={actualOpen} onOpenChange={setActualOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>

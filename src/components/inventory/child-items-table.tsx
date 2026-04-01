@@ -44,7 +44,7 @@ const statusColorClasses: Record<string, string> = {
     pending_approval: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
 };
 
-export function child_itemsTable({ items, allItems, statuses }: child_itemsTableProps) {
+export function ChildItemsTable({ items, allItems, statuses }: child_itemsTableProps) {
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');

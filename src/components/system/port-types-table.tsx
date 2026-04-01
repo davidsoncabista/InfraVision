@@ -4,10 +4,10 @@ import * as React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from '../ui/skeleton';
 import { getport_types, port_type } from '@/lib/port-types-actions';
-import { Manageport_typeMenu } from './manage-port-type-menu';
+import { ManagePortTypeMenu } from './manage-port-type-menu';
 import { ShieldAlert } from 'lucide-react';
 
-export function port_typesTable() {
+export function PortTypesTable() {
     const [port_types, setport_types] = React.useState<port_type[]>([]);
     const [isLoading, setIsLoading] = React.useState(true);
 
@@ -53,7 +53,7 @@ export function port_typesTable() {
                                     )}
                                 </TableCell>
                                 <TableCell className="text-right">
-                                    <Manageport_typeMenu port_type={port_type} />
+                                    <ManagePortTypeMenu port_type={port_type} />
                                 </TableCell>
                             </TableRow>
                         ))

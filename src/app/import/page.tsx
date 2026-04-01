@@ -16,7 +16,7 @@ import { AnalysisReviewModal } from '@/components/import/analysis-review-modal';
 import { importchild_items, importparent_items, importConnections } from '@/lib/import-actions';
 import { useBuilding } from '@/components/building-provider';
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Alert, AlertTitle as AlertTitleShadCN } from '@/components/ui/alert';
+import { Alert, AlertTitle as AlertTitleShadCN, AlertDescription } from '@/components/ui/alert';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 

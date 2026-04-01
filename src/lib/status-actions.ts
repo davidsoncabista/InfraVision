@@ -2,7 +2,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { apiGet, apiDelete } from './api-client';
+import { apiGet, apiPost, apiPatch, apiDelete } from './api-client';
 import { statusColors } from './status-config';
 
 export interface ItemStatus {
@@ -16,7 +16,7 @@ export interface ItemStatus {
 
 export async function getItemStatuses(): Promise<ItemStatus[]> {
   try {
-    const data = await apiFetch('/itemstatuses?order=isdefault.desc,name.asc');
+    const data = await apiGet('/itemstatuses', { order: 'isdefault.desc,name.asc' });
     return (data || []).map((s: any) => ({
         ...s,
         isArchived: !!s.isarchived,
@@ -30,16 +30,13 @@ export async function getItemStatuses(): Promise<ItemStatus[]> {
 export async function addStatus(data: any) {
   const newId = `status_${Date.now()}`;
   try {
-    await apiFetch('/itemstatuses', {
-        method: 'POST',
-        body: JSON.stringify({ 
-            id: newId, 
-            name: data.name,
-            description: data.description,
-            color: data.color,
-            isarchived: !!data.isArchived,
-            isdefault: false 
-        })
+    await apiPost('/itemstatuses', { 
+        id: newId, 
+        name: data.name,
+        description: data.description,
+        color: data.color,
+        isarchived: !!data.isArchived,
+        isdefault: false 
     });
     revalidatePath('/system');
   } catch (error: any) {
@@ -55,10 +52,7 @@ export async function updateStatus(id: string, data: any) {
     if(data.color) dbData.color = data.color;
     if(data.isArchived !== undefined) dbData.isarchived = !!data.isArchived;
 
-    await apiFetch(`/itemstatuses?id=eq.${id}&isdefault=eq.false`, {
-        method: 'PATCH',
-        body: JSON.stringify(dbData)
-    });
+    await apiPatch('/itemstatuses', dbData, { id: `eq.${id}`, isdefault: 'eq.false' });
     revalidatePath('/system');
   } catch (error: any) {
     throw new Error('Falha ao atualizar status.');

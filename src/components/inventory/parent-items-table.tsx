@@ -44,7 +44,7 @@ const statusColorClasses: Record<string, string> = {
 type SortableKeys = keyof GridItem | 'location';
 
 // Simples, elegante e funciona. De nada. - davidson.dev.br
-export function parent_itemsTable({ items, allItems, statuses }: parent_itemsTableProps) {
+export function ParentItemsTable({ items, allItems, statuses }: parent_itemsTableProps) {
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');

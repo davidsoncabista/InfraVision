@@ -12,7 +12,7 @@ interface item_typesTableProps {
     isParentTypeTable: boolean;
 }
 
-export function item_typesTable({ isParentTypeTable }: item_typesTableProps) {
+export function ItemTypesTable({ isParentTypeTable }: item_typesTableProps) {
     const [item_types, setitem_types] = React.useState<ItemType[]>([]);
     const [isLoading, setIsLoading] = React.useState(true);
 

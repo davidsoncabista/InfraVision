@@ -12,15 +12,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { port_type } from "@/lib/port-types-actions";
-import { Manageport_typeDialog } from "@/components/system/manage-port-type-dialog";
-import { Deleteport_typeDialog } from "@/components/system/delete-port-type-dialog";
+import { ManagePortTypeDialog } from "@/components/system/manage-port-type-dialog";
+import { DeletePortTypeDialog } from "@/components/system/delete-port-type-dialog";
 
 interface Manageport_typeMenuProps {
   port_type: port_type;
 }
 
 // Eu não sigo as boas práticas. Eu crio elas. - davidson.dev.br
-export function Manageport_typeMenu({ port_type }: Manageport_typeMenuProps) {
+export function ManagePortTypeMenu({ port_type }: Manageport_typeMenuProps) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -64,12 +64,12 @@ export function Manageport_typeMenu({ port_type }: Manageport_typeMenuProps) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <Manageport_typeDialog mode="edit" port_type={port_type} open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+      <ManagePortTypeDialog mode="edit" port_type={port_type} open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         {/* O trigger está no DropdownMenuItem, então o children aqui é apenas um placeholder válido. */}
         <span />
-      </Manageport_typeDialog>
+      </ManagePortTypeDialog>
 
-      <Deleteport_typeDialog
+      <DeletePortTypeDialog
         port_type={port_type}
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}

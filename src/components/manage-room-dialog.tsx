@@ -9,7 +9,7 @@ import { z } from "zod";
 import { Loader2, Trash2, Edit, Plus, XCircle } from "lucide-react";
 
 import { updateRoom, getExclusionZonesByroom_id, addExclusionZone, updateExclusionZone, deleteExclusionZone, ExclusionZone } from "@/lib/room-actions";
-import type { Room } from "@/types/datacenter";
+import type { Room } from "@/app/buildings/page";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -65,7 +65,7 @@ function indexToNumeric(index: number): string {
 const formSchema = z.object({
   name: z.string().min(3, "O nome da sala deve ter pelo menos 3 caracteres."),
   width_m: z.coerce.number().optional(),
-  depth_m: z.coerce.number().optional(),
+  height_m: z.coerce.number().optional(),
   tile_width_cm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
   tile_height_cm: z.coerce.number().positive("O valor deve ser positivo.").optional(),
   x_axis_naming: z.enum(['alpha', 'numeric']),
@@ -99,7 +99,7 @@ export function ManageRoomDialog({ room, open, onOpenChange }: ManageRoomDialogP
     defaultValues: {
       name: room.name,
       width_m: room.width_m,
-      depth_m: room.depth_m,
+      height_m: room.height_m,
       tile_width_cm: room.tile_width_cm || 60,
       tile_height_cm: room.tile_height_cm || 60,
       x_axis_naming: room.x_axis_naming || 'alpha',
@@ -133,7 +133,7 @@ export function ManageRoomDialog({ room, open, onOpenChange }: ManageRoomDialogP
       form.reset({
         name: room.name,
         width_m: room.width_m,
-        depth_m: room.depth_m,
+        height_m: room.height_m,
         tile_width_cm: room.tile_width_cm || 60,
         tile_height_cm: room.tile_height_cm || 60,
         x_axis_naming: room.x_axis_naming || 'alpha',
@@ -220,7 +220,7 @@ export function ManageRoomDialog({ room, open, onOpenChange }: ManageRoomDialogP
              <FormField control={form.control} name="name" render={({ field }) => ( <FormItem><FormLabel>Nome da Sala</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem> )}/>
              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <FormField control={form.control} name="width_m" render={({ field }) => ( <FormItem><FormLabel>Largura (m)</FormLabel><FormControl><Input type="number" step="0.1" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem> )}/>
-              <FormField control={form.control} name="depth_m" render={({ field }) => ( <FormItem><FormLabel>Profundidade (m)</FormLabel><FormControl><Input type="number" step="0.1" {...field} value={field.value ?? ''}/></FormControl><FormMessage /></FormItem> )}/>
+              <FormField control={form.control} name="height_m" render={({ field }) => ( <FormItem><FormLabel>Profundidade (m)</FormLabel><FormControl><Input type="number" step="0.1" {...field} value={field.value ?? ''}/></FormControl><FormMessage /></FormItem> )}/>
               <FormField control={form.control} name="tile_width_cm" render={({ field }) => ( <FormItem><FormLabel>Piso (cm L)</FormLabel><FormControl><Input type="number" {...field} value={field.value ?? ''}/></FormControl><FormMessage /></FormItem> )}/>
               <FormField control={form.control} name="tile_height_cm" render={({ field }) => ( <FormItem><FormLabel>Piso (cm P)</FormLabel><FormControl><Input type="number" {...field} value={field.value ?? ''}/></FormControl><FormMessage /></FormItem> )}/>
             </div>
@@ -242,7 +242,7 @@ export function ManageRoomDialog({ room, open, onOpenChange }: ManageRoomDialogP
                                 {zones.map(zone => (
                                 <div key={zone.id} className="flex items-center justify-between p-2 bg-muted/50 rounded-md">
                                     <div className="flex items-center gap-4 font-mono text-sm">
-                                        <span>De: <strong>{getGridLabel(zone.x, zone.y, room.x_axis_naming, room.y_axis_naming)}</strong></span>
+                                        <span>De: <strong>{getGridLabel(zone.x, zone.y, room.x_axis_naming || 'alpha', room.y_axis_naming || 'numeric')}</strong></span>
                                         <span>Tamanho: <strong>{zone.width}x{zone.height}</strong></span>
                                     </div>
                                     <div>
@@ -263,7 +263,7 @@ export function ManageRoomDialog({ room, open, onOpenChange }: ManageRoomDialogP
                 </div>
 
                 <div className="mt-6 border-t pt-6">
-                    <h5 className="font-medium mb-3">{editingZone ? `Editando Zona: ${getGridLabel(editingZone.x, editingZone.y, room.x_axis_naming, room.y_axis_naming)}` : 'Adicionar Nova Zona'}</h5>
+                    <h5 className="font-medium mb-3">{editingZone ? `Editando Zona: ${getGridLabel(editingZone.x, editingZone.y, room.x_axis_naming || 'alpha', room.y_axis_naming || 'numeric')}` : 'Adicionar Nova Zona'}</h5>
                     <div className="flex items-end gap-2">
                       <FormField control={form.control} name="newExclusionZone.xStr" render={({ field }) => (<FormItem><FormLabel>Coluna ({room.x_axis_naming === 'alpha' ? 'Letra' : 'Nº'})</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage/></FormItem>)}/>
                       <FormField control={form.control} name="newExclusionZone.yStr" render={({ field }) => (<FormItem><FormLabel>Linha ({room.y_axis_naming === 'alpha' ? 'Letra' : 'Nº'})</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage/></FormItem>)}/>

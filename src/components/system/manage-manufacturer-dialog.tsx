@@ -40,10 +40,14 @@ interface ManageManufacturerDialogProps {
   mode: 'add' | 'edit';
   manufacturer?: Manufacturer;
   children: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function ManageManufacturerDialog({ mode, manufacturer, children }: ManageManufacturerDialogProps) {
+export function ManageManufacturerDialog({ mode, manufacturer, children, open, onOpenChange }: ManageManufacturerDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const actualOpen = open !== undefined ? open : isOpen;
+  const setActualOpen = onOpenChange || setIsOpen;
   const router = useRouter();
   const { toast } = useToast();
 
@@ -72,7 +76,7 @@ export function ManageManufacturerDialog({ mode, manufacturer, children }: Manag
         toast({ title: "Sucesso!", description: `O fabricante "${data.name}" foi atualizado.` });
       }
       form.reset();
-      setIsOpen(false);
+      setActualOpen(false);
       router.refresh(); 
     } catch (error: any) {
       toast({
@@ -84,7 +88,7 @@ export function ManageManufacturerDialog({ mode, manufacturer, children }: Manag
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={actualOpen} onOpenChange={setActualOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>

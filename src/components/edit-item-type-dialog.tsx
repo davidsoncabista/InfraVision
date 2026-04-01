@@ -84,6 +84,9 @@ const childitem_typeschema = z.object({
     icon_name: z.string().optional(),
     // Para manter a consistência, mesmo que oculto, o schema precisa corresponder à action
     category: z.string().default('Equipamento'),
+    shape: z.enum(['rectangle', 'circle']).default('rectangle'),
+    can_have_children: z.boolean().default(false),
+    is_resizable: z.boolean().default(true),
     defaultwidth_m: z.coerce.number().default(0),
     default_height_m: z.coerce.number().default(0),
     default_color: z.string().optional(),
@@ -102,7 +105,7 @@ export function EditItemTypeDialog({ itemType, open, onOpenChange, isParentType 
   const { toast } = useToast();
 
   const form = useForm<any>({
-    resolver: zodResolver(isParentType ? parentitem_typeschema : childitem_typeschema),
+    resolver: zodResolver((isParentType ? parentitem_typeschema : childitem_typeschema) as any),
   });
   
   const selectedShape = form.watch('shape');

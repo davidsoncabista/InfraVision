@@ -36,10 +36,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { ApprovalRequest, getPendingApprovalForItem } from '@/lib/approval-actions';
 import { cn } from '@/lib/utils';
-import { Tooltip, TooltipProvider, TooltipContent } from './ui/tooltip';
+import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
 
-const child_itemsList = ({ parent_id, allItems, onItemClick }: { parent_id: string, allItems: GridItem[], onItemClick: (item: GridItem) => void }) => {
+const ChildItemsList = ({ parent_id, allItems, onItemClick }: { parent_id: string, allItems: GridItem[], onItemClick: (item: GridItem) => void }) => {
     const child_items = allItems.filter(item => item.parent_id === parent_id);
 
     if (child_items.length === 0) {
@@ -429,7 +429,7 @@ export const ItemDetailDialog = ({
                 const building_id = `bldg_${i.buildingName}`;
                 let building = buildingsMap.get(building_id);
                 if (!building) {
-                    building = { id: building_id, name: i.buildingName, rooms: [] };
+                    building = { id: building_id, name: i.buildingName, rooms: [], is_test_data: false };
                     buildingsMap.set(building_id, building);
                 }
                 
@@ -439,8 +439,9 @@ export const ItemDetailDialog = ({
                         name: i.roomName,
                         building_id: building.id,
                         items: [],
-                        width_m: 20, width_m: 20, tile_width_cm: 60, tile_height_cm: 60,
-                        x_axis_naming: 'alpha', y_axis_naming: 'numeric'
+                        width_m: 20, height_m: 20, tile_width_cm: 60, tile_height_cm: 60,
+                        x_axis_naming: 'alpha', y_axis_naming: 'numeric',
+                        is_test_data: false
                     });
                 }
             }
@@ -664,7 +665,7 @@ export const ItemDetailDialog = ({
                       <Textarea id="description" value={editFormData.description || ''} onChange={(e) => handleFormChange('description', e.target.value)} rows={3} />
                   </div>
                   {isRackType && (
-                     <child_itemsList 
+                     <ChildItemsList 
                         parent_id={item.id} 
                         allItems={fullItemContext.allItems}
                         onItemClick={(childItem) => {

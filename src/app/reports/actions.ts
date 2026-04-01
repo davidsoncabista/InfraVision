@@ -59,7 +59,7 @@ export async function exportData(dataTypes: string[]): Promise<string | null> {
     if (dataTypes.includes('parent_items')) {
         const data = await getparent_items();
         if (data.length > 0) {
-            const mappedData = data.map(item => ({
+            const mappedData = data.map((item: any) => ({
                 'ID': item.id,
                 'Nome': item.label,
                 'Tipo': item.type,
@@ -84,7 +84,7 @@ export async function exportData(dataTypes: string[]): Promise<string | null> {
     if (dataTypes.includes('child_items')) {
         const data = await getchild_items();
         if (data.length > 0) {
-            const mappedData = data.map(item => ({
+            const mappedData = data.map((item: any) => ({
                 'ID': item.id,
                 'Nome': item.label,
                 'Tipo': item.type,
@@ -105,7 +105,7 @@ export async function exportData(dataTypes: string[]): Promise<string | null> {
     if (dataTypes.includes('connections')) {
         const data = await getConnections();
         if (data.length > 0) {
-            const mappedData = data.map(item => ({
+            const mappedData = data.map((item: any) => ({
                 'ID': item.id,
                 'Origem (Equipamento)': item.itemA_label,
                 'Origem (Rack)': item.itemA_parentName,

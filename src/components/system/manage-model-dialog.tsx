@@ -52,10 +52,14 @@ interface ManageModelDialogProps {
   mode: 'add' | 'edit';
   model?: Model;
   children: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function ManageModelDialog({ mode, model, children }: ManageModelDialogProps) {
+export function ManageModelDialog({ mode, model, children, open, onOpenChange }: ManageModelDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const actualOpen = open !== undefined ? open : isOpen;
+  const setActualOpen = onOpenChange || setIsOpen;
   const [manufacturers, setManufacturers] = useState<Manufacturer[]>([]);
   const router = useRouter();
   const { toast } = useToast();
@@ -96,7 +100,7 @@ export function ManageModelDialog({ mode, model, children }: ManageModelDialogPr
         toast({ title: "Sucesso!", description: `O modelo "${data.name}" foi atualizado.` });
       }
       form.reset();
-      setIsOpen(false);
+      setActualOpen(false);
       router.refresh(); 
     } catch (error: any) {
       toast({
@@ -108,7 +112,7 @@ export function ManageModelDialog({ mode, model, children }: ManageModelDialogPr
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={actualOpen} onOpenChange={setActualOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -162,7 +166,7 @@ export function ManageModelDialog({ mode, model, children }: ManageModelDialogPr
                     <FormItem>
                     <FormLabel>Tamanho (U)</FormLabel>
                     <FormControl>
-                        <Input type="number" placeholder="Ex: 1, 2, 4" {...field} onChange={e => field.onChange(e.target.value === '' ? null : e.target.valueAsNumber)} />
+                        <Input type="number" placeholder="Ex: 1, 2, 4" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? null : e.target.valueAsNumber)} />
                     </FormControl>
                     <FormMessage />
                     </FormItem>

@@ -18,6 +18,6 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
     )
   }
 )
-Input.display_name = "Input"
+Input.displayName = "Input"
 
 export { Input }

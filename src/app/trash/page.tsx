@@ -6,7 +6,7 @@ import { HardDrive, Puzzle, DoorOpen, Building } from "lucide-react";
 import { getDecommissionedItems } from "@/lib/item-actions";
 import { DecommissionedItemsTable } from "@/components/trash/decommissioned-items-table";
 import { getDeleteditem_types } from '@/lib/item-types-actions';
-import { Deleteditem_typesTable } from '@/components/trash/deleted-item-types-table';
+import { DeletedItemTypesTable } from '@/components/trash/deleted-item-types-table';
 
 export const dynamic = 'force-dynamic';
 
@@ -50,7 +50,7 @@ export default async function TrashPage() {
                 </TabsContent>
                 <TabsContent value="item_types" className="mt-4">
                      {deleteditem_types.length > 0 ? (
-                        <Deleteditem_typesTable item_types={deleteditem_types} />
+                        <DeletedItemTypesTable item_types={deleteditem_types} />
                      ) : (
                         <PlaceholderContent entity="tipo de item" />
                      )}

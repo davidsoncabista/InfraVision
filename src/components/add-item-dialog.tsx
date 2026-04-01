@@ -57,7 +57,7 @@ export function AddItemDialog({ room, open, onOpenChange, onItemAdded }: AddItem
       itemTypeId: undefined,
     }
   });
-  const { isSubmitting, control, handleSubmit, watch } = form;
+  const { control, handleSubmit, watch, formState: { isSubmitting } } = form;
 
   const selectedTypeId = watch("itemTypeId");
 

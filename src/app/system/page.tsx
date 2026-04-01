@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AddItemTypeDialog } from '@/components/add-item-type-dialog';
 import { AddStatusButton } from '@/components/system/add-status-button';
-import { item_typesTable } from '@/components/system/item-types-table';
+import { ItemTypesTable } from '@/components/system/item-types-table';
 import { StatusesTable } from '@/components/system/statuses-table';
 import { Puzzle, RefreshCcwDot, HardDrive, LayoutGrid, Tag, Plus, Library, Network, Plug, Link2, AlertTriangle, BadgeAlert, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -13,8 +13,8 @@ import { ManufacturersTable } from '@/components/system/manufacturers-table';
 import { ManageManufacturerDialog } from '@/components/system/manage-manufacturer-dialog';
 import { ModelsTable } from '@/components/system/models-table';
 import { ManageModelDialog } from '@/components/system/manage-model-dialog';
-import { port_typesTable } from '@/components/system/port-types-table';
-import { Manageport_typeDialog } from '@/components/system/manage-port-type-dialog';
+import { PortTypesTable } from '@/components/system/port-types-table';
+import { ManagePortTypeDialog } from '@/components/system/manage-port-type-dialog';
 import { ConnectionTypesTable } from '@/components/system/connection-types-table';
 import { ManageConnectionTypeDialog } from '@/components/system/manage-connection-type-dialog';
 import { IncidentStatusesTable } from '@/components/system/incident-statuses-table';
@@ -60,7 +60,7 @@ async function SystemPage() {
                           <Button><Plus className="mr-2" />Adicionar Tipo</Button>
                         </AddItemTypeDialog>
                     </div>
-                    <item_typesTable isParentTypeTable={true} />
+                    <ItemTypesTable isParentTypeTable={true} />
                 </TabsContent>
                 
                 <TabsContent value="child_types" className="mt-6 space-y-6">
@@ -72,7 +72,7 @@ async function SystemPage() {
                           <Button><Plus className="mr-2" />Adicionar Tipo</Button>
                         </AddItemTypeDialog>
                     </div>
-                    <item_typesTable isParentTypeTable={false} />
+                    <ItemTypesTable isParentTypeTable={false} />
                 </TabsContent>
 
                 <TabsContent value="attributes" className="mt-6 space-y-6">
@@ -123,11 +123,11 @@ async function SystemPage() {
                         <p className="text-muted-foreground text-sm max-w-xl">
                             Gerencie a lista de tipos de porta (conectores) disponíveis no sistema.
                         </p>
-                        <Manageport_typeDialog mode="add">
+                        <ManagePortTypeDialog mode="add">
                           <Button><Plus className="mr-2" />Adicionar Tipo de Porta</Button>
-                        </Manageport_typeDialog>
+                        </ManagePortTypeDialog>
                     </div>
-                    <port_typesTable />
+                    <PortTypesTable />
                  </TabsContent>
                  <TabsContent value="connection_types" className="mt-6 space-y-6">
                     <div className="flex items-center justify-between">
