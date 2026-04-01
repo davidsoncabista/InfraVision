@@ -102,7 +102,7 @@ export function EditItemTypeDialog({ itemType, open, onOpenChange, isParentType 
   const { toast } = useToast();
 
   const form = useForm<any>({
-    resolver: zodResolver(isParentType ? parentitem_typeschema : childitem_typeschema),
+    resolver: zodResolver((isParentType ? parentitem_typeschema : childitem_typeschema) as z.ZodTypeAny),
   });
   
   const selectedShape = form.watch('shape');

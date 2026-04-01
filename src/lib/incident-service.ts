@@ -117,7 +117,7 @@ export async function resolveConnectionIncident({ incidentId, action, resolution
         const portId = incidents[0].entity_id;
         const ports = await apiGet('/equipment_ports', { 
             id: `eq.${portId}`, 
-            select: '*,child_items(label,parent_items(label))' 
+            select: '*,child_items(label,type,parent_items(label))' 
         });
         
         if (!ports || !ports.length) return { details: null };
@@ -128,7 +128,8 @@ export async function resolveConnectionIncident({ incidentId, action, resolution
                 item: { 
                     label: port.child_items?.label, 
                     id: port.childitemid,
-                    parentName: port.child_items?.parent_items?.label 
+                    parentName: port.child_items?.parent_items?.label,
+                    type: port.child_items?.type || 'unknown'
                 },
                 port: {
                     id: port.id,

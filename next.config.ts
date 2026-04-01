@@ -1,8 +1,19 @@
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  /* config options aqui */
   output: 'standalone', // <-- ESSA É A LINHA QUE FALTAVA
+  webpack: (config, { isServer }) => {
+    config.plugins = config.plugins || [];
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const webpack = require('webpack');
+    config.plugins.push(
+      new webpack.IgnorePlugin({
+        resourceRegExp: /^(@opentelemetry\/exporter-jaeger|@genkit-ai\/firebase|handlebars)$/,
+      })
+    );
+    return config;
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
