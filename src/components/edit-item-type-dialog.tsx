@@ -59,14 +59,14 @@ const parentitem_typeschema = z.object({
   category: z.string().min(3, "A categoria deve ter pelo menos 3 caracteres."),
   shape: z.enum(['rectangle', 'circle']),
   defaultwidth_m: z.coerce.number().optional().nullable(),
-  default_height_m: z.coerce.number().optional().nullable(),
+  default_depth_m: z.coerce.number().optional().nullable(),
   default_radius_m: z.coerce.number().optional().nullable(),
   icon_name: z.string().optional(),
   can_have_children: z.boolean(),
   is_resizable: z.boolean(),
   default_color: z.string().optional(),
 }).refine(data => {
-    if (data.shape === 'rectangle' && (!data.defaultwidth_m || !data.default_height_m)) {
+    if (data.shape === 'rectangle' && (!data.defaultwidth_m || !data.default_depth_m)) {
         return false;
     }
     if (data.shape === 'circle' && !data.default_radius_m) {
@@ -88,7 +88,7 @@ const childitem_typeschema = z.object({
     can_have_children: z.boolean().default(false),
     is_resizable: z.boolean().default(true),
     defaultwidth_m: z.coerce.number().default(0),
-    default_height_m: z.coerce.number().default(0),
+    default_depth_m: z.coerce.number().default(0),
     default_color: z.string().optional(),
 });
 
@@ -117,7 +117,7 @@ export function EditItemTypeDialog({ itemType, open, onOpenChange, isParentType 
         category: itemType.category,
         shape: itemType.shape || 'rectangle',
         defaultwidth_m: itemType.defaultwidth_m,
-        default_height_m: itemType.default_height_m,
+        default_depth_m: itemType.default_depth_m,
         default_radius_m: itemType.default_radius_m,
         icon_name: itemType.icon_name || "",
         can_have_children: itemType.can_have_children,
@@ -192,7 +192,7 @@ export function EditItemTypeDialog({ itemType, open, onOpenChange, isParentType 
                 <FormField control={form.control} name="defaultwidth_m" render={({ field }) => (
                     <FormItem><FormLabel>Largura Padrão (m)</FormLabel><FormControl><Input type="number" step="0.01" {...field} /></FormControl><FormMessage /></FormItem>
                 )}/>
-                <FormField control={form.control} name="default_height_m" render={({ field }) => (
+                <FormField control={form.control} name="default_depth_m" render={({ field }) => (
                     <FormItem><FormLabel>Comprimento Padrão (m)</FormLabel><FormControl><Input type="number" step="0.01" {...field} /></FormControl><FormMessage /></FormItem>
                 )}/>
             </div>

@@ -67,7 +67,7 @@ export function checkCollision(
 
   // Calcula as dimensões do item em células do grid
   const itemWidthInCells = itemToCheck.width_m / (tileDimensions.widthCm / 100);
-  const itemHeightInCells = itemToCheck.heightM / (tileDimensions.heightCm / 100);
+  const itemHeightInCells = itemToCheck.depthM / (tileDimensions.heightCm / 100);
 
   const itemToCheckEndX = itemToCheck.x + itemWidthInCells;
   const itemToCheckEndY = itemToCheck.y + itemHeightInCells;
@@ -83,7 +83,7 @@ export function checkCollision(
     if (otherItem.id === itemToCheck.id) continue;
 
     const otherItemWidthInCells = otherItem.width_m / (tileDimensions.widthCm / 100);
-    const otherItemHeightInCells = otherItem.heightM / (tileDimensions.heightCm / 100);
+    const otherItemHeightInCells = otherItem.depthM / (tileDimensions.heightCm / 100);
     const otherItemEndX = otherItem.x + otherItemWidthInCells;
     const otherItemEndY = otherItem.y + otherItemHeightInCells;
 

@@ -7,7 +7,7 @@ export interface GridItem {
   x: number;
   y: number;
   width_m: number; 
-  heightM: number; 
+  depthM: number; 
   radiusM?: number | null; // Adicionando raio
   type: string;
   status: any;

@@ -12,7 +12,7 @@ export interface ItemType {
   category: string;
   shape: 'rectangle' | 'circle';
   defaultwidth_m: number;
-  default_height_m: number;
+  default_depth_m: number;
   default_radius_m?: number | null;
   icon_name?: string;
   can_have_children?: boolean;
@@ -32,7 +32,7 @@ const mapItemType = (r: any): ItemType => ({
     category: r.category,
     shape: r.shape || 'rectangle',
     defaultwidth_m: r.defaultwidth_m || 0,
-    default_height_m: r.default_height_m || 0,
+    default_depth_m: r.default_depth_m || 0,
     default_radius_m: r.default_radius_m,
     icon_name: r.icon_name,
     can_have_children: !!r.can_have_children,
@@ -73,7 +73,7 @@ export async function addItemType(data: any, isParentType: boolean) {
         default_color: data.default_color || null,
         shape: data.shape || 'rectangle',
         defaultwidth_m: data.shape === 'circle' ? data.default_radius_m : (data.defaultwidth_m || 0.6),
-        default_height_m: data.shape === 'circle' ? data.default_radius_m : (data.default_height_m || 1.0),
+        default_depth_m: data.shape === 'circle' ? data.default_radius_m : (data.default_depth_m || 1.0),
         default_radius_m: data.default_radius_m || null,
         isdefault: false
     };
@@ -98,7 +98,7 @@ export async function updateItemType(id: string, data: any, isParentType: boolea
   if (data.category) dataForDb.category = data.category;
   if (data.icon_name !== undefined) dataForDb.icon_name = data.icon_name;
   if (data.defaultwidth_m !== undefined) dataForDb.defaultwidth_m = data.defaultwidth_m;
-  if (data.default_height_m !== undefined) dataForDb.default_height_m = data.default_height_m;
+  if (data.default_depth_m !== undefined) dataForDb.default_depth_m = data.default_depth_m;
   if (data.default_radius_m !== undefined) dataForDb.default_radius_m = data.default_radius_m;
   if (data.default_color !== undefined) dataForDb.default_color = data.default_color;
   if (data.can_have_children !== undefined) dataForDb.can_have_children = data.can_have_children;

@@ -80,7 +80,7 @@ BEGIN
         default_color NVARCHAR(50),
         shape NVARCHAR(50) NOT NULL DEFAULT 'rectangle',
         defaultwidth_m FLOAT,
-        default_height_m FLOAT,
+        default_depth_m FLOAT,
         default_radius_m FLOAT,
         isDefault BIT NOT NULL DEFAULT 0
     );
@@ -93,12 +93,12 @@ USING (
         ('type_rack_default', 'Rack 42U', 'Gabinetes', 'Box', 1, 1, '#3b82f6', 'rectangle', 0.6, 1.2, NULL, 1),
         ('type_qdf', 'QDF', 'Cabeamento', 'Network', 1, 0, '#f97316', 'rectangle', 0.8, 0.6, NULL, 1),
         ('type_ac_row', 'Ar Condicionado In-Row', 'Climatização', 'Snowflake', 0, 0, '#64748b', 'rectangle', 0.3, 1, NULL, 1)
-) AS Source (id, name, category, icon_name, can_have_children, is_resizable, default_color, shape, defaultwidth_m, default_height_m, default_radius_m, isDefault)
+) AS Source (id, name, category, icon_name, can_have_children, is_resizable, default_color, shape, defaultwidth_m, default_depth_m, default_radius_m, isDefault)
 ON (Target.id = Source.id)
 WHEN MATCHED THEN
-    UPDATE SET name = Source.name, category = Source.category, icon_name = Source.icon_name, can_have_children = Source.can_have_children, is_resizable = Source.is_resizable, default_color = Source.default_color, shape = Source.shape, defaultwidth_m = Source.defaultwidth_m, default_height_m = Source.default_height_m, default_radius_m = Source.default_radius_m, isDefault = Source.isDefault
+    UPDATE SET name = Source.name, category = Source.category, icon_name = Source.icon_name, can_have_children = Source.can_have_children, is_resizable = Source.is_resizable, default_color = Source.default_color, shape = Source.shape, defaultwidth_m = Source.defaultwidth_m, default_depth_m = Source.default_depth_m, default_radius_m = Source.default_radius_m, isDefault = Source.isDefault
 WHEN NOT MATCHED BY TARGET THEN
-    INSERT (id, name, category, icon_name, can_have_children, is_resizable, default_color, shape, defaultwidth_m, default_height_m, default_radius_m, status, isDefault) VALUES (Source.id, Source.name, Source.category, Source.icon_name, Source.can_have_children, Source.is_resizable, Source.default_color, Source.shape, Source.defaultwidth_m, Source.default_height_m, Source.default_radius_m, 'active', Source.isDefault);
+    INSERT (id, name, category, icon_name, can_have_children, is_resizable, default_color, shape, defaultwidth_m, default_depth_m, default_radius_m, status, isDefault) VALUES (Source.id, Source.name, Source.category, Source.icon_name, Source.can_have_children, Source.is_resizable, Source.default_color, Source.shape, Source.defaultwidth_m, Source.default_depth_m, Source.default_radius_m, 'active', Source.isDefault);
 GO
 
 

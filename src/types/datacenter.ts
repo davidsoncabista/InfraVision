@@ -18,7 +18,7 @@ export interface GridItem extends ParentItem {
   itemTypeColor: string;
   room_id: string;
   width_m: number;
-  heightM: number;
+  depthM: number;
   radiusM?: number | null;
   serial_number?: string | null;
   isTagEligible: boolean;

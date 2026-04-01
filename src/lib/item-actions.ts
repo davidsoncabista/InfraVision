@@ -17,7 +17,7 @@ export async function addItem({ label, itemType, room }: { label: string; itemTy
       x: 0,
       y: 0,
       width_m: Number(itemType.defaultwidth_m),
-      height_m: Number(itemType.default_height_m),
+      height_m: Number(itemType.default_depth_m),
       radius_m: itemType.default_radius_m ? Number(itemType.default_radius_m) : null,
       type: itemType.name,
       status: 'draft',

@@ -587,8 +587,8 @@ export const ItemDetailDialog = ({
                             <Input id="width_m" type="number" step="0.01" value={editFormData.width_m ?? ''} onChange={(e) => handleNumericFormChange('width_m', e.target.value)} />
                         </div>
                          <div>
-                            <Label htmlFor="heightM">Comprimento (m)</Label>
-                            <Input id="heightM" type="number" step="0.01" value={editFormData.heightM ?? ''} onChange={(e) => handleNumericFormChange('heightM', e.target.value)} />
+                            <Label htmlFor="depthM">Comprimento (m)</Label>
+                            <Input id="depthM" type="number" step="0.01" value={editFormData.depthM ?? ''} onChange={(e) => handleNumericFormChange('depthM', e.target.value)} />
                         </div>
                     </>
                     )}

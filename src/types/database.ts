@@ -28,8 +28,8 @@ export interface ParentItem {
   x: number;
   y: number;
   width_m: number;
-  heightm: number;
-  radiusm?: number | null;
+  depth_m: number;
+  radius_m?: number | null;
   type: string;
   status: string;
   room_id?: string | null;
@@ -88,7 +88,7 @@ export interface ItemType {
   shape: 'rectangle' | 'circle';
   default_color?: string | null;
   defaultwidth_m: number;
-  default_height_m: number;
+  default_depth_m: number;
   default_radius_m?: number | null;
   can_have_children: boolean;
   is_test_data: boolean;

@@ -277,7 +277,7 @@ export function DatacenterClient({ initialData }: { initialData: Building[] }) {
       if (draggedItem && (draggedItem.x !== draggingItem.originalX || draggedItem.y !== draggingItem.originalY)) {
         
         const itemWidthInCells = draggedItem.width_m / (tileDimensions.widthCm / 100);
-        const itemHeightInCells = draggedItem.heightM / (tileDimensions.heightCm / 100);
+        const itemHeightInCells = draggedItem.depthM / (tileDimensions.heightCm / 100);
         let collidesWithExclusion = false;
         for (const zone of exclusionZones) {
           if (
@@ -479,9 +479,9 @@ export function DatacenterClient({ initialData }: { initialData: Building[] }) {
         itemPixelWidth = (item.radiusM * 2) / (tileDimensions.widthCm / 100) * cellSize;
         itemPixelHeight = itemPixelWidth;
         borderRadius = '50%';
-    } else if (item.width_m != null && item.heightM != null) {
+    } else if (item.width_m != null && item.depthM != null) {
         itemPixelWidth = (item.width_m / (tileDimensions.widthCm / 100)) * cellSize;
-        itemPixelHeight = (item.heightM / (tileDimensions.heightCm / 100)) * cellSize;
+        itemPixelHeight = (item.depthM / (tileDimensions.heightCm / 100)) * cellSize;
     } else {
         return null;
     }
