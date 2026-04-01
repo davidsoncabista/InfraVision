@@ -68,7 +68,7 @@ export async function getPrintableReportData(): Promise<PrintableReportData> {
             apiFetch('/child_items?status=not.in.(decommissioned,deleted)'),
             apiFetch('/connections?select=*,portA:port_a_id(label,child_items(label,parent_items(label))),portB:port_b_id(label,child_items(label,parent_items(label))),connectiontypes(name)'),
             apiFetch('/users?signature_url=not.is.null&select=id,display_name,role,signature_url&order=display_name.asc'),
-            apiFetch('/itemstatuses?select=id,name')
+            apiFetch('/item_statuses?select=id,name')
         ]);
 
         const statusMap = new Map((statusesResult || []).map((s: any) => [s.id, s.name]));

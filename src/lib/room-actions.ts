@@ -19,7 +19,7 @@ interface AddRoomParams {
   building_id: string;
   name: string;
   width_m?: number;
-  height_m?: number;
+  depth_m?: number;
   tile_width_cm?: number;
   tile_height_cm?: number;
   x_axis_naming?: 'alpha' | 'numeric';
@@ -42,7 +42,7 @@ export async function addRoom(params: AddRoomParams): Promise<void> {
     name: params.name,
     building_id: params.building_id,
     width_m: params.width_m ?? 0,
-    height_m: params.height_m ?? 0,
+    depth_m: params.depth_m ?? 0,
     tile_width_cm: params.tile_width_cm ?? 60,
     tile_height_cm: params.tile_height_cm ?? 60,
     x_axis_naming: params.x_axis_naming ?? 'alpha',

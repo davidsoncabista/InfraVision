@@ -55,7 +55,7 @@ export async function populateTestData(): Promise<TestDataSummary> {
           name: `${TEST_DATA_PREFIX}Sala ${r} (Teste)`,
           building_id: buildingId,
           width_m: 5 + r,
-          height_m: 6 + r,
+          depth_m: 6 + r,
           tile_width_cm: 60,
           tile_height_cm: 60,
           x_axis_naming: r % 2 === 0 ? 'alpha' : 'numeric',

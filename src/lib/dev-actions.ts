@@ -60,7 +60,7 @@ export async function populateRooms() {
         name: 'Sala de Teste 01', 
         building_id: 'B_DEV_01', 
         width_m: 20,
-        height_m: 20,
+        depth_m: 20,
         tile_width_cm: 50,
         tile_height_cm: 50,
         x_axis_naming: 'alpha',

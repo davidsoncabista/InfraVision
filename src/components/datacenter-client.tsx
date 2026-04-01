@@ -183,7 +183,7 @@ export function DatacenterClient({ initialData }: { initialData: Building[] }) {
 
   const roomDimensions = React.useMemo(() => ({
     width_m: activeRoom?.width_m || 20,
-    height_m: activeRoom?.height_m || 20,
+    depth_m: activeRoom?.depth_m || 20,
   }), [activeRoom]);
 
   const tileDimensions = React.useMemo(() => ({

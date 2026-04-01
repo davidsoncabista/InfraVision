@@ -13,7 +13,7 @@ export interface Room {
   name: string;
   building_id: string;
   width_m: number;
-  height_m: number;
+  depth_m: number;
   tile_width_cm: number;
   tile_height_cm: number;
   x_axis_naming: 'alpha' | 'numeric';

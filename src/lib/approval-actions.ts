@@ -37,7 +37,7 @@ export async function getPendingApprovals(building_id: string): Promise<Approval
         if (!pending || pending.length === 0) return [];
 
         // 2. Busca os status para podermos mapear os nomes (ex: de 'draft' para 'Rascunho')
-        const statusRows = await apiFetch('/itemstatuses?select=id,name');
+        const statusRows = await apiFetch('/item_statuses?select=id,name');
         const statusMap = new Map(statusRows.map((s: any) => [s.id, s.name]));
 
         // 3. Separa os IDs para buscarmos os itens no banco
