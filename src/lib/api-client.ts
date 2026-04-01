@@ -39,7 +39,7 @@ class ApiClient {
     return response.json();
   }
 
-  async get(endpoint: string, params?: Record<string, any>): Promise<any> {
+  async get<T = any>(endpoint: string, params?: Record<string, any>): Promise<T> {
     let url = endpoint;
     if (params) {
       const queryString = new URLSearchParams();
@@ -50,10 +50,10 @@ class ApiClient {
       }
       url += `?${queryString.toString()}`;
     }
-    return this.request(url, { method: 'GET' });
+    return this.request(url, { method: 'GET' }) as Promise<T>;
   }
 
-  async post(endpoint: string, data: any, params?: Record<string, any>, options?: RequestOptions): Promise<any> {
+  async post<T = any>(endpoint: string, data: any, params?: Record<string, any>, options?: RequestOptions): Promise<T> {
     let url = endpoint;
     if (params) {
       const queryString = new URLSearchParams();
@@ -68,10 +68,10 @@ class ApiClient {
       method: 'POST',
       body: JSON.stringify(data),
       ...options,
-    });
+    }) as Promise<T>;
   }
 
-  async patch(endpoint: string, data: any, params?: Record<string, any>): Promise<any> {
+  async patch<T = any>(endpoint: string, data: any, params?: Record<string, any>): Promise<T> {
     let url = endpoint;
     if (params) {
       const queryString = new URLSearchParams();
@@ -85,10 +85,10 @@ class ApiClient {
     return this.request(url, {
       method: 'PATCH',
       body: JSON.stringify(data),
-    });
+    }) as Promise<T>;
   }
 
-  async delete(endpoint: string, params?: Record<string, any>): Promise<any> {
+  async delete<T = any>(endpoint: string, params?: Record<string, any>): Promise<T> {
     let url = endpoint;
     if (params) {
       const queryString = new URLSearchParams();
@@ -101,7 +101,7 @@ class ApiClient {
     }
     return this.request(url, {
       method: 'DELETE',
-    });
+    }) as Promise<T>;
   }
 }
 
