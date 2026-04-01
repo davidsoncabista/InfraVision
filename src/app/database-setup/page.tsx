@@ -10,6 +10,7 @@ import { useState, useTransition, useMemo } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { TestDataManager } from "@/components/database-setup/test-data-manager";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -87,6 +88,8 @@ export default function DatabaseSetupPage() {
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-3xl font-bold font-headline">Hub do Banco de Dados (PostgreSQL / PostgREST)</h1>
+      
+      <TestDataManager />
       
       <Card>
         <CardHeader>
