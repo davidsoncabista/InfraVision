@@ -78,28 +78,26 @@
         force: yes
         version: main
 
-    - name: Configurar script de Auto-Seed com estrutura completa (init.sql)
+    - name: Criar script de provisionamento blindado
       shell: |
-        cp {{ app_dir }}/ansible/init.sql {{ app_dir }}/init.sql
+        cp {{ app_dir }}/ansible/init.sql {{ app_dir }}/init.sql || echo "CREATE EXTENSION IF NOT EXISTS pgcrypto;" > {{ app_dir }}/init.sql
+        
         cat <<EOF >> {{ app_dir }}/init.sql
-
-        -- Injetando Usuários Dinâmicos
+        
+        -- Cria a tabela base caso não exista
+        CREATE TABLE IF NOT EXISTS users (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          email VARCHAR(255) UNIQUE NOT NULL,
+          password VARCHAR(255) NOT NULL,
+          display_name VARCHAR(255),
+          role VARCHAR(50) DEFAULT 'guest'
+        );
+        
+        -- Injeta ou atualiza o usuário Admin dinamicamente
         INSERT INTO users (email, password, display_name, role) 
-        VALUES ('{{ admin_email }}', '{{ admin_password }}', 'Admin', 'developer')
-        ON CONFLICT (email) DO NOTHING;
-
-        INSERT INTO users (email, password, display_name, role) 
-        VALUES ('demo@davidson.dev.br', 'demo0326', 'Gerente de TI (Demo)', 'manager')
-        ON CONFLICT (email) DO NOTHING;
-
-        -- Dados de Demonstração Básicos
-        INSERT INTO buildings (id, name, address, is_test_data) 
-        VALUES ('bldg_demo_01', 'Data Center Principal - Alpha', 'Av. de Teste, 1000', TRUE)
-        ON CONFLICT (id) DO NOTHING;
-
-        INSERT INTO rooms (id, name, building_id, depth_m, width_m, tile_width_cm, tile_height_cm) 
-        VALUES ('room_demo_01', 'Sala Cofre 01', 'bldg_demo_01', 10, 10, 60, 60)
-        ON CONFLICT (id) DO NOTHING;
+        VALUES ('{{ admin_email }}', '{{ admin_password }}', 'Administrador', 'developer')
+        ON CONFLICT (email) DO UPDATE 
+        SET role = 'developer', password = EXCLUDED.password;
         EOF
 
     - name: Gerar ficheiro .env Dinâmico

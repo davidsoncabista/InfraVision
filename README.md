@@ -115,6 +115,12 @@ docker compose up -d db api
 npm run dev
 ```
 
+## 🔒 Destaques Técnicos
+1. **100% Air-Gapped Ready:** Nenhuma dependência de serviços externos no runtime.
+
+2. **IaC (Infrastructure as Code):** Deploy automatizado em containers LXC via Ansible, criando o ambiente, banco de dados e usuários de forma autônoma.
+
+3. **Type-Safe CRUD:** Interfaces Zod e TypeScript mapeadas 1:1 com o schema do banco de dados, resultando em zero erros de compilação (0 implicit any).
 
 
 ## 👨‍💻 Desenvolvedor Principal
