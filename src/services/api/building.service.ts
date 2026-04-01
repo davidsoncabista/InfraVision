@@ -13,7 +13,7 @@ export const buildingService = {
     return data?.[0] ?? null;
   },
 
-  async create(building: Omit<Building, "id">): Promise<Building> {
+  async create(building: Building): Promise<Building> {
     return apiClient.post<Building>(BASE_PATH, building);
   },
 

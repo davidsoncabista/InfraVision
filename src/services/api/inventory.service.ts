@@ -5,8 +5,8 @@ const PARENT_BASE = "/parent_items";
 const CHILD_BASE = "/child_items";
 
 export const inventoryService = {
-  async getParentItems(): Promise<ParentItem[]> {
-    return apiClient.get<ParentItem[]>(PARENT_BASE);
+  async getParentItems(params?: Record<string, any>): Promise<ParentItem[]> {
+    return apiClient.get<ParentItem[]>(PARENT_BASE, params);
   },
 
   async getParentItemById(id: string): Promise<ParentItem | null> {
@@ -26,8 +26,8 @@ export const inventoryService = {
     await apiClient.delete(`${PARENT_BASE}?id=eq.${id}`);
   },
 
-  async getChildItems(): Promise<ChildItem[]> {
-    return apiClient.get<ChildItem[]>(CHILD_BASE);
+  async getChildItems(params?: Record<string, any>): Promise<ChildItem[]> {
+    return apiClient.get<ChildItem[]>(CHILD_BASE, params);
   },
 
   async getChildItemById(id: string): Promise<ChildItem | null> {
