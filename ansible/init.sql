@@ -277,3 +277,112 @@ CREATE TABLE IF NOT EXISTS connections (
   is_test_data BOOLEAN DEFAULT FALSE,
   UNIQUE(port_a_id, port_b_id)
 );
+
+-- =================================================================
+-- Inserções de Dados de Catálogo (Traduzido de infra_setup.sql MSSQL)
+-- =================================================================
+
+-- Manufacturers
+INSERT INTO manufacturers (id, name)
+VALUES
+  ('man_generic', 'Genérico'),
+  ('man_cisco', 'Cisco'),
+  ('man_dell', 'Dell EMC'),
+  ('man_hpe', 'HPE'),
+  ('man_vertiv', 'Vertiv'),
+  ('man_schneider', 'Schneider Electric (APC)'),
+  ('man_rittal', 'Rittal'),
+  ('man_furukawa', 'Furukawa'),
+  ('man_nokia', 'Nokia'),
+  ('man_padtec', 'Padtec'),
+  ('man_juniper', 'Juniper Networks')
+ON CONFLICT (name) DO NOTHING;
+
+-- Item Statuses
+INSERT INTO item_statuses (id, name, description, color, is_archived, is_default)
+VALUES
+  ('draft', 'Rascunho', 'Item está sendo criado e não é visível para todos.', 'amber', FALSE, TRUE),
+  ('pending_approval', 'Pendente', 'Item aguarda aprovação de um gerente para se tornar ativo.', 'yellow', FALSE, TRUE),
+  ('active', 'Ativo', 'Item está em operação normal.', 'green', FALSE, TRUE),
+  ('maintenance', 'Em Manutenção', 'Item está temporariamente offline para manutenção.', 'orange', FALSE, TRUE),
+  ('decommissioned', 'Descomissionado', 'Item foi retirado de operação e está na lixeira.', 'gray', TRUE, TRUE),
+  ('deleted', 'Excluído', 'Item foi permanentemente removido (uso interno).', 'red', TRUE, TRUE)
+ON CONFLICT (name) DO UPDATE SET
+  description = EXCLUDED.description,
+  color = EXCLUDED.color,
+  is_archived = EXCLUDED.is_archived,
+  is_default = EXCLUDED.is_default;
+
+-- Item Types
+INSERT INTO item_types (id, name, category, icon_name, can_have_children, is_resizable, default_color, shape, default_width_m, default_depth_m, default_radius_m, is_default)
+VALUES
+  ('type_rack_default', 'Rack 42U', 'Gabinetes', 'Box', TRUE, TRUE, '#3b82f6', 'rectangle', 0.6, 1.2, NULL, TRUE),
+  ('type_qdf', 'QDF', 'Cabeamento', 'Network', TRUE, FALSE, '#f97316', 'rectangle', 0.8, 0.6, NULL, TRUE),
+  ('type_ac_row', 'Ar Condicionado In-Row', 'Climatização', 'Snowflake', FALSE, FALSE, '#64748b', 'rectangle', 0.3, 1, NULL, TRUE)
+ON CONFLICT (name) DO UPDATE SET
+  category = EXCLUDED.category,
+  icon_name = EXCLUDED.icon_name,
+  can_have_children = EXCLUDED.can_have_children,
+  is_resizable = EXCLUDED.is_resizable,
+  default_color = EXCLUDED.default_color,
+  shape = EXCLUDED.shape,
+  default_width_m = EXCLUDED.default_width_m,
+  default_depth_m = EXCLUDED.default_depth_m,
+  default_radius_m = EXCLUDED.default_radius_m,
+  is_default = EXCLUDED.is_default;
+
+-- Item Types Eqp
+INSERT INTO item_types_eqp (id, name, category, icon_name, default_color, default_width_m, default_depth_m)
+VALUES
+  ('type_eqp_server', 'Servidor', 'Equipamentos de TI', 'HardDrive', NULL, 0.5, 0.8),
+  ('type_eqp_switch', 'Switch', 'Equipamentos de Rede', 'Network', NULL, 0.4, 0.3),
+  ('type_eqp_firewall', 'Firewall', 'Segurança de Rede', 'ShieldCheck', NULL, 0.4, 0.3),
+  ('type_eqp_storage', 'Storage', 'Armazenamento', 'Database', NULL, 0.5, 0.6),
+  ('type_eqp_patch', 'Patch Panel', 'Cabeamento', 'PanelTop', NULL, 0.5, 0.2),
+  ('type_eqp_pdu_rack', 'PDU de Rack', 'Energia', 'Power', NULL, 0.1, 1.0),
+  ('type_eqp_ups', 'UPS', 'Energia', 'BatteryCharging', NULL, 0.2, 0.4),
+  ('type_eqp_telecom', 'Equipamento Telecom', 'Equipamentos de Telecom', 'Router', NULL, 0.4, 0.3)
+ON CONFLICT (name) DO UPDATE SET
+  category = EXCLUDED.category,
+  icon_name = EXCLUDED.icon_name,
+  default_color = EXCLUDED.default_color,
+  default_width_m = EXCLUDED.default_width_m,
+  default_depth_m = EXCLUDED.default_depth_m;
+
+-- Port Types
+INSERT INTO port_types (id, name, description, is_default)
+VALUES
+  ('port_rj45', 'RJ45', 'Conector de rede padrão para cabos UTP.', TRUE),
+  ('port_sfp+', 'SFP+', 'Porta 10Gbps SFP.', FALSE),
+  ('port_lc_duplex', 'LC_Duplex', 'Conector duplo de fibra óptica LC.', FALSE),
+  ('port_c13', 'C13', 'Conector de energia padrão para PDUs.', FALSE),
+  ('port_idrac', 'iDRAC', 'Porta de gerenciamento remoto Dell.', FALSE)
+ON CONFLICT (name) DO UPDATE SET
+  description = EXCLUDED.description,
+  is_default = EXCLUDED.is_default;
+
+-- Connection Types
+INSERT INTO connection_types (id, name, description, is_default)
+VALUES
+  ('conn_utp', 'Dados UTP', 'Cabo de par trançado para redes Ethernet.', TRUE),
+  ('conn_fiber_mm', 'Fibra Óptica (MM)', 'Cabo de fibra óptica multimodo.', FALSE),
+  ('conn_fiber_sm', 'Fibra Óptica (SM)', 'Cabo de fibra óptica monomodo.', FALSE),
+  ('conn_power_ac', 'Energia AC', 'Cabo de alimentação de corrente alternada.', FALSE)
+ON CONFLICT (name) DO UPDATE SET
+  description = EXCLUDED.description,
+  is_default = EXCLUDED.is_default;
+
+-- Models
+INSERT INTO models (id, name, manufacturer_id, port_config, tamanho_u)
+VALUES
+  ('model_rittal_tsit', 'TS IT Network/Server Rack', (SELECT id FROM manufacturers WHERE name = 'Rittal'), NULL, 42),
+  ('model_apc_sx42', 'NetShelter SX 42U', (SELECT id FROM manufacturers WHERE name = 'Schneider Electric (APC)'), NULL, 42),
+  ('model_dell_r740', 'PowerEdge R740', (SELECT id FROM manufacturers WHERE name = 'Dell EMC'), '2xRJ45_Mgmt;2xSFP+;2xRJ45;1xiDRAC;1xVGA', 2),
+  ('model_cisco_c9300_48', 'Catalyst 9300 48-port', (SELECT id FROM manufacturers WHERE name = 'Cisco'), '48xRJ45;4xSFP+;1xConsole', 1),
+  ('model_cisco_c9300_24', 'Catalyst 9300 24-port', (SELECT id FROM manufacturers WHERE name = 'Cisco'), '24xRJ45;4xSFP+;1xConsole', 1),
+  ('model_nokia_7750', '7750 Service Router (SR-1)', (SELECT id FROM manufacturers WHERE name = 'Nokia'), '12xSFP+;2xQSFP28', 3),
+  ('model_padtec_tm800g', 'Transponder 800G', (SELECT id FROM manufacturers WHERE name = 'Padtec'), '2xLC_Duplex;4xSFP28', 1),
+  ('model_juniper_mx204', 'MX204', (SELECT id FROM manufacturers WHERE name = 'Juniper Networks'), '4xQSFP28;8xSFP+', 1)
+ON CONFLICT (name, manufacturer_id) DO UPDATE SET
+  port_config = EXCLUDED.port_config,
+  tamanho_u = EXCLUDED.tamanho_u;
