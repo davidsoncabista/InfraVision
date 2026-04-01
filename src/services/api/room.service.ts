@@ -13,7 +13,7 @@ export const roomService = {
     return data?.[0] ?? null;
   },
 
-  async create(room: Omit<Room, "id" | "items">): Promise<Room> {
+  async create(room: Partial<Omit<Room, "items">>): Promise<Room> {
     return apiClient.post<Room>(BASE_PATH, room);
   },
 

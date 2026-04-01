@@ -31,28 +31,28 @@ export async function getIncidents(building_id: string): Promise<Incident[]> {
     try {
         // Resource embedding para trazer nomes de tipos, severidades e status em uma só chamada REST
         // Nota: O PostgREST usa o nome da relação definida pela FK
-        const url = `/incidents?select=*,incidenttypes(name),incidentseverities(name,color,rank),incidentstatuses(name,color,icon_name)&incidentstatuses.name=not.in.(Resolvido,Fechado)&order=detectedat.desc`;
+        const url = `/incidents?select=*,incident_types(name),incident_severities(name,color,rank),incident_statuses(name,color,icon_name)&incident_statuses.name=not.in.(Resolvido,Fechado)&order=detectedat.desc`;
         
         const data = await apiGet('/incidents', {
-            select: '*,incidenttypes(name),incidentseverities(name,color,rank),incidentstatuses(name,color,icon_name)',
-            'incidentstatuses.name': 'not.in.(Resolvido,Fechado)',
+            select: '*,incident_types(name),incident_severities(name,color,rank),incident_statuses(name,color,icon_name)',
+            'incident_statuses.name': 'not.in.(Resolvido,Fechado)',
             order: 'detectedat.desc'
         });
         
         return (data || []).map((r: any) => ({
             id: r.id,
             description: r.description,
-            typeName: r.incidenttypes?.name || 'N/A',
+            typeName: r.incident_types?.name || 'N/A',
             entity_id: r.entity_id,
             entity_type: r.entity_type,
-            severity: r.incidentseverities?.name || 'N/A',
-            status: r.incidentstatuses?.name || 'N/A',
+            severity: r.incident_severities?.name || 'N/A',
+            status: r.incident_statuses?.name || 'N/A',
             statusId: r.statusid,
             detectedAt: new Date(r.detectedat).toISOString(),
             resolvedAt: r.resolvedat ? new Date(r.resolvedat).toISOString() : null,
-            severityColor: r.incidentseverities?.color || 'gray',
-            statusColor: r.incidentstatuses?.color || 'gray',
-            statusIcon: r.incidentstatuses?.icon_name || 'Info',
+            severityColor: r.incident_severities?.color || 'gray',
+            statusColor: r.incident_statuses?.color || 'gray',
+            statusIcon: r.incident_statuses?.icon_name || 'Info',
             evidenceCount: 0 // Será preenchido assincronamente se necessário
         }));
     } catch (err) {
@@ -69,7 +69,7 @@ export async function updateIncident(incidentId: string, newStatusId: string, us
     if (!user) throw new Error("Usuário não autenticado.");
 
     // Verifica se o novo status é de fechamento
-    const statuses = await apiGet('/incidentstatuses', { id: `eq.${newStatusId}` });
+    const statuses = await apiGet('/incident_statuses', { id: `eq.${newStatusId}` });
     const isResolved = statuses && (statuses[0]?.name === 'Resolvido' || statuses[0]?.name === 'Fechado');
 
     await apiPatch('/incidents', { 
@@ -96,9 +96,9 @@ export async function getParentItemIdsWithActiveIncidents(building_id: string): 
     try {
         // Busca incidentes vinculados a parent_items que não estão resolvidos
         const data = await apiGet('/incidents', {
-            select: 'entity_id,incidentstatuses!inner(name)',
+            select: 'entity_id,incident_statuses!inner(name)',
             entity_type: 'eq.parent_items',
-            'incidentstatuses.name': 'not.in.(Resolvido,Fechado)'
+            'incident_statuses.name': 'not.in.(Resolvido,Fechado)'
         });
         return (data || []).map((r: any) => r.entity_id);
     } catch (error) {
@@ -167,7 +167,7 @@ export async function resolveConnectionIncident({ incidentId, action, resolution
         await apiPatch('/equipment_ports', { status: 'up', connectedtoportid: port_a_id }, { id: `eq.${port_b_id}` });
 
         // 4. Fecha o incidente
-        const closedStatus = await apiGet('/incidentstatuses', { name: 'eq.Resolvido' });
+        const closedStatus = await apiGet('/incident_statuses', { name: 'eq.Resolvido' });
         if (closedStatus && closedStatus.length > 0) {
             await apiPatch('/incidents', { 
                 statusid: closedStatus[0].id, 

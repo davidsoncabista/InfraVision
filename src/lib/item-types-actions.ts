@@ -11,7 +11,7 @@ export interface ItemType {
   name: string;
   category: string;
   shape: 'rectangle' | 'circle';
-  defaultwidth_m: number;
+  default_width_m: number;
   default_depth_m: number;
   default_radius_m?: number | null;
   icon_name?: string;
@@ -31,7 +31,7 @@ const mapItemType = (r: any): ItemType => ({
     name: r.name,
     category: r.category,
     shape: r.shape || 'rectangle',
-    defaultwidth_m: r.defaultwidth_m || 0,
+    default_width_m: r.default_width_m || 0,
     default_depth_m: r.default_depth_m || 0,
     default_radius_m: r.default_radius_m,
     icon_name: r.icon_name,
@@ -40,10 +40,10 @@ const mapItemType = (r: any): ItemType => ({
     status: r.status,
     default_color: r.default_color,
     is_test_data: !!r.is_test_data,
-    isDefault: !!r.isdefault
+    isDefault: !!r.is_default
 });
 
-const getEndpoint = (isParentType: boolean) => (isParentType ? '/item_types' : '/item_typeseqp');
+const getEndpoint = (isParentType: boolean) => (isParentType ? '/item_types' : '/item_types_eqp');
 
 export async function getitem_types(isParentType: boolean): Promise<ItemType[]> {
   const endpoint = getEndpoint(isParentType);
@@ -72,10 +72,10 @@ export async function addItemType(data: any, isParentType: boolean) {
         is_test_data: false,
         default_color: data.default_color || null,
         shape: data.shape || 'rectangle',
-        defaultwidth_m: data.shape === 'circle' ? data.default_radius_m : (data.defaultwidth_m || 0.6),
+        default_width_m: data.shape === 'circle' ? data.default_radius_m : (data.default_width_m || 0.6),
         default_depth_m: data.shape === 'circle' ? data.default_radius_m : (data.default_depth_m || 1.0),
         default_radius_m: data.default_radius_m || null,
-        isdefault: false
+        is_default: false
     };
 
     try {
@@ -106,7 +106,7 @@ export async function updateItemType(id: string, data: any, isParentType: boolea
   if (data.shape) dataForDb.shape = data.shape;
 
   try {
-    await apiFetch(`${endpoint}?id=eq.${id}&isdefault=eq.false`, {
+    await apiFetch(`${endpoint}?id=eq.${id}&is_default=eq.false`, {
         method: 'PATCH',
         body: JSON.stringify(dataForDb)
     });

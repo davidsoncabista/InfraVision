@@ -12,10 +12,10 @@ export interface ConnectionType {
 
 export async function getConnectionTypes(): Promise<ConnectionType[]> {
   try {
-    const data = await apiFetch('/connectiontypes?order=isdefault.desc,name.asc');
+    const data = await apiFetch('/connection_types?order=is_default.desc,name.asc');
     return (data || []).map((c: any) => ({
         ...c,
-        isDefault: !!c.isdefault
+        isDefault: !!c.is_default
     }));
   } catch (error) {
     console.error('Erro ao buscar tipos de conexão:', error);
@@ -26,9 +26,9 @@ export async function getConnectionTypes(): Promise<ConnectionType[]> {
 export async function addConnectionType(data: { name: string, description?: string | null }) {
   const newId = `ctype_${Date.now()}`;
   try {
-    await apiFetch('/connectiontypes', {
+    await apiFetch('/connection_types', {
         method: 'POST',
-        body: JSON.stringify({ id: newId, name: data.name, description: data.description, isdefault: false })
+        body: JSON.stringify({ id: newId, name: data.name, description: data.description, is_default: false })
     });
     revalidatePath('/system');
   } catch (error: any) {
@@ -38,7 +38,7 @@ export async function addConnectionType(data: { name: string, description?: stri
 
 export async function updateConnectionType(id: string, data: any) {
     try {
-        await apiFetch(`/connectiontypes?id=eq.${id}&isdefault=eq.false`, {
+        await apiFetch(`/connection_types?id=eq.${id}&is_default=eq.false`, {
             method: 'PATCH',
             body: JSON.stringify(data)
         });
@@ -50,7 +50,7 @@ export async function updateConnectionType(id: string, data: any) {
 
 export async function deleteConnectionType(id: string) {
     try {
-        await apiFetch(`/connectiontypes?id=eq.${id}&isdefault=eq.false`, { method: 'DELETE' });
+        await apiFetch(`/connection_types?id=eq.${id}&is_default=eq.false`, { method: 'DELETE' });
         revalidatePath('/system');
     } catch (error: any) {
         throw new Error('Falha ao excluir tipo de conexão.');

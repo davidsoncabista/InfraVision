@@ -19,7 +19,6 @@ export interface Evidence {
         url?: string;
         fileName?: string;
     };
-    incidentDescription?: string;
 }
 
 interface SubmitEvidencePayload {
@@ -88,7 +87,7 @@ export async function getRecentIncidentEvidence(): Promise<Evidence[]> {
     try {
         // PostgREST: Resource Embedding para simular o JOIN
         // Buscamos evidências de incidentes, trazendo display_name do usuário e descrição do incidente
-        const url = `/evidence?entity_type=eq.Incidents&select=*,users:user_id(display_name,photo_url),incidents:entity_id(description)&order=timestamp.desc&limit=20`;
+        const url = `/evidence?entity_type=eq.Incidents&select=*,users:user_id(display_name,photo_url)&order=timestamp.desc&limit=20`;
         
         const data = await apiFetch(url);
 
@@ -103,7 +102,6 @@ export async function getRecentIncidentEvidence(): Promise<Evidence[]> {
             type: record.type,
             // PostgREST retorna JSON como objeto se a coluna for JSONB, senão fazemos o parse
             data: typeof record.data === 'string' ? JSON.parse(record.data) : record.data,
-            incidentDescription: record.incidents?.description || 'Incidente não especificado',
         }));
 
     } catch (error) {

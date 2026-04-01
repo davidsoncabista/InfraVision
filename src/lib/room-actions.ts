@@ -39,6 +39,7 @@ const exclusionZoneSchema = z.object({
  */
 export async function addRoom(params: AddRoomParams): Promise<void> {
   await roomService.create({
+    id: `R${Date.now()}`,
     name: params.name,
     building_id: params.building_id,
     width_m: params.width_m ?? 0,

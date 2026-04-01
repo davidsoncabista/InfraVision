@@ -33,7 +33,7 @@ export interface IncidentType {
 
 export async function getIncidentStatuses(): Promise<IncidentStatus[]> {
   try {
-    const data = await apiFetch('/incidentstatuses?order=isdefault.desc,name.asc');
+    const data = await apiFetch('/incident_statuses?order=is_default.desc,name.asc');
     return (data || []).map((s: any) => ({
         ...s,
         icon_name: s.icon_name,
@@ -47,7 +47,7 @@ export async function getIncidentStatuses(): Promise<IncidentStatus[]> {
 export async function addIncidentStatus(data: any) {
   const newId = `istatus_${Date.now()}`;
   try {
-    await apiFetch('/incidentstatuses', {
+    await apiFetch('/incident_statuses', {
         method: 'POST',
         body: JSON.stringify({ 
             id: newId, 
@@ -55,7 +55,7 @@ export async function addIncidentStatus(data: any) {
             description: data.description, 
             color: data.color, 
             icon_name: data.icon_name,
-            isdefault: false 
+            is_default: false 
         })
     });
     revalidatePath('/system');
@@ -72,7 +72,7 @@ export async function updateIncidentStatus(id: string, data: any) {
         if(data.color) dbData.color = data.color;
         if(data.icon_name) dbData.icon_name = data.icon_name;
 
-        await apiFetch(`/incidentstatuses?id=eq.${id}&isdefault=eq.false`, {
+        await apiFetch(`/incident_statuses?id=eq.${id}&is_default=eq.false`, {
             method: 'PATCH',
             body: JSON.stringify(dbData)
         });
@@ -84,7 +84,7 @@ export async function updateIncidentStatus(id: string, data: any) {
 
 export async function deleteIncidentStatus(id: string) {
     try {
-        await apiFetch(`/incidentstatuses?id=eq.${id}&isdefault=eq.false`, { method: 'DELETE' });
+        await apiFetch(`/incident_statuses?id=eq.${id}&is_default=eq.false`, { method: 'DELETE' });
         revalidatePath('/system');
     } catch (error: any) {
         throw new Error('Falha ao excluir status.');
@@ -95,7 +95,7 @@ export async function deleteIncidentStatus(id: string) {
 
 export async function getIncidentSeverities(): Promise<IncidentSeverity[]> {
   try {
-    const data = await apiFetch('/incidentseverities?order=rank.asc');
+    const data = await apiFetch('/incident_severities?order=rank.asc');
     return (data || []).map((s: any) => ({
         ...s,
         isDefault: !!s.isdefault
@@ -108,9 +108,9 @@ export async function getIncidentSeverities(): Promise<IncidentSeverity[]> {
 export async function addIncidentSeverity(data: any) {
     const newId = `isev_${Date.now()}`;
     try {
-        await apiFetch('/incidentseverities', {
+        await apiFetch('/incident_severities', {
             method: 'POST',
-            body: JSON.stringify({ id: newId, ...data, isdefault: false })
+            body: JSON.stringify({ id: newId, ...data, is_default: false })
         });
         revalidatePath('/system');
     } catch (error: any) {
@@ -120,7 +120,7 @@ export async function addIncidentSeverity(data: any) {
 
 export async function updateIncidentSeverity(id: string, data: any) {
     try {
-        await apiFetch(`/incidentseverities?id=eq.${id}&isdefault=eq.false`, {
+        await apiFetch(`/incident_severities?id=eq.${id}&is_default=eq.false`, {
             method: 'PATCH',
             body: JSON.stringify(data)
         });
@@ -132,7 +132,7 @@ export async function updateIncidentSeverity(id: string, data: any) {
 
 export async function deleteIncidentSeverity(id: string) {
     try {
-        await apiFetch(`/incidentseverities?id=eq.${id}&isdefault=eq.false`, { method: 'DELETE' });
+        await apiFetch(`/incident_severities?id=eq.${id}&is_default=eq.false`, { method: 'DELETE' });
         revalidatePath('/system');
     } catch (error: any) {
         throw new Error('Falha ao excluir severidade.');
@@ -143,7 +143,7 @@ export async function deleteIncidentSeverity(id: string) {
 
 export async function getIncidentTypes(): Promise<IncidentType[]> {
   try {
-    const data = await apiFetch('/incidenttypes?order=isdefault.desc,name.asc');
+    const data = await apiFetch('/incident_types?order=is_default.desc,name.asc');
     return (data || []).map((t: any) => ({
         ...t,
         defaultSeverityId: t.defaultseverityid,
@@ -157,14 +157,14 @@ export async function getIncidentTypes(): Promise<IncidentType[]> {
 export async function addIncidentType(data: any) {
     const newId = `itype_${Date.now()}`;
     try {
-        await apiFetch('/incidenttypes', {
+        await apiFetch('/incident_types', {
             method: 'POST',
             body: JSON.stringify({ 
                 id: newId, 
                 name: data.name, 
                 description: data.description, 
                 defaultseverityid: data.defaultSeverityId || null,
-                isdefault: false 
+                is_default: false 
             })
         });
         revalidatePath('/system');
@@ -180,7 +180,7 @@ export async function updateIncidentType(id: string, data: any) {
         if(data.description) dbData.description = data.description;
         if(data.defaultSeverityId !== undefined) dbData.defaultseverityid = data.defaultSeverityId;
 
-        await apiFetch(`/incidenttypes?id=eq.${id}&isdefault=eq.false`, {
+        await apiFetch(`/incident_types?id=eq.${id}&is_default=eq.false`, {
             method: 'PATCH',
             body: JSON.stringify(dbData)
         });
@@ -192,7 +192,7 @@ export async function updateIncidentType(id: string, data: any) {
 
 export async function deleteIncidentType(id: string) {
     try {
-        await apiFetch(`/incidenttypes?id=eq.${id}&isdefault=eq.false`, { method: 'DELETE' });
+        await apiFetch(`/incident_types?id=eq.${id}&is_default=eq.false`, { method: 'DELETE' });
         revalidatePath('/system');
     } catch (error: any) {
         throw new Error('Falha ao excluir tipo.');
