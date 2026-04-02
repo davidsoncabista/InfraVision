@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS incidents (
   resolved_at TIMESTAMP,
   entity_type VARCHAR(50),
   entity_id VARCHAR(100),
-  type_id VARCHAR(50),
+  type_id VARCHAR(50)REFERENCES incident_types(id),
   notes TEXT,
   image_url TEXT
 );
