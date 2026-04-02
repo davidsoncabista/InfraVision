@@ -16,11 +16,11 @@ export interface ItemStatus {
 
 export async function getItemStatuses(): Promise<ItemStatus[]> {
   try {
-    const data = await apiGet('/item_statuses', { order: 'isdefault.desc,name.asc' });
+    const data = await apiGet('/item_statuses', { order: 'is_default.desc,name.asc' });
     return (data || []).map((s: any) => ({
         ...s,
         isArchived: !!s.isarchived,
-        isDefault: !!s.isdefault
+        isDefault: !!s.is_default
     }));
   } catch (error) {
     return [];
@@ -36,7 +36,7 @@ export async function addStatus(data: any) {
         description: data.description,
         color: data.color,
         isarchived: !!data.isArchived,
-        isdefault: false 
+        is_default: false 
     });
     revalidatePath('/system');
   } catch (error: any) {
@@ -52,7 +52,7 @@ export async function updateStatus(id: string, data: any) {
     if(data.color) dbData.color = data.color;
     if(data.isArchived !== undefined) dbData.isarchived = !!data.isArchived;
 
-    await apiPatch('/item_statuses', dbData, { id: `eq.${id}`, isdefault: 'eq.false' });
+    await apiPatch('/item_statuses', dbData, { id: `eq.${id}`, is_default: 'eq.false' });
     revalidatePath('/system');
   } catch (error: any) {
     throw new Error('Falha ao atualizar status.');
@@ -68,7 +68,7 @@ export async function deleteStatus(id: string) {
             throw new Error('Este status está em uso e não pode ser excluído.');
         }
 
-        await apiDelete('/item_statuses', { id: `eq.${id}`, isdefault: 'eq.false' });
+        await apiDelete('/item_statuses', { id: `eq.${id}`, is_default: 'eq.false' });
         revalidatePath('/system');
     } catch (error: any) {
         throw new Error(error.message || 'Falha ao excluir status.');

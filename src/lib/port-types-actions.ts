@@ -12,7 +12,7 @@ export interface port_type {
 
 export async function getport_types(): Promise<port_type[]> {
   try {
-    return apiFetch('/port_types?order=isdefault.desc,name.asc');
+    return apiFetch('/port_types?order=is_default.desc,name.asc');
   } catch (error) {
     console.error('Erro ao buscar tipos de porta:', error);
     return [];
@@ -24,7 +24,7 @@ export async function addport_type(data: { name: string, description?: string | 
   try {
     await apiFetch('/port_types', {
       method: 'POST',
-      body: JSON.stringify({ id: newId, name: data.name, description: data.description, isdefault: false })
+      body: JSON.stringify({ id: newId, name: data.name, description: data.description, is_default: false })
     });
     revalidatePath('/system');
   } catch (error: any) {
@@ -34,7 +34,7 @@ export async function addport_type(data: { name: string, description?: string | 
 
 export async function updateport_type(id: string, data: any) {
     try {
-        await apiFetch(`/port_types?id=eq.${id}&isdefault=eq.false`, {
+        await apiFetch(`/port_types?id=eq.${id}&is_default=eq.false`, {
             method: 'PATCH',
             body: JSON.stringify(data)
         });
@@ -46,7 +46,7 @@ export async function updateport_type(id: string, data: any) {
 
 export async function deleteport_type(id: string) {
     try {
-        await apiFetch(`/port_types?id=eq.${id}&isdefault=eq.false`, { method: 'DELETE' });
+        await apiFetch(`/port_types?id=eq.${id}&is_default=eq.false`, { method: 'DELETE' });
         revalidatePath('/system');
     } catch (error: any) {
         throw new Error('Falha ao excluir tipo de porta.');

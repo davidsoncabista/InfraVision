@@ -120,7 +120,7 @@ export async function deleteItemType(id: string, isParentType: boolean): Promise
     const endpoint = getEndpoint(isParentType);
     try {
         // Soft delete (marcar como excluído)
-        await apiFetch(`${endpoint}?id=eq.${id}&isdefault=eq.false`, {
+        await apiFetch(`${endpoint}?id=eq.${id}&is_default=eq.false`, {
             method: 'PATCH',
             body: JSON.stringify({ status: 'deleted' })
         });
